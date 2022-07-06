@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from 'react-bootstrap'
+import { Button, Col, Container, Row } from 'react-bootstrap'
 import { getAuth, signOut } from 'firebase/auth'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -17,10 +17,13 @@ const Dashboard = () => {
   }, []);
   
   return (
-    
-    <div>
-      <h1>DASHBOARD</h1>
+  <Container>
+    <Col>
+    <div className="card-dash col-md-12 h-100" style={{backgroundColor:"gray"}}>
+
     </div>
+    </Col>
+  </Container>  
   )
 }
 
