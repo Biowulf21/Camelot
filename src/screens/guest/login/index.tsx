@@ -8,9 +8,26 @@ import {faEye, faEyeSlash} from "@fortawesome/free-regular-svg-icons";
 import { InputGroup } from 'react-bootstrap';
 import { FormControl } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 const Login = () => {
   const [passIsVisible, setPassVisibility ] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+
+  const passwordChanged = (newPass: React.SetStateAction<string>) =>{
+    setPassword(newPass);
+  }
+
+  const authentication = getAuth()
+  const logIn = () => {
+    signInWithEmailAndPassword(authentication, email, password).then((response)=>console.log(response))
+  }
+
+  const emailChanged = (newemail: React.SetStateAction<string>) => {
+    setEmail(newemail);
+  }
 
   const toggleVisibility = () =>{
     setPassVisibility(!passIsVisible);
@@ -21,11 +38,12 @@ const Login = () => {
       <Col>
         <Form>
           <InputGroup>
-            <Form.Control type='email' placeholder='Enter your email' style={{marginBottom: "10px"}}></Form.Control>
+            <Form.Control onChange={(event)=>emailChanged(event.target.value)} type='email' placeholder='Enter your email' style={{marginBottom: "10px"}}></Form.Control>
           </InputGroup>
 
           <InputGroup className="mb-2">
               <Form.Control
+              onChange={(event)=> passwordChanged(event.target.value)}
               type={passIsVisible? "text" : "password"}
                 placeholder="Password"
                 aria-label="Password"
@@ -36,7 +54,7 @@ const Login = () => {
           <Col>
           <a className='mb-2' href="https://gmail.com/">Forgot Password</a>
           </Col>
-          <Button type='submit' variant="primary" className="btn-primary">Login</Button>
+          <Button variant="primary" className="btn-primary" onClick={logIn}>Login</Button>
           <Col>
           </Col>
         </Form>
