@@ -7,22 +7,27 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faEye, faEyeSlash} from "@fortawesome/free-regular-svg-icons";
 import { InputGroup } from 'react-bootstrap';
 import { FormControl } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import auth from '../../../services/firebase-config'
 
 const Login = () => {
   const [passIsVisible, setPassVisibility ] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
 
   const passwordChanged = (newPass: React.SetStateAction<string>) =>{
     setPassword(newPass);
   }
 
-  const authentication = getAuth()
   const logIn = () => {
-    signInWithEmailAndPassword(authentication, email, password).then((response)=>console.log(response))
+    const authentication = getAuth()
+    signInWithEmailAndPassword(auth, email, password).then((response)=>{
+      navigate('/dashboard')
+      sessionStorage.setItem('Auth_Token', response.user.refreshToken
+    )})
   }
 
   const emailChanged = (newemail: React.SetStateAction<string>) => {
