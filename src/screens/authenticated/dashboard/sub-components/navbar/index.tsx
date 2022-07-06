@@ -3,15 +3,29 @@ import { Alert, Button, Nav, Navbar, Offcanvas } from 'react-bootstrap'
 import { useState} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faNavicon } from '@fortawesome/free-solid-svg-icons';
+import { getAuth, signOut } from 'firebase/auth';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 
 const SideBar = () => {
+    const navigate = useNavigate();
+    const location = useLocation()
     const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  
+  const handleSignOut = () =>{
+    const auth = getAuth()
+    signOut(auth)
+    sessionStorage.clear()
+    console.log('Deleted token')
+    console.log('Redirecting to login page')
+    navigate('/')
+  }
   return (
-<>
+    <>
+    { location.pathname === "/" ? null :
     <Navbar>
       <Navbar.Offcanvas show={show} onClick={handleShow} onHide={handleClose }>
       <Offcanvas.Header closeButton>
@@ -39,8 +53,9 @@ const SideBar = () => {
       <Navbar.Brand href='/dashboard'>Camelot</Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav"></Navbar.Collapse>
-            <Button>Logout</Button>
+            <Button onClick={handleSignOut}>Logout</Button>
     </Navbar>
+  }
     </>
   )
 }
