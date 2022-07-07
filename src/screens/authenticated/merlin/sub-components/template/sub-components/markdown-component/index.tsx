@@ -22,8 +22,8 @@ const MarkdownComponent = (props:any ) => {
             <FormGroup>
                     <Form.Label>Preview Body</Form.Label>
                     {/* TODO: use React Markdown To display Items. Link: https://github.com/remarkjs/react-markdown */}
-                    <div className='px-2 markdown-preview' style={{height:'500px', backgroundColor:'beige', maxWidth:"612px"}}>
-                        <ReactMarkdown>{emailText}</ReactMarkdown>
+                    <div className='px-2 markdown-preview container' style={{height:'500px', overflow:'auto', backgroundColor:'beige', maxWidth:"612px", display:'flex'}}>
+                        <ReactMarkdown className='markdown'>{emailText}</ReactMarkdown>
                     </div>
                 </FormGroup>
             </Col>
