@@ -1,0 +1,16 @@
+.template-viewer{
+    background-color:lightgreen; 
+    height: 300px;
+    display: flex;
+    overflow-y: auto;
+    border-width: 1px;  
+    border-style: solid;
+    border-radius: 15px;
+}
+
+.template-viewer-title{
+    overflow-y: auto;
+    height: 100;
+    border-width: 1px;  
+    border-color: black;
+}

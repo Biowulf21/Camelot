@@ -1,0 +1,15 @@
+.template-card-div{
+    border-style: solid;
+    border-width: 1px;
+    background-color: grey;
+    width: 300px;
+}
+
+
+.title-text{
+    font-weight: bold;
+}
+
+.subject-text {
+    font-weight:normal;
+}
