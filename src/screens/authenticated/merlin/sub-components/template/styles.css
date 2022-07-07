@@ -5,3 +5,9 @@
 .markdown-textarea{
     margin-left: 0px;
 }
+
+.template-div{
+    border-width: 1px;
+    border-style: solid;
+    border: 2px 0px 0px 0px;
+}

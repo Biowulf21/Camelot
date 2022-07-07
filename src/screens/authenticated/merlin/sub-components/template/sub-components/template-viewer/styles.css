@@ -1,0 +1,9 @@
+.template-viewer{
+    background-color: lightblue;
+    text-decoration-color: black;
+    height: 200px;
+}
+
+.template-viewer-title{
+    background-color: aqua;
+}

@@ -10,7 +10,6 @@ const MarkdownComponent = (props:any ) => {
     }
 
   return (
-    <Container>
         <Row className='no-gutter'>
             <Col className='my-3 markdown-textarea'>
                 <FormGroup>
@@ -28,7 +27,6 @@ const MarkdownComponent = (props:any ) => {
                 </FormGroup>
             </Col>
         </Row>
-    </Container>
   )
 }
 
