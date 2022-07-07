@@ -14,6 +14,7 @@ import Dashboard from "./screens/authenticated/dashboard/index";
 import Error404Page from "./screens/404";
 import SideBar from "./screens/authenticated/dashboard/sub-components/navbar";
 import React from "react";
+import MerlinPage from "./screens/authenticated/merlin/index";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login></Login>}></Route>
         <Route path="/dashboard" element={<Dashboard></Dashboard>}></Route>
+        <Route path="/merlin" element={<MerlinPage></MerlinPage>}></Route>
         <Route path="*" element={<Error404Page></Error404Page>}></Route>
       </Routes>
     </React.StrictMode>

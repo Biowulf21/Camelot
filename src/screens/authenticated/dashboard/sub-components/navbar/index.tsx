@@ -38,7 +38,7 @@ const SideBar = () => {
             <ProfileCard></ProfileCard>
           </Nav>
           <Nav className="nav-card">
-            <Link to={"/"}>Merlin</Link>
+            <Link to={"/merlin"}>Merlin</Link>
           </Nav>
           <Nav className="nav-card">
             <Link to={"/"}>Arthur</Link>
