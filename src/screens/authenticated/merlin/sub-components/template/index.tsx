@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button, Col, Container, Form, FormGroup, InputGroup, Row } from 'react-bootstrap'
 import MarkdownComponent from './sub-components/markdown-component'
 
 const Template = () => {
+    const [emailBodyText, setEmailBodyText] = useState('');
+    const [emailSubjectText, setEmailSubjectText] = useState('');
+
   return (
     <Container>
         <Row>
@@ -19,8 +22,8 @@ const Template = () => {
             </InputGroup>
             </Col>
             </Row>
-        <Col className='my-2' style={{backgroundColor: 'lightGray'}}>
-            <MarkdownComponent></MarkdownComponent>
+        <Col className='my-2' style={{backgroundColor: 'light-gr'}}>
+            <MarkdownComponent emailText={emailBodyText}  setEmailText={setEmailBodyText}></MarkdownComponent>
         </Col>
         <Button className='mb-3'>Save</Button>
         </Row>
