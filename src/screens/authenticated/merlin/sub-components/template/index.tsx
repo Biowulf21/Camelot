@@ -19,6 +19,10 @@ const TemplateComponent = () => {
     const handleChangeTemplateTitle = (value:SetStateAction<string>) =>{
         setTemplateTitle(value)
     }
+
+    const handleChangeTemplateSubject = (value:SetStateAction<string>) => {
+        settemplateSubject(value)
+    }
     
     const printTemplates = () =>{
        templateObj.getTemplates()
@@ -44,7 +48,7 @@ const TemplateComponent = () => {
             <FormGroup className='mb-3 col-md-5'>
                 <InputGroup>
                 <InputGroup.Text>Template Subject</InputGroup.Text>
-                <Form.Control></Form.Control>
+                <Form.Control onChange={(event)=> {handleChangeTemplateSubject(event.target.value)}}></Form.Control>
             </InputGroup>
             </FormGroup>
             
