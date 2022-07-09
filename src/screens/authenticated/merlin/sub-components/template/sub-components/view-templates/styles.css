@@ -1,7 +1,9 @@
 .template-viewer{
-    height: 520px;
-    max-height: 520px;
+    height: 510px;
+    max-height: 510px;
     overflow-y: scroll;
+    border: solid 1px;
+    border-radius: 10px;
 }
 
 .body-container{

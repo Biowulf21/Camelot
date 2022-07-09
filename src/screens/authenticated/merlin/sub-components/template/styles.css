@@ -18,8 +18,8 @@
 .view-template-card{
     border: solid 1px;
     border-radius: 5px;
-    max-height: 500px;
-    height: 500px;
+    max-height: 510px;
+    height: 510px;
     overflow-y: auto;
 }
 
@@ -28,5 +28,11 @@
 }
 
 .template-viewer{
-    border: solid 1px;
+    border-style: solid;
+    border: 1px;
+}
+
+.edit-div{
+    display: grid;
+    justify-content: end;
 }

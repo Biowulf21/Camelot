@@ -22,9 +22,11 @@ const TemplateComponent = () => {
     console.log(templateList)
     }
 
+    const handleEditTemplate = (editID:string) => {
+      console.log(editID)
+    }
 
     const handleViewTemplate = (id:DocumentData, subject:DocumentData, body:DocumentData) =>{
-        console.log(id, subject, body);
         const newID = String(id);
         const newSubject = String(subject);
         const newBody = String(body);
@@ -38,12 +40,23 @@ const TemplateComponent = () => {
     }, [])
     
     if (isLoading){
-        return (<h1>Loading</h1>)
+        return (
+          <Container>
+            <div>
+              <h1>Loading</h1>
+            </div>
+          </Container>
+        )
     }
 
   return (
-    <Container>
-       <Col className='template-div mt-3 p-3'>
+    <Container fluid>
+      <Row>
+        <Col className='mt-2 mx-5 edit-div'>
+      <Button disabled={currentID === "" ? true : false} variant='success' className='' onClick={() => handleEditTemplate(currentID)}>Edit</Button>
+        </Col>
+      </Row>
+       <Col className='template-div mt-2 p-3 mx-5'>
             <Row>
                 <Col className='col-md-3 mx-2 px-0 view-template-card'>
                 <ListGroup>
@@ -55,12 +68,11 @@ const TemplateComponent = () => {
                }) : <h1>Templates Empty</h1>}
                </ListGroup>
             </Col>
-            <Col className='template-viewer mx-1 py-3'>
+            <Col className='template-viewer mx-2 py-1'>
                 <TemplateViewer id={currentID} subject={currentSubject} body={currentBody}></TemplateViewer>
             </Col>
-            </Row>
+            </Row>                
        </Col>
-       <Button onClick={fetchTemplates}>PRINT</Button>
     </Container>
   )
 }
