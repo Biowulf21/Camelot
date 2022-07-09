@@ -1,0 +1,18 @@
+.template-viewer{
+    height: 520px;
+    max-height: 520px;
+    overflow-y: scroll;
+}
+
+.body-container{
+    height: 520px;
+    max-height: 520px;
+}
+
+.template-subject{
+font-size: large;
+}
+
+.spacer{
+ height: 10px;  
+}
