@@ -36,3 +36,7 @@
     display: grid;
     justify-content: end;
 }
+
+.loading-div{
+    max-width: 100;
+}

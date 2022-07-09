@@ -1,5 +1,5 @@
 import React, { SetStateAction, useEffect, useState } from 'react'
-import { Button, Col, Container, Form, FormGroup, InputGroup, ListGroup, ListGroupItem, Row } from 'react-bootstrap'
+import { Button, Col, Container, Form, FormGroup, InputGroup, ListGroup, ListGroupItem, Row, Spinner } from 'react-bootstrap'
 import { Template } from '../../../../../services/Template-Service/template-service'
 import '../template/styles.css'
 import { DocumentData } from 'firebase/firestore'
@@ -42,9 +42,15 @@ const TemplateComponent = () => {
     if (isLoading){
         return (
           <Container>
-            <div>
-              <h1>Loading</h1>
+            <Col>
+            <div style={{height:"550px", display: 'flex',alignItems: 'center',justifyContent: 'center',}}>
+              <div className='mx-2'>
+              <h2>Loading</h2>
+              </div>
+            <Spinner animation="border" role="status" size='sm'>
+            </Spinner>
             </div>
+            </Col>
           </Container>
         )
     }
