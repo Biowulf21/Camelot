@@ -11,4 +11,18 @@
     border-style: solid;
     border: 2px 0px 0px 0px;
     border-radius: 15px;
+    height: 500px;
+    max-height: 500px;
+}
+
+.view-template-card{
+    border: solid 1px;
+    border-radius: 5px;
+    max-height: 465px;
+    height: 465px;
+    overflow-y: auto;
+}
+
+.template-titlecard{
+    cursor: pointer;
 }

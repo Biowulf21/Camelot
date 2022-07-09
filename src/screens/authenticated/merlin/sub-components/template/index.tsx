@@ -1,71 +1,46 @@
 import React, { SetStateAction, useEffect, useState } from 'react'
-import { Button, Col, Container, Form, FormGroup, InputGroup, Row } from 'react-bootstrap'
+import { Button, Col, Container, Form, FormGroup, InputGroup, ListGroup, ListGroupItem, Row } from 'react-bootstrap'
 import MarkdownComponent from './sub-components/markdown-component'
 import { Template } from '../../../../../services/Template-Service/template-service'
-import TemplateViewer from './sub-components/view-templates'
 import '../template/styles.css'
+import { collection, DocumentData, getDocs, onSnapshot, query } from 'firebase/firestore'
+import { db } from '../../../../../services/firebase-config'
+import TEMPLATE_PATH from '../../../../../services/firebase-constants'
 
 const TemplateComponent = () => {
-    const [templateTitle, setTemplateTitle] = useState('');
-    const [templateSubject, settemplateSubject] = useState('');
-    const [templateBody, setTemplateBody] = useState('');
-
     var templateObj = new Template();
-
-    const currentTemplateObject = {
-        title: templateTitle,
-        subject: templateSubject,
-        body: templateBody
-    }
-
-    const handleChangeTemplateTitle = (value:SetStateAction<string>) =>{
-        setTemplateTitle(value)
-    }
-
-    const handleChangeTemplateSubject = (value:SetStateAction<string>) => {
-        settemplateSubject(value)
-    }
+    const [templateList, setTemplateList] = useState<DocumentData[]>([]);
+    const [isLoading, setisLoading] = useState<boolean>(false);
     
-    const printTemplates = () =>{
-       templateObj.getTemplates()
+    const fetchTemplates = async () =>{
+    const fetchedTemplates = await templateObj.getTemplates()
+    setTemplateList(fetchedTemplates)
+    console.log(templateList)
     }
 
-    const saveTemplate = () =>{
-        templateObj.saveTemplate(currentTemplateObject)
+    useEffect(() => {
+    fetchTemplates()
+    }, [])
+    
+    if (isLoading){
+        return (<h1>Loading</h1>)
     }
 
   return (
     <Container>
-        <Row >
-            <Col>
-            <FormGroup className='mt-3'>
-            <Form.Text>View Saved Templates</Form.Text>
-            <TemplateViewer></TemplateViewer>
-            </FormGroup>
+       <Col className='template-div mt-3 p-3'>
+            <Col className='col-md-3 view-template-card'>
+                <ListGroup>
+               {templateList.length > 0?
+               templateList.map((template)=>{
+                   return(
+                     <ListGroupItem className='template-titlecard' onClick={() => console.log(template.id)} key={template.id}><b>{template.title}</b></ListGroupItem>
+                );
+               }) : <h1>Templates Empty</h1>}
+               </ListGroup>
             </Col>
-        </Row>
-        <Row className='template-div my-3 py-5 px-3'>
-            <Col>
-            <FormGroup className='mb-3 col-md-5' >
-                <Form.Label className="mt-3"><h2>{templateTitle ? templateTitle : 'Template Title'}</h2></Form.Label> 
-                <InputGroup>
-                <InputGroup.Text>Template Title</InputGroup.Text>
-                <Form.Control onChange={(event)=>handleChangeTemplateTitle(event.target.value)}></Form.Control>
-                </InputGroup>
-            </FormGroup>
-
-            <FormGroup className='mb-3 col-md-5'>
-                <InputGroup>
-                <InputGroup.Text>Template Subject</InputGroup.Text>
-                <Form.Control onChange={(event)=> {handleChangeTemplateSubject(event.target.value)}}></Form.Control>
-            </InputGroup>
-            </FormGroup>
-            
-            </Col>
-            <MarkdownComponent emailText={templateBody}  setEmailText={setTemplateBody}></MarkdownComponent>
-        <Button onClick={saveTemplate} className='mb-3'>Save</Button>
-        <Button onClick={printTemplates}>PRINT TEMPLATES</Button>
-            </Row>
+       </Col> 
+       <Button onClick={fetchTemplates}>PRINT</Button>
     </Container>
   )
 }

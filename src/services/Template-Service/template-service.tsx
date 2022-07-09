@@ -1,4 +1,4 @@
-import { doc, setDoc, onSnapshot, query, collection, QueryDocumentSnapshot, DocumentData, addDoc } from "firebase/firestore"; 
+import { doc, setDoc, onSnapshot, query, collection, QueryDocumentSnapshot, DocumentData, addDoc, getDocs } from "firebase/firestore"; 
 import TEMPLATE_PATH from "../firebase-constants";
 import { db } from "../firebase-config";
 
@@ -21,14 +21,13 @@ export class Template {
         }).then(() => console.log('done saving'))
     }
 
-    async getTemplates(){
+    async getTemplates(): Promise<DocumentData[]>{
+        const templates:DocumentData[] = []
         const q = query(collection(db, TEMPLATE_PATH));
-        const snapshot = onSnapshot(q, (querySnapshot) => {
-          const cities:DocumentData = [];
-          querySnapshot.forEach((doc) => {
-              cities.push(doc.data());
-          });
-          console.log(cities);
-        });
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc)=>{
+        templates.push({...doc.data(), key: doc.id})
+    })
+        return templates;
     }
 }
