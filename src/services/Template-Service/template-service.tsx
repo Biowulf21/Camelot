@@ -30,4 +30,13 @@ export class Template {
     })
         return templates;
     }
+
+    async saveNewTemplate():Promise<boolean>{
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+              resolve(true);
+            }, 5000);
+          });
+       } 
+    
 }
