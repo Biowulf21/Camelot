@@ -37,6 +37,6 @@
     justify-content: end;
 }
 
-.loading-div{
-    max-width: 100;
+.loading-text-div, .spinner-div{
+    display: inline-block;
 }

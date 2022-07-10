@@ -42,15 +42,14 @@ const TemplateComponent = () => {
     if (isLoading){
         return (
           <Container>
-            <Col>
-            <div style={{height:"550px", display: 'flex',alignItems: 'center',justifyContent: 'center',}}>
-              <div className='mx-2'>
-              <h2>Loading</h2>
+            <div className="d-flex align-items-center justify-content-center text-center my-5">
+              <div className='loading-text-div mx-2'>
+                  <h1>Loading</h1>
               </div>
-            <Spinner animation="border" role="status" size='sm'>
-            </Spinner>
+              <div className='spinner-div'>
+                  <Spinner animation='border'></Spinner>
+              </div>
             </div>
-            </Col>
           </Container>
         )
     }
