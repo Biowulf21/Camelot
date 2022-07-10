@@ -13,14 +13,6 @@ export class Template {
 
     }
 
-   async saveTemplate(props:SaveProps) {
-        await addDoc(collection(db, TEMPLATE_PATH), {
-            title: props.title,
-            subject: props.subject,
-            body: props.body
-        }).then(() => console.log('done saving'))
-    }
-
     async getTemplates(): Promise<DocumentData[]>{
         const templates:DocumentData[] = []
         const q = query(collection(db, TEMPLATE_PATH));
@@ -31,12 +23,23 @@ export class Template {
         return templates;
     }
 
-    async saveNewTemplate():Promise<boolean>{
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-              resolve(true);
-            }, 5000);
-          });
+    async saveNewTemplate(title: string, subject:string, body:string){
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let resultID ='';
+        for (var i = 0; i< 20; i++){
+            resultID += characters.charAt(Math.floor(Math.random() * characters.length))
+        }
+
+        //convert string to base 64
+        const base64Body = window.btoa(body)
+
+        const data = {
+            id: resultID,
+            title,
+            subject,
+           body: base64Body
+        }
+        await setDoc(doc(db, TEMPLATE_PATH, resultID), data);
        } 
     
 }

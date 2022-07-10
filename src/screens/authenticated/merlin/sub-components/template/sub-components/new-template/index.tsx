@@ -37,7 +37,7 @@ const NewTemplate = () => {
         else{
             console.log('success')
             setisLoading(true)
-            const hasSaved: boolean | void = await templateObject.saveNewTemplate().then(()=>{
+            const hasSaved: boolean | void = await templateObject.saveNewTemplate(templateTitle, templateSubject, templateBodyText).then(()=>{
                 setisLoading(false)
                 Swal.fire({
                     icon: 'success',
@@ -67,7 +67,7 @@ const NewTemplate = () => {
             <Col className='col-md-6'>
                     <InputGroup>
                         <InputGroup.Text className='col-md-3 col-sm-3 col-xs-auto'>Template Subject</InputGroup.Text>
-                        <Form.Control onChange={(event) => handleEditTemplateSubject(event.target.value)} placeholder="Enter Your New Template's Title"></Form.Control>
+                        <Form.Control onChange={(event) => handleEditTemplateSubject(event.target.value)} placeholder="Enter Your New Template's Subject"></Form.Control>
                     </InputGroup>
                 </Col>
         </Row>
