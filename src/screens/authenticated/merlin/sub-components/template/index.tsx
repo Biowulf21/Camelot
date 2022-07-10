@@ -26,6 +26,10 @@ const TemplateComponent = () => {
       console.log(editID)
     }
 
+    const handleDeleteTemplate = (editID:string) => {
+      console.log(editID)
+    }
+
     const handleViewTemplate = (id:DocumentData, subject:DocumentData, body:DocumentData) =>{
         const newID = String(id);
         const newSubject = String(subject);
@@ -34,6 +38,7 @@ const TemplateComponent = () => {
         setCurrentSubject(newSubject);
         setcurrentBody(newBody);
     }
+
 
     useEffect(() => {
     fetchTemplates()
@@ -57,13 +62,15 @@ const TemplateComponent = () => {
   return (
     <Container fluid>
       <Row>
-        <Col className='mt-2 mx-5 edit-div'>
-      <Button disabled={currentID === "" ? true : false} variant='success' className='' onClick={() => handleEditTemplate(currentID)}>Edit</Button>
+        <Col className='d-flex align-items-end justify-content-end text-center mt-2'>
+      <Button disabled={currentID === "" ? true : false} variant='danger' className='mx-1' onClick={() => handleEditTemplate(currentID)}>Delete</Button>
+      <Button disabled={currentID === "" ? true : false} variant='success' className='mx-1' onClick={() => handleEditTemplate(currentID)}>Edit</Button>
+      <Button>New</Button>
         </Col>
       </Row>
        <Col className='template-div mt-2 p-3 mx-5'>
             <Row>
-                <Col className='col-md-3 mx-2 px-0 view-template-card'>
+                <Col xs={{ span: 12, order: 1 }} md={{ span: 2, order: 1 }}  className='view-template-card'>
                 <ListGroup>
                {templateList.length > 0?
                templateList.map((template)=>{
@@ -73,7 +80,7 @@ const TemplateComponent = () => {
                }) : <h1>Templates Empty</h1>}
                </ListGroup>
             </Col>
-            <Col className='template-viewer mx-2 py-1'>
+            <Col xs={{ span: 12, order: 2 }} md={{ span: 10, order: 2 }} className='template-viewer'>
                 <TemplateViewer id={currentID} subject={currentSubject} body={currentBody}></TemplateViewer>
             </Col>
             </Row>                
