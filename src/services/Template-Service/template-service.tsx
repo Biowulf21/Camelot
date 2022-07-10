@@ -1,4 +1,4 @@
-import { doc, setDoc, onSnapshot, query, collection, QueryDocumentSnapshot, DocumentData, addDoc, getDocs } from "firebase/firestore"; 
+import { doc, setDoc, onSnapshot, query, collection, QueryDocumentSnapshot, DocumentData, addDoc, getDocs, deleteDoc } from "firebase/firestore"; 
 import TEMPLATE_PATH from "../firebase-constants";
 import { db } from "../firebase-config";
 
@@ -42,4 +42,8 @@ export class Template {
         await setDoc(doc(db, TEMPLATE_PATH, resultID), data);
        } 
     
+       async deleteTemplate (id:string):Promise<void>{
+         console.log('deleteing template with id ' + id)
+        const deleteRef = await deleteDoc(doc(db, TEMPLATE_PATH, id))
+       }
 }

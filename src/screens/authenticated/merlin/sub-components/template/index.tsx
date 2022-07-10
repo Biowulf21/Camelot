@@ -48,13 +48,19 @@ const TemplateComponent = () => {
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes, delete it!'
       }).then((result) => {
-        if (result.isConfirmed) {
-          Swal.fire(
-            'Deleted!',
-            'The template has been deleted.',
-            'success'
-          )
-        }
+        templateObj.deleteTemplate(currentID)
+        .then((onClickResult)=> {
+          if (result.isConfirmed) {
+            Swal.fire(
+              'Deleted!',
+              'The template has been deleted.',
+              'success'
+            ).then(()=>{
+              window.location.reload()
+            })
+          }
+        })
+       
       })
       console.log(editID)
     }
@@ -102,7 +108,11 @@ const TemplateComponent = () => {
                    return(
                      <ListGroupItem className='template-titlecard' onClick={() => handleViewTemplate(template.id, template.subject, template.body)} key={template.id}><b>{template.title}</b></ListGroupItem>
                 );
-               }) : <h1>Templates Empty</h1>}
+               }) : 
+               <div className='mx-2 my-2'>
+                <h3>No Templates to display.</h3>
+               </div>
+               }
                </ListGroup>
             </Col>
             <Col xs={{ span: 12, order: 2 }} md={{ span: 10, order: 2 }} className='template-viewer'>

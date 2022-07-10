@@ -6,9 +6,11 @@ import { useState } from 'react';
 import Swal from 'sweetalert2';
 import { Template } from '../../../../../../../services/Template-Service/template-service';
 import LoadingComponent from '../../../../../../global-components/loading-component';
+import { useNavigate } from 'react-router-dom';
 
 const NewTemplate = () => {
     const templateObject = new Template()
+    const navigate = useNavigate()
     const [templateTitle, setTemplateTitle] = useState<string>("");
     const [templateSubject, setTemplateSubject] = useState<string>("");
     const [templateBodyText, setTemplateBodyText] = useState<string>("");
@@ -44,6 +46,9 @@ const NewTemplate = () => {
                     title: 'Your Template has been saved',
                     showConfirmButton: true,
                     timer: 3000
+                  }).then((okResult)=>{
+                      navigate('/merlin')
+
                   })
                   setTemplateBodyText('')
             })
@@ -84,7 +89,7 @@ const NewTemplate = () => {
                     <a className='cheatsheet-link' target={"_blank"} href='https://www.markdownguide.org/cheat-sheet/'>Formatting Cheatsheet</a>
                 </div>
                 <div>
-                <Button variant='secondary'>Cancel</Button>
+                <Button onClick={()=> navigate('/merlin')} variant='secondary'>Cancel</Button>
                 <Button onClick={handleSaveNewTemplate} style={{maxWidth:"200px"}} className='mx-2'>Save</Button>
                 </div>
             </div>
