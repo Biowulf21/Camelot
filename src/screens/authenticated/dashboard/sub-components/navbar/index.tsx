@@ -28,7 +28,7 @@ const SideBar = () => {
   return (
     <>
     { location.pathname === "/" ? null :
-    <Navbar>
+    <Navbar style={{backgroundColor:'white'}} sticky='top'>
       <Offcanvas show={show} onHide={handleClose} responsive="lg">
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>Camelot - The Crusader Yearbook</Offcanvas.Title>
@@ -57,7 +57,7 @@ const SideBar = () => {
           </Nav>
         </Offcanvas.Body>
       </Offcanvas>
-      <Button variant='outline-primary' className="mx-3" onClick={handleShow}><FontAwesomeIcon icon={faNavicon}></FontAwesomeIcon></Button>
+      <Button variant='primary' className="mx-3" onClick={handleShow}><FontAwesomeIcon icon={faNavicon}></FontAwesomeIcon></Button>
       <Navbar.Brand href='/dashboard'>Camelot</Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav"></Navbar.Collapse>

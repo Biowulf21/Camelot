@@ -32,6 +32,11 @@ const TemplateComponent = () => {
       console.log(editID)
     }
 
+    const handleNewTemplate = (editID:string) => {
+      console.log(editID)
+      navigate('/merlin/new-template')
+    }
+
     const handleDeleteTemplate = (editID:string) => {
       Swal.fire({
         title: 'Are you sure?',
@@ -93,7 +98,7 @@ const TemplateComponent = () => {
         <Col className='d-flex align-items-end justify-content-end text-center mt-2'>
       <Button disabled={currentID === "" ? true : false} variant='danger' className='mx-1' onClick={() => handleDeleteTemplate(currentID)}>Delete</Button>
       <Button disabled={currentID === "" ? true : false} variant='success' className='mx-1' onClick={() => handleEditTemplate(currentID)}>Edit</Button>
-      <Button className='mx-1'>New <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon></Button>
+      <Button className='mx-1' onClick={()=> handleNewTemplate(currentID)}>New <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon></Button>
         </Col>
       </Row>
        <Col className='template-div mt-2 p-3 mx-5'>
