@@ -29,5 +29,9 @@ textarea{
 .save-div{
     width: 97vw;
     display: flex;
-    justify-content: end;
+    justify-content: space-between;
+}
+
+.cheatsheet-link{
+    color: #0000EE
 }

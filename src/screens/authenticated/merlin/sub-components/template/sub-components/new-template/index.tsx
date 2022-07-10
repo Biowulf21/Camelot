@@ -80,8 +80,13 @@ const NewTemplate = () => {
             </Col>
         </Row>
             <div className='save-div mx-2 my-0'>
+                <div>
+                    <a className='cheatsheet-link' target={"_blank"} href='https://www.markdownguide.org/cheat-sheet/'>Formatting Cheatsheet</a>
+                </div>
+                <div>
                 <Button variant='secondary'>Cancel</Button>
                 <Button onClick={handleSaveNewTemplate} style={{maxWidth:"200px"}} className='mx-2'>Save</Button>
+                </div>
             </div>
     </Container>
   )

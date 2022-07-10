@@ -24,6 +24,7 @@
     .view-template-card {
         overflow-y: auto;
         height: 165px;
+        margin-bottom: 10px;
     }
 }
 
