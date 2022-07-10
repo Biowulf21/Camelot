@@ -4,10 +4,16 @@ import { Template } from '../../../../../services/Template-Service/template-serv
 import '../template/styles.css'
 import { DocumentData } from 'firebase/firestore'
 import TemplateViewer from './sub-components/view-templates'
+import Swal from 'sweetalert2'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faNavicon } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useNavigate } from 'react-router-dom'
 
 
 const TemplateComponent = () => {
     var templateObj = new Template();
+    const navigate = useNavigate()
     const [templateList, setTemplateList] = useState<DocumentData[]>([]);
     const [isLoading, setisLoading] = useState<boolean>(false);
     const [currentSubject, setCurrentSubject] = useState('');
@@ -27,6 +33,23 @@ const TemplateComponent = () => {
     }
 
     const handleDeleteTemplate = (editID:string) => {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire(
+            'Deleted!',
+            'The template has been deleted.',
+            'success'
+          )
+        }
+      })
       console.log(editID)
     }
 
@@ -41,7 +64,12 @@ const TemplateComponent = () => {
 
 
     useEffect(() => {
-    fetchTemplates()
+      const token = sessionStorage.getItem('Auth_Token')
+      if (!token){
+        navigate('/')
+      }
+      fetchTemplates()
+
     }, [])
     
     if (isLoading){
@@ -63,14 +91,14 @@ const TemplateComponent = () => {
     <Container fluid>
       <Row>
         <Col className='d-flex align-items-end justify-content-end text-center mt-2'>
-      <Button disabled={currentID === "" ? true : false} variant='danger' className='mx-1' onClick={() => handleEditTemplate(currentID)}>Delete</Button>
+      <Button disabled={currentID === "" ? true : false} variant='danger' className='mx-1' onClick={() => handleDeleteTemplate(currentID)}>Delete</Button>
       <Button disabled={currentID === "" ? true : false} variant='success' className='mx-1' onClick={() => handleEditTemplate(currentID)}>Edit</Button>
-      <Button>New</Button>
+      <Button className='mx-1'>New <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon></Button>
         </Col>
       </Row>
        <Col className='template-div mt-2 p-3 mx-5'>
             <Row>
-                <Col xs={{ span: 12, order: 1 }} md={{ span: 2, order: 1 }}  className='view-template-card'>
+                <Col xs={{ span: 12, order: 1 }} md={{ span: 2, order: 1 }}  className='view-template-card px-0'>
                 <ListGroup>
                {templateList.length > 0?
                templateList.map((template)=>{
