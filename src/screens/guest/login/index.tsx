@@ -10,6 +10,7 @@ import { FormControl } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import auth from '../../../services/firebase-config'
+import Swal from 'sweetalert2';
 
 const Login = () => {
   const [passIsVisible, setPassVisibility ] = useState(false);
@@ -23,11 +24,32 @@ const Login = () => {
   }
 
   const logIn = () => {
-    const authentication = getAuth()
-    signInWithEmailAndPassword(auth, email, password).then((response)=>{
-      navigate('/dashboard')
-      sessionStorage.setItem('Auth_Token', response.user.refreshToken
-    )})
+    try{
+      if (email === "" || password === ""){
+        throw new Error('One or more fields empty. Please fill in all fields.')
+      }
+      const authentication = getAuth()
+      signInWithEmailAndPassword(auth, email, password).then((response)=>{
+        navigate('/dashboard')
+        sessionStorage.setItem('Auth_Token', response.user.refreshToken
+        )}).catch((error)=>{
+          if (error instanceof Error){
+            Swal.fire(
+              'Whoops... Something went wrong.',
+              error.message,
+              'error'
+            )
+          }
+        })
+      } catch(e){
+        if (e instanceof Error){
+          Swal.fire(
+            'Whoops... Something went wrong.',
+            e.message,
+            'error'
+          )
+        }
+      }
   }
 
   const emailChanged = (newemail: React.SetStateAction<string>) => {
