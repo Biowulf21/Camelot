@@ -16,6 +16,7 @@ import SideBar from "./screens/authenticated/dashboard/sub-components/navbar";
 import React from "react";
 import MerlinPage from "./screens/authenticated/merlin/index";
 import NewTemplate from "./screens/authenticated/merlin/sub-components/template/sub-components/new-template/index.tsx";
+import MerlinMailing from "./screens/authenticated/merlin/sub-components/mailing/index";
 
 function App() {
   return (
@@ -28,6 +29,10 @@ function App() {
         <Route
           path="/merlin/new-template"
           element={<NewTemplate></NewTemplate>}
+        ></Route>
+        <Route
+          path="/merlin/mailing"
+          element={<MerlinMailing></MerlinMailing>}
         ></Route>
         <Route path="*" element={<Error404Page></Error404Page>}></Route>
       </Routes>
