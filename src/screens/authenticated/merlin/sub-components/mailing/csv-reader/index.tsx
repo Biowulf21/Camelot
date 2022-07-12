@@ -81,7 +81,7 @@ const styles = {
 
 interface CSVReaderInterface{
     csvFile: any | null,
-    updateCSVFile: Dispatch<SetStateAction<object>>
+    updateCSVFile: Dispatch<SetStateAction<{ data: never[]; }>> 
 }
 
 export default function CSVReader(props:CSVReaderInterface) {
