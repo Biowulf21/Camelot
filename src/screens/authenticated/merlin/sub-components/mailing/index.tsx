@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
 import { Button, Col, Container, Form, InputGroup, Row } from 'react-bootstrap'
 import './styles.css'
-import Papa from 'papaparse';
 import CSVReader from './csv-reader';
-import { counter } from '@fortawesome/fontawesome-svg-core';
-import { CSVtoJSON } from '../../../../../services/CSVtoJSON/csv-to-json-service'
-
+import {CSVtoJson} from '../../../../../services/CSVtoJSON/csv-to-json-v2'
+import Swal from 'sweetalert2';
 
 type CSVFILE = {
     data: []
@@ -16,10 +14,18 @@ const MerlinMailing = () => {
     const [csvLength, updateCSVLength] = useState<number | null>(null);
     const str = JSON.stringify(csvFile)
 
-    const CSVService = new CSVtoJSON;
+    const CSVService = new CSVtoJson;
 
-    const handleCSV = () => {
-        CSVService.handleCSVtoJSON(csvFile)
+    const handleCSV = async () => {
+        const parsedCSVFile:any = CSVService.CSVtoJSON(csvFile)
+        console.log(parsedCSVFile)
+        if (parsedCSVFile instanceof Error){
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: parsedCSVFile.message,
+              })
+        }
     }
 
     

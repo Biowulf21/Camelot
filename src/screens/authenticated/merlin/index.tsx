@@ -6,7 +6,7 @@ import Template from './sub-components/template'
 function MerlinPage() {
 
   return (
-    <Tabs defaultActiveKey={'Templates'} >
+    <Tabs defaultActiveKey={'Mail'} >
       <Tab eventKey={'Templates'} title={'Templates'}>
           <Template></Template>
       </Tab>
