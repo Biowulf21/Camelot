@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Col, Container, Form, InputGroup, Row } from 'react-bootstrap'
+import { Button, Col, Container, Form, InputGroup, ListGroup, ListGroupItem, Row } from 'react-bootstrap'
 import './styles.css'
 import CSVReader from './csv-reader';
 import {CSVtoJson} from '../../../../../services/CSVtoJSON/csv-to-json-v2'
@@ -13,6 +13,7 @@ const MerlinMailing = () => {
     const [csvFile, updateCSVFile] = useState<any>({data:[]});
     const [csvLength, updateCSVLength] = useState<number | null>(null);
     const [headers, updateHeaders] = useState<[]>([])
+    const [receipientList, updateReceipientList] = useState<[]>([])
 
     const CSVService = new CSVtoJson;
 
@@ -22,7 +23,7 @@ const MerlinMailing = () => {
 
             const parsedCSVFile:any = CSVService.CSVtoJSON(csvFile)
             console.log(parsedCSVFile)
-            const {headers} = parsedCSVFile;
+            const {headers, body} = parsedCSVFile;
             if (parsedCSVFile instanceof Error){
                 Swal.fire({
                     icon: 'error',
@@ -31,7 +32,10 @@ const MerlinMailing = () => {
                 })
             }
             
-            updateCSVFile(headers)
+            updateHeaders(headers)
+            updateReceipientList(body[0])
+            // console.log(body)
+
         } catch(error){
             if (typeof error === 'string'){
                 Swal.fire({
@@ -58,17 +62,48 @@ const MerlinMailing = () => {
     
  
   return (
-    <div className='main-div col-md-6'>
-    <Container  fluid className='mailing-container'>
-        <br>{csvLength}</br>
-        <Row>
+    <Container fluid className='main-div m-5'>
+        <Row >
+        <Col className='align-items-center'>
+            <h2 style={{textAlign:'center'}}>Headers Detected</h2>
+            <ListGroup horizontal>
+        {headers.length > 0? headers.map((header)=>{
+            return(
+                    <ListGroupItem>{header}</ListGroupItem>
+                    )
+                }): <p style={{textAlign:'center'}}>No Headers to display</p>}
+        </ListGroup>
+        </Col>
+        <Col className='align-items-center'>
+            <h2 style={{textAlign:'center'}}>Receipients Detected</h2>
+            <Row>
+                <Col>
+                    <b>Count:</b>
+                </Col>
+                <Col>
+                    <p>{receipientList.length}</p>
+                </Col>
+
+            </Row>
+        <div className='receipient-div'>
+        <ListGroup>
+        {receipientList.length > 0? receipientList.map((receipient:{NAME:string, EMAIL:string})=>{
+            console.log(receipient)
+            return(
+                <ListGroupItem key={receipient.EMAIL}>{receipient.NAME}: {receipient.EMAIL}</ListGroupItem>
+                )
+            }): <p style={{textAlign:'center'}}>No receipients to display</p>}
+        </ListGroup>
+            </div>
+        </Col>
+        </Row>
+        <Row className='mt-3'>
             <Col>
             <CSVReader csvFile={csvFile} updateCSVFile={updateCSVFile}></CSVReader>
             </Col>
         </Row>
             <Button className='my-2' onClick={()=>handleCSV()}>Parse</Button>
     </Container>
-    </div>
   )
 }
 

@@ -3,8 +3,12 @@ interface CSVFileInterface {
 }
 
 interface ParsedCSVFileInterface{
-    body: [][],
+    body: {}[],
     headers:string[]
+}
+
+interface ReceipientObjectInterface{
+    [key:string]:string
 }
 
 
@@ -14,10 +18,11 @@ export class CSVtoJson{
     CSVEmailColumnIndex: number = 0;
     recepients: [][] = []
     headers:string[] = []
+    receipientsJSON: {}[] = []
     
     CSVData:ParsedCSVFileInterface = {
         headers: this.headers,
-        body: this.recepients
+        body: this.receipientsJSON
      }
      
      CSVtoJSON = (file:CSVFileInterface) => {
@@ -33,14 +38,16 @@ export class CSVtoJson{
                             const header:string = CSVRow[column]
                             // Changes all headers to uppercase
                             const headerText:string = header.toUpperCase()
-                            this.headers.push(CSVRow[column])
+                            this.headers.push(headerText)
                             }
             } else {
                 this.recepients.push(CSVRow)
             }
             CSVColumnCounter +=1
         })
-
+        this.receipientsJSON.push(this.arrToJSON(this.recepients))
+        // this.receipientsJSON.pop()
+        console.log(this.receipientsJSON)
         return this.CSVData
         
     }catch(error){
@@ -52,6 +59,30 @@ export class CSVtoJson{
         return Error('Something went wrong. Please try again.')
       }
   }
+}
+
+arrToJSON = (receipientsArray:[][]) =>{
+    const receipientsJSONArray:{}[] = []
+    const headers = this.headers
+    var counter = 0
+    // removes useless empty row
+    receipientsArray.pop()
+        // get each individual receipient from the receipient list
+        for (const receipient in receipientsArray){
+            const currentReceipient = receipientsArray[receipient]
+            var currentHeader = ''
+            var currentHeaderValue = ''
+            var currentObject:ReceipientObjectInterface = {}
+            // console.log(currentReceipient)
+            for (const header in headers){
+                currentHeader = headers[header]
+                currentHeaderValue = currentReceipient[header]
+                currentObject[currentHeader] = currentHeaderValue
+            }
+            receipientsJSONArray.push(currentObject)
+        }
+
+        return receipientsJSONArray
 }
     
 ParseCSVHeaders = () =>{
