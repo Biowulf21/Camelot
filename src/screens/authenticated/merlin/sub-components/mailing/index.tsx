@@ -12,22 +12,49 @@ type CSVFILE = {
 const MerlinMailing = () => {
     const [csvFile, updateCSVFile] = useState<any>({data:[]});
     const [csvLength, updateCSVLength] = useState<number | null>(null);
-    const str = JSON.stringify(csvFile)
+    const [headers, updateHeaders] = useState<[]>([])
 
     const CSVService = new CSVtoJson;
 
     const handleCSV = async () => {
-        const parsedCSVFile:any = CSVService.CSVtoJSON(csvFile)
-        console.log(parsedCSVFile)
-        if (parsedCSVFile instanceof Error){
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: parsedCSVFile.message,
-              })
+
+        try{
+
+            const parsedCSVFile:any = CSVService.CSVtoJSON(csvFile)
+            console.log(parsedCSVFile)
+            const {headers} = parsedCSVFile;
+            if (parsedCSVFile instanceof Error){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: parsedCSVFile.message,
+                })
+            }
+            
+            updateCSVFile(headers)
+        } catch(error){
+            if (typeof error === 'string'){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: error,
+                })
+            } else if (error instanceof Error){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: error.message,
+                })
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: "Something went wrong. Please try again.",
+                })
+            }
         }
     }
-
+    
     
  
   return (
