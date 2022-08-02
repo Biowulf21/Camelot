@@ -63,7 +63,7 @@ const NewTemplate = () => {
         <Row className='mx-2 my-2'>
             <Col className='col-md-6'>
                 <InputGroup>
-                    <InputGroup.Text className='col-md-3 col-sm-3 col-xs-auto'>Template Title</InputGroup.Text>
+                    <InputGroup.Text className='col-md-3 col-sm-3 col-xs-auto'>Title</InputGroup.Text>
                     <Form.Control onChange={(event) => handleEditTemplateTitle(event.target.value)} placeholder="Enter Your New Template's Title"></Form.Control>
                 </InputGroup>
             </Col>
@@ -71,7 +71,7 @@ const NewTemplate = () => {
         <Row className='mx-2 my-2'>
             <Col className='col-md-6'>
                     <InputGroup>
-                        <InputGroup.Text className='col-md-3 col-sm-3 col-xs-auto'>Template Subject</InputGroup.Text>
+                        <InputGroup.Text className='col-md-3 col-sm-3 col-xs-auto'>Template</InputGroup.Text>
                         <Form.Control onChange={(event) => handleEditTemplateSubject(event.target.value)} placeholder="Enter Your New Template's Subject"></Form.Control>
                     </InputGroup>
                 </Col>

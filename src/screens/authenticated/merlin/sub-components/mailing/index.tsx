@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import { Button, Col, Container, Form, InputGroup, ListGroup, ListGroupItem, Row } from 'react-bootstrap'
 import './styles.css'
-import CSVReader from './csv-reader';
+import CSVReader from './sub-components/csv-reader';
 import {CSVtoJson} from '../../../../../services/CSVtoJSON/csv-to-json-v2'
 import Swal from 'sweetalert2';
+import HeadersDetected from './sub-components/headers-detected';
 
 type CSVFILE = {
     data: []
@@ -71,21 +72,12 @@ const MerlinMailing = () => {
         </div> 
             )
     }
-
-    
  
   return (
     <Container fluid className='main-div m-5'>
         <Row >
         <Col className='align-items-center'>
-            <h2 style={{textAlign:'center'}}>Headers Detected</h2>
-            <ListGroup horizontal>
-        {headers.length > 0? headers.map((header)=>{
-            return(
-                    <ListGroupItem>{header}</ListGroupItem>
-                    )
-                }): <p style={{textAlign:'center'}}>No Headers to display</p>}
-        </ListGroup>
+            <HeadersDetected headers={headers} ></HeadersDetected>
         </Col>
         <Col className='align-items-center'>
             <h2 style={{textAlign:'center'}}>Receipients Detected</h2>
