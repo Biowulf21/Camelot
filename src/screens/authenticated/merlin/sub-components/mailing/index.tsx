@@ -90,7 +90,7 @@ const MerlinMailing = () => {
         {receipientList.length > 0? receipientList.map((receipient:{NAME:string, EMAIL:string})=>{
             console.log(receipient)
             return(
-                <ListGroupItem key={receipient.EMAIL}>{receipient.NAME}: {receipient.EMAIL}</ListGroupItem>
+                <ListGroupItem key={receipient.EMAIL}>{receipient.NAME !== undefined? receipient.NAME + " : " + receipient.EMAIL : receipient.EMAIL}</ListGroupItem>
                 )
             }): <p style={{textAlign:'center'}}>No receipients to display</p>}
         </ListGroup>

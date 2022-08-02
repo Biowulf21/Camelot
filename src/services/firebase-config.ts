@@ -6,7 +6,7 @@ import { getFirestore } from "firebase/firestore";
 
 // https://firebase.google.com/docs/web/setup#available-libraries
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_KEY,
+  apiKey: "AIzaSyCS9CWPUYf68eEo2GbNYyflWmiQto3rSO8",
   authDomain: process.env.REACT_APP_FIREBASE_DOMAIN,
   projectId: "camelot-59ea0",
   storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
