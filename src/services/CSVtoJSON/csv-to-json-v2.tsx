@@ -5,10 +5,11 @@ interface CSVFileInterface {
 interface ParsedCSVFileInterface{
     body: {}[],
     headers:string[]
+    emailIndex:number
 }
 
 interface ReceipientObjectInterface{
-    [key:string]:string
+    [key:string]:string;
 }
 
 
@@ -22,7 +23,8 @@ export class CSVtoJson{
     
     CSVData:ParsedCSVFileInterface = {
         headers: this.headers,
-        body: this.receipientsJSON
+        body: this.receipientsJSON,
+        emailIndex:this.CSVEmailColumnIndex
      }
      
      CSVtoJSON = (file:CSVFileInterface) => {
@@ -40,6 +42,8 @@ export class CSVtoJson{
                             const headerText:string = header.toUpperCase()
                             this.headers.push(headerText)
                             }
+                    const emailIndex = this.headers.indexOf('EMAIL')
+                    this.CSVData.emailIndex = emailIndex
             } else {
                 this.recepients.push(CSVRow)
             }
@@ -72,7 +76,8 @@ arrToJSON = (receipientsArray:[][]) =>{
             const currentReceipient = receipientsArray[receipient]
             var currentHeader = ''
             var currentHeaderValue = ''
-            var currentObject:ReceipientObjectInterface = {}
+            var currentObject:ReceipientObjectInterface = {
+            }
             // console.log(currentReceipient)
             for (const header in headers){
                 currentHeader = headers[header]

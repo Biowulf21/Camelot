@@ -14,6 +14,7 @@ const MerlinMailing = () => {
     const [csvLength, updateCSVLength] = useState<number | null>(null);
     const [headers, updateHeaders] = useState<[]>([])
     const [receipientList, updateReceipientList] = useState<[]>([])
+    const [emailIndex, updateEmailIndex] = useState<number>(0   )
 
     const CSVService = new CSVtoJson;
 
@@ -23,7 +24,7 @@ const MerlinMailing = () => {
 
             const parsedCSVFile:any = CSVService.CSVtoJSON(csvFile)
             console.log(parsedCSVFile)
-            const {headers, body} = parsedCSVFile;
+            const {headers,body, emailIndex} = parsedCSVFile;
             if (parsedCSVFile instanceof Error){
                 Swal.fire({
                     icon: 'error',
@@ -34,6 +35,7 @@ const MerlinMailing = () => {
             
             updateHeaders(headers)
             updateReceipientList(body[0])
+            updateEmailIndex(emailIndex)
             // console.log(body)
 
         } catch(error){
@@ -58,7 +60,18 @@ const MerlinMailing = () => {
             }
         }
     }
-    
+  
+    if (emailIndex === -1){
+        return (
+        <div>
+            <h1>Email Column not found</h1>
+            <h2>The CSV file uploaded did not have the required EMAIL column.</h2> 
+            <h3>Please upload the corrected file.</h3>
+            <Button onClick={() => window.location.reload()}>Reload Page</Button>
+        </div> 
+            )
+    }
+
     
  
   return (
@@ -66,6 +79,7 @@ const MerlinMailing = () => {
         <Row >
         <Col className='align-items-center'>
             <h2 style={{textAlign:'center'}}>Headers Detected</h2>
+            <h2>{emailIndex}</h2>
             <ListGroup horizontal>
         {headers.length > 0? headers.map((header)=>{
             return(
