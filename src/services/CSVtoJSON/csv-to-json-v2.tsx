@@ -65,7 +65,6 @@ export class CSVtoJson {
   arrToJSON = (receipientsArray: [][]) => {
     const receipientsJSONArray: {}[] = [];
     const headers = this.headers;
-    var counter = 0;
     // removes useless empty row
     receipientsArray.pop();
     // get each individual receipient from the receipient list

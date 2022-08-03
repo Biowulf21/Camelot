@@ -2,24 +2,17 @@ import React, { useState } from "react";
 import {
   Button,
   Col,
-  Container,
-  ListGroup,
-  ListGroupItem,
-  Row,
+  Container, Row
 } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { CSVtoJson } from "../../../../../services/CSVtoJSON/csv-to-json-v2";
 import "./styles.css";
 import CSVReader from "./sub-components/csv-reader";
 import HeadersDetected from "./sub-components/headers-detected";
-
-type CSVFILE = {
-  data: [];
-};
+import ReceipientList from "./sub-components/reciepient-list/receipient-list";
 
 const MerlinMailing = () => {
   const [csvFile, updateCSVFile] = useState<any>({ data: [] });
-  const [csvLength, updateCSVLength] = useState<number | null>(null);
   const [headers, updateHeaders] = useState<[]>([]);
   const [receipientList, updateReceipientList] = useState<[]>([]);
   const [emailIndex, updateEmailIndex] = useState<number>(0);
@@ -94,24 +87,7 @@ const MerlinMailing = () => {
             </Col>
           </Row>
           <div className="receipient-div">
-            <ListGroup>
-              {receipientList.length > 0 ? (
-                receipientList.map(
-                  (receipient: { NAME: string; EMAIL: string }) => {
-                    console.log(receipient);
-                    return (
-                      <ListGroupItem key={receipient.EMAIL}>
-                        {receipient.NAME !== undefined
-                          ? receipient.NAME + " : " + receipient.EMAIL
-                          : receipient.EMAIL}
-                      </ListGroupItem>
-                    );
-                  }
-                )
-              ) : (
-                <p style={{ textAlign: "center" }}>No receipients to display</p>
-              )}
-            </ListGroup>
+              <ReceipientList receipientList={receipientList}></ReceipientList> 
           </div>
         </Col>
       </Row>
