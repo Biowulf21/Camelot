@@ -6,6 +6,7 @@ import Template from './sub-components/template'
 function MerlinPage() {
 
   const [ActiveTab, setActiveTab] = useState("Templates");
+  const defaultActiveTabKey: string = "Templates";
 
   useEffect(() => {
     //Will run every time the page loads. This stores the active tab in the session storage bucket 
@@ -13,7 +14,7 @@ function MerlinPage() {
     let activeTabKey:string = "";
     const sessionStorageKey:string | null = sessionStorage.getItem("activeTabKey");
 
-    sessionStorageKey != null ? activeTabKey = sessionStorageKey : activeTabKey = "Templates";
+    sessionStorageKey != null ? activeTabKey = sessionStorageKey : activeTabKey = defaultActiveTabKey;
 
     setActiveTab(activeTabKey);
     console.log(ActiveTab);
@@ -30,7 +31,7 @@ function MerlinPage() {
   
 
   return (
-    <Tabs activeKey={ActiveTab} onSelect={(tab_key) => saveActiveTabKeyToSessionStorage(tab_key != null ? tab_key : "Templates")} id="merlin-tabs" defaultActiveKey={"Templates"} >
+    <Tabs activeKey={ActiveTab} onSelect={(tab_key) => saveActiveTabKeyToSessionStorage(tab_key != null ? tab_key : defaultActiveTabKey)} id="merlin-tabs" defaultActiveKey={"Templates"} >
       <Tab eventKey={'Templates'} title={'Templates'}>
           <Template></Template>
       </Tab>
