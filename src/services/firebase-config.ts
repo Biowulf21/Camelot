@@ -1,4 +1,3 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, Auth, connectAuthEmulator } from "firebase/auth";
 import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
@@ -7,13 +6,15 @@ import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
 // https://firebase.google.com/docs/web/setup#available-libraries
 const firebaseConfig = {
   apiKey: "AIzaSyCS9CWPUYf68eEo2GbNYyflWmiQto3rSO8",
-  authDomain: process.env.REACT_APP_FIREBASE_DOMAIN,
+  authDomain: "camelot-59ea0.firebaseapp.com",
   projectId: "camelot-59ea0",
-  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSENGER_ID,
-  appId: process.env.REACT_APP_FIREBASE_ID
+  storageBucket: "camelot-59ea0.appspot.com",
+  messagingSenderId: "970650568035",
+  appId: "1:970650568035:web:25ea362fdacd882f1a3f56"
+
 };
 
+console.log(process.env.REACT_APP_FIREBASE_PROJECT_ID);
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();

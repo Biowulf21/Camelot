@@ -2,7 +2,7 @@ import {CSVtoJson} from "../csv-to-json-v2";
 
 test("Properly formats CSV to JSON objects.", () => {
     const converter = new CSVtoJson();
-    // data key skips the last array element, as it is the headers of the CSV file
+    // data key skips the last array element, as it is the headers of the CSV file.
     const positiveData = {data: [['email', 'name'],['james@example.com', 'James Jilhaney'],
     ['email', 'name']]};
     const result = converter.CSVtoJSON(positiveData);
@@ -12,6 +12,7 @@ test("Properly formats CSV to JSON objects.", () => {
     emailIndex:0})
 })
 
+// Email index value returns -1 when the CSV file has no email column.
 test("Throws error when no email column is found.", ()=>{
     const converter = new CSVtoJson();
     const negativeData = {data: [['notemail', 'name'],['james@example.com', 'James Jilhaney'], 
