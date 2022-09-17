@@ -1,0 +1,22 @@
+.mailing-container{
+    margin-left:5em;
+}
+
+.main-div{
+    max-width: 90vw;
+    margin-top: 2rem;
+}
+
+.receipient-column, .details-row{
+    width: 50vw
+}
+
+
+.header-column{
+    width:50vw
+}
+
+.receipient-div{
+    max-height: 200px;
+    overflow-y: scroll;
+}

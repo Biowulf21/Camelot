@@ -1,0 +1,48 @@
+.type-markdown{
+    height: 500px;
+}
+
+.markdown-textarea{
+    margin-left: 0px;
+}
+
+.template-div{
+    border-width: 1px;
+    border-style: solid;
+    border: 2px 0px 0px 0px;
+    border-radius: 15px;
+}
+
+.view-template-card{
+    border: solid 1px;
+    border-radius: 5px;
+    overflow-y: auto;
+}
+
+@media only screen and (max-width : 768px) {
+    /* only size 'xs' and below */
+    .view-template-card {
+        overflow-y: auto;
+        height: 165px;
+        margin-bottom: 10px;
+    }
+}
+
+
+.template-titlecard{
+    cursor: pointer;
+}
+
+.template-viewer{
+    border-style: solid;
+    border: 1px;
+}
+
+.edit-div{
+    display: grid;
+    justify-content: end;
+}
+
+.loading-text-div, .spinner-div{
+    display: inline-block;
+}

@@ -1,8 +1,10 @@
 import React from 'react'
-import { Button } from 'react-bootstrap'
+import { Button, Col, Container, Row } from 'react-bootstrap'
 import { getAuth, signOut } from 'firebase/auth'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import SideBar from "../dashboard/sub-components/navbar/index";
+
 
 const Dashboard = () => {
   const navigate = useNavigate()
@@ -14,20 +16,14 @@ const Dashboard = () => {
     }
   }, []);
   
-  const handleSignOut = () =>{
-    const auth = getAuth()
-    signOut(auth)
-    sessionStorage.clear()
-    console.log('Deleted token')
-    console.log('Redirecting to login page')
-    navigate('/')
-  }
-
   return (
-    <div>
-      <h1>DASHBOARD</h1>
-    <Button onClick={handleSignOut}>Logout</Button>
+  <Container>
+    <Col>
+    <div className="card-dash col-md-12 h-100" style={{backgroundColor:"gray"}}>
+
     </div>
+    </Col>
+  </Container>  
   )
 }
 
