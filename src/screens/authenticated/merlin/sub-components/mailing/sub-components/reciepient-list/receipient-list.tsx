@@ -18,7 +18,7 @@ const ReceipientList = (receipientsList:ReceipientListInterface) => {
                       <ListGroupItem key={receipient.EMAIL}>
                         {receipient.NAME !== undefined
                           ? receipient.NAME + " : " + receipient.EMAIL
-                          : receipient.EMAIL}
+                          : "Emails: " + receipient.EMAIL}
                       </ListGroupItem>
                     );
                   }
