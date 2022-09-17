@@ -8,6 +8,8 @@ function MerlinPage() {
   const [ActiveTab, setActiveTab] = useState("Templates");
 
   useEffect(() => {
+    //Will run every time the page loads. This stores the active tab in the session storage bucket 
+    // to make sure that tabs stay the same after the page loads.
     let activeTabKey:string = "";
     const sessionStorageKey:string | null = sessionStorage.getItem("activeTabKey");
 
