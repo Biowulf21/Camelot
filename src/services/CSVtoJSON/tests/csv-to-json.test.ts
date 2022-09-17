@@ -11,8 +11,8 @@ test("Properly formats CSV to JSON objects.", () => {
 
 test("Throws error when no email column is found.", ()=>{
     const converter = new CSVtoJson();
-    const positiveData = {data: [['notemail', 'name'],['james@example.com', 'James Jilhaney'], ['oten1', 'oten1@gmail.com']]};
-    const result = converter.CSVtoJSON(positiveData);
+    const negativeData = {data: [['notemail', 'name'],['james@example.com', 'James Jilhaney'], ['oten1', 'oten1@gmail.com']]};
+    const result = converter.CSVtoJSON(negativeData);
 
     expect(result).toStrictEqual({headers:["NOTEMAIL","NAME"], body:[[{"NOTEMAIL":"james@example.com","NAME":"James Jilhaney"}]],emailIndex:-1})
 })
