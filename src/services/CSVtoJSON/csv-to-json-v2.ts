@@ -1,5 +1,7 @@
+import { log } from "console";
+
 interface CSVFileInterface {
-  data: [] | [][];
+  data: [] | string[][];
 }
 
 interface ParsedCSVFileInterface {
@@ -13,9 +15,9 @@ interface ReceipientObjectInterface {
 }
 
 export class CSVtoJson {
-  CSVBody: [][] = [];
+  CSVBody: string[][] = [];
   CSVEmailColumnIndex: number = 0;
-  recepients: [][] = [];
+  recepients: string[][] = [];
   headers: string[] = [];
   receipientsJSON: {}[] = [];
 
@@ -26,6 +28,7 @@ export class CSVtoJson {
   };
 
   CSVtoJSON = (file: CSVFileInterface) => {
+    // console.log(file.data)
     const { data } = file;
     this.CSVBody = data;
     var CSVColumnCounter = 0;
@@ -49,7 +52,7 @@ export class CSVtoJson {
       });
       this.receipientsJSON.push(this.arrToJSON(this.recepients));
       // this.receipientsJSON.pop()
-      console.log(this.receipientsJSON);
+      // console.log(this.receipientsJSON);
       return this.CSVData;
     } catch (error) {
       if (typeof error === "string") {
@@ -62,7 +65,7 @@ export class CSVtoJson {
     }
   };
 
-  arrToJSON = (receipientsArray: [][]) => {
+  arrToJSON = (receipientsArray: string[][]) => {
     const receipientsJSONArray: {}[] = [];
     const headers = this.headers;
     // removes useless empty row

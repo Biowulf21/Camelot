@@ -21,8 +21,9 @@ const MerlinMailing = () => {
 
   const handleCSV = async () => {
     try {
+      // console.log(csvFile)
       const parsedCSVFile: any = CSVService.CSVtoJSON(csvFile);
-      console.log(parsedCSVFile);
+      // console.log(parsedCSVFile);
       const { headers, body, emailIndex } = parsedCSVFile;
       if (parsedCSVFile instanceof Error) {
         Swal.fire({
