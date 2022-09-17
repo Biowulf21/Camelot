@@ -38,19 +38,19 @@ const SideBar = () => {
             <ProfileCard></ProfileCard>
           </Nav>
           <Nav className="nav-card">
-            <Link to={"/merlin"}>Merlin</Link>
+            <Link onClick={handleClose} to={"/merlin"}>Merlin</Link>
           </Nav>
           <Nav className="nav-card">
-            <Link to={"/"}>Arthur</Link>
+            <Link onClick={handleClose} to={"/"}>Arthur</Link>
           </Nav>
           <Nav className="nav-card">
-            <Link to={"/"}>Excalibur</Link>
+            <Link onClick={handleClose} to={"/"}>Excalibur</Link>
           </Nav>
           <Nav className="nav-card">
-            <Link to={"/"}>Morgana</Link>
+            <Link onClick={handleClose} to={"/"}>Morgana</Link>
           </Nav>
           <Nav className="nav-card">
-            <Link to={"/"}>Settings</Link>
+            <Link onClick={handleClose} to={"/"}>Settings</Link>
           </Nav>
           <Nav className="my-3">
             <Button onClick={handleSignOut}>Logout</Button>

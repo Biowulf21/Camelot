@@ -78,7 +78,7 @@ const NewTemplate = () => {
         <Col className="col-md-6">
           <InputGroup>
             <InputGroup.Text className="col-md-3 col-sm-3 col-xs-auto">
-              Template
+              Subject
             </InputGroup.Text>
             <Form.Control
               onChange={(event) =>
@@ -106,7 +106,7 @@ const NewTemplate = () => {
           <a
             className="cheatsheet-link"
             target={"_blank"}
-            href="https://www.markdownguide.org/cheat-sheet/"
+            href="https://www.markdownguide.org/cheat-sheet/" rel="noreferrer"
           >
             Formatting Cheatsheet
           </a>
