@@ -1,4 +1,3 @@
-import { log } from "console";
 
 interface CSVFileInterface {
   data: [] | string[][];

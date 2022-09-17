@@ -2,7 +2,8 @@ import {CSVtoJson} from "../csv-to-json-v2";
 
 test("Properly formats CSV to JSON objects.", () => {
     const converter = new CSVtoJson();
-    const positiveData = {data: [['email', 'name'],['james@example.com', 'James Jilhaney'], ['oten1', 'oten1@gmail.com']]};
+    // data key skips the last array element, as it is the headers of the CSV file
+    const positiveData = {data: [['email', 'name'],['james@example.com', 'James Jilhaney'], ['email', 'name']]};
     const result = converter.CSVtoJSON(positiveData);
 
     expect(result).toStrictEqual({headers:["EMAIL","NAME"], body:[[{"EMAIL":"james@example.com","NAME":"James Jilhaney"}]],emailIndex:0})
