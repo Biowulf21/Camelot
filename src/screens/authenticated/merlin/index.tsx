@@ -31,7 +31,9 @@ function MerlinPage() {
   
 
   return (
-    <Tabs activeKey={ActiveTab} onSelect={(tab_key) => saveActiveTabKeyToSessionStorage(tab_key != null ? tab_key : defaultActiveTabKey)} id="merlin-tabs" defaultActiveKey={"Templates"} >
+    <Tabs activeKey={ActiveTab} 
+    onSelect={(tab_key) => saveActiveTabKeyToSessionStorage(tab_key != null ? tab_key : defaultActiveTabKey)} 
+    id="merlin-tabs" defaultActiveKey={"Templates"} >
       <Tab eventKey={'Templates'} title={'Templates'}>
           <Template></Template>
       </Tab>
