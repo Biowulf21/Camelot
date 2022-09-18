@@ -9,6 +9,7 @@ import { CSVtoJson } from '../../../services/CSVtoJSON/csv-to-json-v2';
 import Swal from 'sweetalert2';
 import { addDoc, doc, setDoc, collection} from 'firebase/firestore';
 import {db} from "../../../services/firebase-config";
+import LoadingComponent from '../../global-components/loading-component';
 
 interface ParsedCSVFileInterface{
     headers: string[]
@@ -21,6 +22,7 @@ const ArthurPage = () => {
     const [SearchTerm, setSearchTerm] = useState("");
     const [show, setShow] = useState(false);
     const [isUploading, setisUploading] = useState(false);
+    // const [buttonIsDisabled, setbuttonIsDisabled] = useState(false);
     const [subscriberList, setsubscriberList] = useState<[]>([]);
     const [currentUploadingCount, setcurrentUploadingCount] = useState(0);
     const [uploadingMaxCount, setuploadingMaxCount] = useState();
@@ -29,6 +31,9 @@ const ArthurPage = () => {
     const handleShow = () => setShow(true);
 
     const handleParseCSVFile = () =>{
+    // setisUploading(true);
+    // setbuttonIsDisabled(true);
+    // console.log('button is enabled: ' + buttonIsDisabled);
     const CSVParser = new CSVtoJson();
     const parsedUploadData = CSVParser.CSVtoJSON(csvFile);
     const isValidCSV = handleValidatingCSVFile(parsedUploadData);
@@ -44,7 +49,7 @@ const ArthurPage = () => {
         const expectedHeaders = ['LASTNAME', 'FIRSTNAME', 'IDNUMBER', 'EMAIL', 'COURSE', 'COLLEGE'];
 
         const hasAllHeaders = checkIfHeadersMatch(headers, expectedHeaders);
-
+        console.log('Done checking headers.');
         if (hasAllHeaders === false) {
             Swal.fire(
                 'Incomplete Headers',
@@ -58,6 +63,7 @@ const ArthurPage = () => {
     }
 
     const checkIfHeadersMatch  = (target:string[], pattern:string[]) => {
+        console.log('checking if headers match');
         // Check if all the headers of the CSV File are matched against Firebase expected fields for 
         // subscriber data
 
@@ -77,13 +83,19 @@ const ArthurPage = () => {
     }
 
     const handleUploadSubscriberData = (subscriberData:[]) =>{
+        console.log('Starting upload');
         var counter = 1;
-        subscriberData.forEach(async(subData)=>{
-            const docRef = await addDoc(collection(db, "Subscribers"), subData);
+        subscriberData.forEach(async(subData:{LASTNAME:string, FIRSTNAME:string, EMAIL:string,
+            IDNUMBER:string, COURSE:string, COLLEGE:string})=>{
+            console.log("beginning of foreach");
+            const docRef = await setDoc(doc(db, "Subscribers", subData.IDNUMBER), subData);
             console.log('sent ' + counter);
             counter++;
+        setTimeout(()=>{}, 250);
         })
-
+        
+        // setbuttonIsDisabled(false);
+        // console.log('button is enabled: ' + buttonIsDisabled);
     }
 
     useEffect(() => {
@@ -94,7 +106,7 @@ const ArthurPage = () => {
     if(isUploading){
         return(
         <>
-            oten
+            <LoadingComponent></LoadingComponent>
         </>
         
         );
@@ -139,7 +151,7 @@ const ArthurPage = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary">Read Documentation</Button>
-          <Button onClick={handleParseCSVFile} variant="primary">Upload</Button>
+          <Button onClick={handleParseCSVFile} variant="primary">Upload</Button> 
         </Modal.Footer>
       </Modal>
     </Container>
