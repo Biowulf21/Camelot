@@ -50,6 +50,8 @@ const ArthurPage = () => {
                 handleClose();
               })
         }
+
+        handleUploadSubscriberData(headers, body, emailIndex);
     }
 
     const checkIfHeadersMatch  = (target:string[], pattern:string[]) => {
@@ -71,7 +73,7 @@ const ArthurPage = () => {
        return false;
     }
 
-    const handleUploadSubscriberData = () =>{
+    const handleUploadSubscriberData = (headers:string[], body:{}[], emailIndex:number) =>{
 
     }
 
@@ -82,7 +84,7 @@ const ArthurPage = () => {
     
   return (
     <Container>
-        <div className='d-flex justify-content-end'>
+        <div className='d-flex justify-content-end mt-3'>
             <Button onClick={handleShow} variant="success">Upload Data <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon></Button>
         </div>
         <div className="arthur-search-div">
