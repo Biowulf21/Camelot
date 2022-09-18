@@ -41,7 +41,7 @@ const SideBar = () => {
             <Link onClick={handleClose} to={"/merlin"}>Merlin</Link>
           </Nav>
           <Nav className="nav-card">
-            <Link onClick={handleClose} to={"/"}>Arthur</Link>
+            <Link onClick={handleClose} to={"/arthur"}>Arthur</Link>
           </Nav>
           <Nav className="nav-card">
             <Link onClick={handleClose} to={"/"}>Excalibur</Link>

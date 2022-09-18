@@ -17,12 +17,14 @@ import React from "react";
 import MerlinPage from "./screens/authenticated/merlin/index";
 import NewTemplate from "./screens/authenticated/merlin/sub-components/template/sub-components/new-template/index.tsx";
 import MerlinMailing from "./screens/authenticated/merlin/sub-components/mailing/index";
+import ArthurPage from "./screens/authenticated/arthur/index";
 
 function App() {
   return (
     <React.StrictMode>
       <SideBar></SideBar>
       <Routes>
+        {/* MERLIN */}
         <Route path="/" element={<Login></Login>}></Route>
         <Route path="/dashboard" element={<Dashboard></Dashboard>}></Route>
         <Route exact path="/merlin" element={<MerlinPage></MerlinPage>}></Route>
@@ -34,6 +36,8 @@ function App() {
           path="/merlin/mailing"
           element={<MerlinMailing></MerlinMailing>}
         ></Route>
+        {/* Arthur */}
+        <Route path="/arthur" element={<ArthurPage></ArthurPage>}></Route>
         <Route path="*" element={<Error404Page></Error404Page>}></Route>
       </Routes>
     </React.StrictMode>
