@@ -33,10 +33,17 @@ const Login = () => {
         navigate('/dashboard')
         sessionStorage.setItem('Auth_Token', response.user.refreshToken
         )}).catch((error)=>{
-          if (error instanceof Error){
+          if (error.code === 'auth/user-not-found') {
             Swal.fire(
-              'Whoops... Something went wrong.',
-              error.message,
+              'Email not found.',
+              'The email you provided was incorrect. Please contact your Computer Systems Officer to get the corrected credentials.',
+              'error'
+            )
+          }
+          if (error.code === 'auth/wrong-password'){
+            Swal.fire(
+              'Password is incorrect.',
+              'The password you provided was incorrect. Please contact your Computer Systems Officer to get the corrected credentials.',
               'error'
             )
           }
