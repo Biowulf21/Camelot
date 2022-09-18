@@ -7,6 +7,12 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import CSVReader from '../merlin/sub-components/mailing/sub-components/csv-reader';
 import { CSVtoJson } from '../../../services/CSVtoJSON/csv-to-json-v2';
 
+interface ParsedCSVFileInterface{
+    headers: string[]
+    body: {}[]
+    emailIndex: number
+  };
+
 const ArthurPage = () => {
     const [csvFile, setcsvFile] = useState<any>({ data: [] });
     const [SearchTerm, setSearchTerm] = useState("");
@@ -18,10 +24,49 @@ const ArthurPage = () => {
     const handleParseCSVFile = () =>{
     const CSVParser = new CSVtoJson();
     const parsedUploadData = CSVParser.CSVtoJSON(csvFile);
-    console.log(parsedUploadData);
+    const isValidCSV = handleValidatingCSVFile(parsedUploadData);
     }
 
+    const handleValidatingCSVFile = (parsedData: ParsedCSVFileInterface | Error) =>{
+        console.log(parsedData);
 
+        if(parsedData instanceof Error){
+            return Error(parsedData.message);
+        }
+
+        const headers = parsedData['headers'];
+        const body = parsedData['body'];
+        const emailIndex = parsedData['emailIndex'];
+        const expectedHeaders = ['LASTNAME', 'FIRSTNAME', 'IDNUMBER', 'EMAIL', 'COURSE', 'COLLEGE'];
+
+        const hasAllHeaders = checkIfHeadersMatch(headers, expectedHeaders);
+        console.log(hasAllHeaders);
+        
+        
+    }
+
+    const checkIfHeadersMatch  = (target:string[], pattern:string[]) => {
+        // Check if all the headers of the CSV File are matched against Firebase expected fields for 
+        // subscriber data
+
+       let matchCounter = 0; 
+       const expectedHeaderCount = 6;
+       pattern.forEach((header)=>{
+        if (target.includes(header)){
+        matchCounter++;
+        }
+       }) 
+
+       if (matchCounter === expectedHeaderCount){
+        return true;
+       }
+
+       return false;
+    }
+
+    const handleUploadSubscriberData = () =>{
+
+    }
 
     useEffect(() => {
       console.log(SearchTerm);
@@ -74,4 +119,4 @@ const ArthurPage = () => {
   )
 }
 
-export default ArthurPage
+export default ArthurPage;
