@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import CSVReader from '../merlin/sub-components/mailing/sub-components/csv-reader';
 import { CSVtoJson } from '../../../services/CSVtoJSON/csv-to-json-v2';
+import Swal from 'sweetalert2';
 
 interface ParsedCSVFileInterface{
     headers: string[]
@@ -40,9 +41,15 @@ const ArthurPage = () => {
         const expectedHeaders = ['LASTNAME', 'FIRSTNAME', 'IDNUMBER', 'EMAIL', 'COURSE', 'COLLEGE'];
 
         const hasAllHeaders = checkIfHeadersMatch(headers, expectedHeaders);
-        console.log(hasAllHeaders);
-        
-        
+        if (hasAllHeaders === false) {
+            Swal.fire(
+                'Incomplete Headers',
+                'The headers in the file do not match the expected headers. Please follow the instructions',
+                'error'
+              ).then(()=>{
+                handleClose();
+              })
+        }
     }
 
     const checkIfHeadersMatch  = (target:string[], pattern:string[]) => {
@@ -87,7 +94,6 @@ const ArthurPage = () => {
         <Modal
         show={show}
         onHide={handleClose}
-        backdrop="static"
         keyboard={false}
         centered
         size='lg'
@@ -95,16 +101,17 @@ const ArthurPage = () => {
         <Modal.Header closeButton>
             <div>
                 <Modal.Title className="mb-1">
-                    <strong><h2>Upload Subscriber Package Data</h2></strong>
+                    <strong>Upload Subscriber Package Data</strong>
                 </Modal.Title>
-                <p>Arthur only accepts CSV files when upload, please make 
-                sure the file is exported in the proper format.</p>
-                <p>Also, please make sure that the file has the following headers:
-                    <strong><code> LastName, FirstName, IDNumber, Email, Course, College.</code></strong>
-                </p>
+            
             </div>
        </Modal.Header>
         <Modal.Body>
+            <p>Arthur only accepts CSV files when upload, please make 
+            sure the file is exported in the proper format.</p>
+            <p><strong>Note: </strong> Please make sure that the file has the following headers:
+            <strong><code> LastName, FirstName, IDNumber, Email, Course, College.</code></strong>
+            </p><br/>
             <CSVReader
             csvFile={csvFile}
             updateCSVFile={setcsvFile}
