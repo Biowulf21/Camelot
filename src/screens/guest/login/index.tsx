@@ -68,7 +68,7 @@ const Login = () => {
   }
   return (
     <Container >
-      <h1>CAMELOT - CRUSADER YEARBOOK TOOL HUB</h1>
+      <strong><h1>CAMELOT - THE CRUSADER YEARBOOK TOOL HUB</h1></strong>
       <Col>
         <Form>
           <InputGroup>
