@@ -45,7 +45,6 @@ const ArthurPage = () => {
         if(parsedData instanceof Error){
             return Error(parsedData.message);
         }
-        setsubscriberList(body[0]);
         const expectedHeaders = ['LASTNAME', 'FIRSTNAME', 'IDNUMBER', 'EMAIL', 'COURSE', 'COLLEGE'];
 
         const hasAllHeaders = checkIfHeadersMatch(headers, expectedHeaders);
@@ -59,7 +58,8 @@ const ArthurPage = () => {
                 handleClose();
               })
         }
-        handleUploadSubscriberData(subscriberList);
+
+        handleUploadSubscriberData(body[0]);
     }
 
     const checkIfHeadersMatch  = (target:string[], pattern:string[]) => {
