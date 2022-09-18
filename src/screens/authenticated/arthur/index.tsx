@@ -7,6 +7,8 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import CSVReader from '../merlin/sub-components/mailing/sub-components/csv-reader';
 import { CSVtoJson } from '../../../services/CSVtoJSON/csv-to-json-v2';
 import Swal from 'sweetalert2';
+import { addDoc, doc, setDoc, collection} from 'firebase/firestore';
+import {db} from "../../../services/firebase-config";
 
 interface ParsedCSVFileInterface{
     headers: string[]
@@ -18,6 +20,10 @@ const ArthurPage = () => {
     const [csvFile, setcsvFile] = useState<any>({ data: [] });
     const [SearchTerm, setSearchTerm] = useState("");
     const [show, setShow] = useState(false);
+    const [isUploading, setisUploading] = useState(false);
+    const [subscriberList, setsubscriberList] = useState<[]>([]);
+    const [currentUploadingCount, setcurrentUploadingCount] = useState(0);
+    const [uploadingMaxCount, setuploadingMaxCount] = useState();
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -28,19 +34,17 @@ const ArthurPage = () => {
     const isValidCSV = handleValidatingCSVFile(parsedUploadData);
     }
 
-    const handleValidatingCSVFile = (parsedData: ParsedCSVFileInterface | Error) =>{
-        console.log(parsedData);
+    const handleValidatingCSVFile = (parsedData:any) =>{
+        const { headers, body, emailIndex } = parsedData;
 
         if(parsedData instanceof Error){
             return Error(parsedData.message);
         }
-
-        const headers = parsedData['headers'];
-        const body = parsedData['body'];
-        const emailIndex = parsedData['emailIndex'];
+        setsubscriberList(body[0]);
         const expectedHeaders = ['LASTNAME', 'FIRSTNAME', 'IDNUMBER', 'EMAIL', 'COURSE', 'COLLEGE'];
 
         const hasAllHeaders = checkIfHeadersMatch(headers, expectedHeaders);
+
         if (hasAllHeaders === false) {
             Swal.fire(
                 'Incomplete Headers',
@@ -50,8 +54,7 @@ const ArthurPage = () => {
                 handleClose();
               })
         }
-
-        handleUploadSubscriberData(headers, body, emailIndex);
+        handleUploadSubscriberData(subscriberList);
     }
 
     const checkIfHeadersMatch  = (target:string[], pattern:string[]) => {
@@ -73,7 +76,13 @@ const ArthurPage = () => {
        return false;
     }
 
-    const handleUploadSubscriberData = (headers:string[], body:{}[], emailIndex:number) =>{
+    const handleUploadSubscriberData = (subscriberData:[]) =>{
+        var counter = 1;
+        subscriberData.forEach(async(subData)=>{
+            const docRef = await addDoc(collection(db, "Subscribers"), subData);
+            console.log('sent ' + counter);
+            counter++;
+        })
 
     }
 
@@ -81,6 +90,15 @@ const ArthurPage = () => {
       console.log(SearchTerm);
     
     }, [SearchTerm] );
+
+    if(isUploading){
+        return(
+        <>
+            oten
+        </>
+        
+        );
+    }
     
   return (
     <Container>
@@ -109,7 +127,7 @@ const ArthurPage = () => {
             </div>
        </Modal.Header>
         <Modal.Body>
-            <p>Arthur only accepts CSV files when upload, please make 
+            <p>Arthur only accepts CSV files when uploading, please make 
             sure the file is exported in the proper format.</p>
             <p><strong>Note: </strong> Please make sure that the file has the following headers:
             <strong><code> LastName, FirstName, IDNumber, Email, Course, College.</code></strong>

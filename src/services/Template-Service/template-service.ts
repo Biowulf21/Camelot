@@ -1,6 +1,6 @@
 import { doc, setDoc, onSnapshot, query, collection, QueryDocumentSnapshot, DocumentData, addDoc, getDocs, deleteDoc } from "firebase/firestore"; 
 import TEMPLATE_PATH from "../firebase-constants";
-import { db } from "../firebase-config";
+import { db } from "./../firebase-config";
 
 interface SaveProps{
     title:string;
