@@ -22,57 +22,81 @@ const ArthurPage = () => {
     const [csvFile, setcsvFile] = useState<any>({ data: [] });
     const [SearchTerm, setSearchTerm] = useState("");
     const [show, setShow] = useState(false);
-    const [isUploading, setisUploading] = useState(false);
-    // const [buttonIsDisabled, setbuttonIsDisabled] = useState(false);
+    const [isUploading, setisUploading] = useState<boolean>(false);
     const [subscriberList, setsubscriberList] = useState<[]>([]);
     const [currentUploadingCount, setcurrentUploadingCount] = useState(1);
-    const [uploadingMaxCount, setuploadingMaxCount] = useState();
+    const [uploadingMaxCount, setuploadingMaxCount] = useState(1);
 
-    useEffect(() => {
-      console.log(SearchTerm);
-    
-    }, [SearchTerm] );
+    // useEffect(() => {
+    //   console.log('search term is: ' + SearchTerm);
+    //   console.log('current uploading: ' + currentUploadingCount);
+    //   console.log('max upload: ' + uploadingMaxCount);
+    //   console.log('is uploading: ' + isUploading);
+    // }, [SearchTerm, currentUploadingCount, uploadingMaxCount, isUploading] );
 
-    useEffect(() => {
-     console.log(currentUploadingCount); 
-    
-    }, [currentUploadingCount]);
-    
+    useEffect(() =>{
+      console.log(isUploading);
+    }, [isUploading]);
+
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
     const handleParseCSVFile = () =>{
-    setisUploading(true);
     const CSVParser = new CSVtoJson();
-    const parsedUploadData = CSVParser.CSVtoJSON(csvFile);
+    const parsedUploadData:any = CSVParser.CSVtoJSON(csvFile);
+    
+    const {body} = parsedUploadData;
+
     const isValidCSV = handleValidatingCSVFile(parsedUploadData);
+    if (isValidCSV instanceof Error) {
+      Swal.fire(
+        'Whoops... Something went wrong.',
+        'Something went wrong with the uploaded file. Please try again later',
+        'error'
+        );
+      }
+     
+      try{
+        if (isValidCSV instanceof Error) throw isValidCSV;
+        if (isValidCSV === false) throw new Error(`The uploaded file is not a valid CSV file. 
+        Please refer to the documentation and try again.`);
+
+      } catch(error){
+        if (error instanceof Error){
+          Swal.fire(
+            'Oops! Something went wrong.',
+            error.message,
+            'error'
+          )
+        } else {
+          Swal.fire(
+            'Oops! Something went wrong.',
+            'The uploaded file is not a valid CSV file. Please refer to the documentation and try again',
+            'error'
+          )
+        }
+
+        return;
+      }
+
+      setuploadingMaxCount(body[0].length);
+      handleUploadSubscriberData(body[0]);
     }
 
     const handleValidatingCSVFile = (parsedData:any) =>{
-        const { headers, body, emailIndex } = parsedData;
+      const {headers} = parsedData;
 
         if(parsedData instanceof Error){
             return Error(parsedData.message);
         }
-        const expectedHeaders = ['LASTNAME', 'FIRSTNAME', 'IDNUMBER', 'EMAIL', 'COURSE', 'COLLEGE', 'HASCLAIMED', 'CLAIMDATE'];
+        const expectedHeaders = ['LASTNAME', 'FIRSTNAME', 'IDNUMBER', 'EMAIL', 
+        'COURSE', 'COLLEGE', 'HASCLAIMED', 'CLAIMDATE'];
 
         const hasAllHeaders = checkIfHeadersMatch(headers, expectedHeaders);
         console.log('Done checking headers.');
-        if (hasAllHeaders === false) {
-            Swal.fire(
-                'Incomplete Headers',
-                'The headers in the file do not match the expected headers. Please follow the instructions',
-                'error'
-              ).then(()=>{
-                handleClose();
-              })
-              console.log('headers don\'t match');
-              return;
-        } 
-        // console.log('csv length is: ' + body[0].length);
-        setuploadingMaxCount(body[0].length);
-        handleUploadSubscriberData(body[0]);
+        return hasAllHeaders;
+
     }
 
     const checkIfHeadersMatch  = (target:string[], pattern:string[]) => {
@@ -96,19 +120,21 @@ const ArthurPage = () => {
     }
 
     const handleUploadSubscriberData = (subscriberData:[]) =>{
-        setisUploading(true);
         console.log('Starting upload');
         var counter = 1;
+
         subscriberData.forEach(async(subData:{LASTNAME:string, FIRSTNAME:string, EMAIL:string,
             IDNUMBER:string, COURSE:string, COLLEGE:string})=>{
+
               console.log("beginning of foreach");
               const docRef = await setDoc(doc(db, "Subscribers", subData.IDNUMBER), subData);
+
               setcurrentUploadingCount(counter);
               console.log('sent ' + counter);
               counter++;
         setTimeout(()=>{}, 250);
         })
-        setisUploading(false);
+        setisUploading(value => !value);
         
     }
 
@@ -117,8 +143,11 @@ const ArthurPage = () => {
     if(isUploading === true) {
         return(
         <>
+        <Container>
+            <div><h1>Currently Uploading the Subscriber Data</h1></div>
             <LoadingComponent></LoadingComponent>
             <ProgressBar variant="success" animated min={1} max={uploadingMaxCount} now={currentUploadingCount} />
+        </Container>
         </>
         
         );
