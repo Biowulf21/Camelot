@@ -22,7 +22,7 @@ const ArthurPage = () => {
     const [csvFile, setcsvFile] = useState<any>({ data: [] });
     const [SearchTerm, setSearchTerm] = useState("");
     const [show, setShow] = useState(false);
-    const [isUploading, setisUploading] = useState<boolean>(false);
+    const [isUploading, setisUploading] = useState<boolean>(true);
     const [subscriberList, setsubscriberList] = useState<[]>([]);
     const [currentUploadingCount, setcurrentUploadingCount] = useState(1);
     const [uploadingMaxCount, setuploadingMaxCount] = useState(1);
@@ -143,8 +143,8 @@ const ArthurPage = () => {
     if(isUploading === true) {
         return(
         <>
-        <Container>
-            <div><h1>Currently Uploading the Subscriber Data</h1></div>
+        <Container className="upload-loading">
+            <div className='progress-bar-text'><h1><strong>Currently Uploading the Subscriber Data</strong></h1></div>
             <LoadingComponent></LoadingComponent>
             <ProgressBar variant="success" animated min={1} max={uploadingMaxCount} now={currentUploadingCount} />
         </Container>
