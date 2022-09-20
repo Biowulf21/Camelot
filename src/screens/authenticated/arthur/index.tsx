@@ -45,7 +45,7 @@ const ArthurPage = () => {
         if(parsedData instanceof Error){
             return Error(parsedData.message);
         }
-        const expectedHeaders = ['LASTNAME', 'FIRSTNAME', 'IDNUMBER', 'EMAIL', 'COURSE', 'COLLEGE'];
+        const expectedHeaders = ['LASTNAME', 'FIRSTNAME', 'IDNUMBER', 'EMAIL', 'COURSE', 'COLLEGE', 'HASCLAIMED', 'CLAIMDATE'];
 
         const hasAllHeaders = checkIfHeadersMatch(headers, expectedHeaders);
         console.log('Done checking headers.');
@@ -57,6 +57,7 @@ const ArthurPage = () => {
               ).then(()=>{
                 handleClose();
               })
+              return;
         }
 
         handleUploadSubscriberData(body[0]);
@@ -103,7 +104,7 @@ const ArthurPage = () => {
     
     }, [SearchTerm] );
 
-    if(isUploading){
+    if(isUploading === true) {
         return(
         <>
             <LoadingComponent></LoadingComponent>
@@ -142,7 +143,7 @@ const ArthurPage = () => {
             <p>Arthur only accepts CSV files when uploading, please make 
             sure the file is exported in the proper format.</p>
             <p><strong>Note: </strong> Please make sure that the file has the following headers:
-            <strong><code> LastName, FirstName, IDNumber, Email, Course, College.</code></strong>
+            <strong><code> LastName, FirstName, IDNumber, Email, Course, College, HasClaimed, and ClaimDate.</code></strong>
             </p><br/>
             <CSVReader
             csvFile={csvFile}
