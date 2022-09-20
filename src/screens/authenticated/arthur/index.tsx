@@ -1,7 +1,7 @@
 import React from 'react'
 import "./style.css";
 import { useState, useEffect } from 'react'
-import { Button, Container, Modal } from 'react-bootstrap'
+import { Button, Container, Modal, ProgressBar } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import CSVReader from '../merlin/sub-components/mailing/sub-components/csv-reader';
@@ -18,22 +18,32 @@ interface ParsedCSVFileInterface{
   };
 
 const ArthurPage = () => {
+  
     const [csvFile, setcsvFile] = useState<any>({ data: [] });
     const [SearchTerm, setSearchTerm] = useState("");
     const [show, setShow] = useState(false);
     const [isUploading, setisUploading] = useState(false);
     // const [buttonIsDisabled, setbuttonIsDisabled] = useState(false);
     const [subscriberList, setsubscriberList] = useState<[]>([]);
-    const [currentUploadingCount, setcurrentUploadingCount] = useState(0);
+    const [currentUploadingCount, setcurrentUploadingCount] = useState(1);
     const [uploadingMaxCount, setuploadingMaxCount] = useState();
+
+    useEffect(() => {
+      console.log(SearchTerm);
+    
+    }, [SearchTerm] );
+
+    useEffect(() => {
+     console.log(currentUploadingCount); 
+    
+    }, [currentUploadingCount]);
+    
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
     const handleParseCSVFile = () =>{
-    // setisUploading(true);
-    // setbuttonIsDisabled(true);
-    // console.log('button is enabled: ' + buttonIsDisabled);
+    setisUploading(true);
     const CSVParser = new CSVtoJson();
     const parsedUploadData = CSVParser.CSVtoJSON(csvFile);
     const isValidCSV = handleValidatingCSVFile(parsedUploadData);
@@ -59,8 +69,9 @@ const ArthurPage = () => {
               })
               console.log('headers don\'t match');
               return;
-        }
-
+        } 
+        // console.log('csv length is: ' + body[0].length);
+        setuploadingMaxCount(body[0].length);
         handleUploadSubscriberData(body[0]);
     }
 
@@ -85,30 +96,29 @@ const ArthurPage = () => {
     }
 
     const handleUploadSubscriberData = (subscriberData:[]) =>{
+        setisUploading(true);
         console.log('Starting upload');
         var counter = 1;
         subscriberData.forEach(async(subData:{LASTNAME:string, FIRSTNAME:string, EMAIL:string,
             IDNUMBER:string, COURSE:string, COLLEGE:string})=>{
-            console.log("beginning of foreach");
-            const docRef = await setDoc(doc(db, "Subscribers", subData.IDNUMBER), subData);
-            console.log('sent ' + counter);
-            counter++;
+              console.log("beginning of foreach");
+              const docRef = await setDoc(doc(db, "Subscribers", subData.IDNUMBER), subData);
+              setcurrentUploadingCount(counter);
+              console.log('sent ' + counter);
+              counter++;
         setTimeout(()=>{}, 250);
         })
+        setisUploading(false);
         
-        // setbuttonIsDisabled(false);
-        // console.log('button is enabled: ' + buttonIsDisabled);
     }
 
-    useEffect(() => {
-      console.log(SearchTerm);
-    
-    }, [SearchTerm] );
+   
 
     if(isUploading === true) {
         return(
         <>
             <LoadingComponent></LoadingComponent>
+            <ProgressBar variant="success" animated min={1} max={uploadingMaxCount} now={currentUploadingCount} />
         </>
         
         );
