@@ -57,6 +57,7 @@ const ArthurPage = () => {
               ).then(()=>{
                 handleClose();
               })
+              console.log('headers don\'t match');
               return;
         }
 
@@ -69,7 +70,7 @@ const ArthurPage = () => {
         // subscriber data
 
        let matchCounter = 0; 
-       const expectedHeaderCount = 6;
+       const expectedHeaderCount = pattern.length;
        pattern.forEach((header)=>{
         if (target.includes(header)){
         matchCounter++;
