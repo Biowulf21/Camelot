@@ -7,9 +7,10 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import CSVReader from '../merlin/sub-components/mailing/sub-components/csv-reader';
 import { CSVtoJson } from '../../../services/CSVtoJSON/csv-to-json-v2';
 import Swal from 'sweetalert2';
-import { addDoc, doc, setDoc, collection} from 'firebase/firestore';
+import { addDoc, doc, setDoc, getDocs, collection, DocumentData} from 'firebase/firestore';
 import {db} from "../../../services/firebase-config";
 import LoadingComponent from '../../global-components/loading-component';
+import {Subscribers} from "../../../services/Subscriber-Service/subscriber-service";
 
 interface ParsedCSVFileInterface{
     headers: string[]
@@ -24,26 +25,30 @@ LASTNAME:string, FIRSTNAME:string, EMAIL:string,
 
 const ArthurPage = () => {
   
+    var SubsObj = new Subscribers();
     const [csvFile, setcsvFile] = useState<any>({ data: [] });
     const [SearchTerm, setSearchTerm] = useState("");
     const [show, setShow] = useState(false);
     const [isUploading, setisUploading] = useState<boolean>(false);
-    const [subscriberList, setsubscriberList] = useState<[]>([]);
+    const [isLoading, setisLoading] = useState(false);
+    const [subscriberList, setsubscriberList] = useState<DocumentData[]>([]);
     const [currentUploadingCount, setcurrentUploadingCount] = useState(0);
     const [uploadingMaxCount, setuploadingMaxCount] = useState(1);
 
-    // useEffect(() => {
-    //   console.log('search term is: ' + SearchTerm);
-    //   console.log('current uploading: ' + currentUploadingCount);
-    //   console.log('max upload: ' + uploadingMaxCount);
-    //   console.log('is uploading: ' + isUploading);
-    // }, [SearchTerm, currentUploadingCount, uploadingMaxCount, isUploading] );
+    useEffect(() => {
+      fetchSubscribers();
+    }, []);
+    
+     useEffect(() => {
+      console.log(subscriberList);
+    }, [subscriberList]);
 
-    useEffect(() =>{
-      console.log(isUploading);
-      console.log(currentUploadingCount);
-    }, [isUploading, currentUploadingCount]);
-
+    const fetchSubscribers = async () => {
+    setisLoading(true);
+    const subs = await SubsObj.getSubscribers();
+    setsubscriberList(subs);
+    setisLoading(false);
+   }
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
