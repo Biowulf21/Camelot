@@ -76,7 +76,7 @@ const MerlinMailing = () => {
       <Row>
         <Col className="align-items-center">
           <HeadersDetected headers={headers}></HeadersDetected>
-        </Col>       const body = parsedData['body'];
+        </Col>  
         <Col className="align-items-center">
           <h2 style={{ textAlign: "center" }}>Receipients Detected</h2>
           <Row>

@@ -1,4 +1,5 @@
 .subscribers-list-div{height: 100vh;}
 .progress-bar-text{text-align: center;}
 .upload-loading{height: 80vh; display:flex; flex-direction: column; justify-content: center;}
-.progress{padding:20px;}
+.progress-bar{height: 20px;}
+.progress{height: 20px;}

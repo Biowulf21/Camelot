@@ -17,14 +17,19 @@ interface ParsedCSVFileInterface{
     emailIndex: number
   };
 
+interface subscriberDataInterface{
+LASTNAME:string, FIRSTNAME:string, EMAIL:string,
+    IDNUMBER:string, COURSE:string, COLLEGE:string
+}
+
 const ArthurPage = () => {
   
     const [csvFile, setcsvFile] = useState<any>({ data: [] });
     const [SearchTerm, setSearchTerm] = useState("");
     const [show, setShow] = useState(false);
-    const [isUploading, setisUploading] = useState<boolean>(true);
+    const [isUploading, setisUploading] = useState<boolean>(false);
     const [subscriberList, setsubscriberList] = useState<[]>([]);
-    const [currentUploadingCount, setcurrentUploadingCount] = useState(1);
+    const [currentUploadingCount, setcurrentUploadingCount] = useState(0);
     const [uploadingMaxCount, setuploadingMaxCount] = useState(1);
 
     // useEffect(() => {
@@ -36,13 +41,14 @@ const ArthurPage = () => {
 
     useEffect(() =>{
       console.log(isUploading);
-    }, [isUploading]);
+      console.log(currentUploadingCount);
+    }, [isUploading, currentUploadingCount]);
 
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const handleParseCSVFile = () =>{
+    const handleParseCSVFile = async () =>{
     const CSVParser = new CSVtoJson();
     const parsedUploadData:any = CSVParser.CSVtoJSON(csvFile);
     
@@ -81,7 +87,7 @@ const ArthurPage = () => {
       }
 
       setuploadingMaxCount(body[0].length);
-      handleUploadSubscriberData(body[0]);
+      const isDone = handleUploadSubscriberData(body[0]);
     }
 
     const handleValidatingCSVFile = (parsedData:any) =>{
@@ -113,30 +119,42 @@ const ArthurPage = () => {
        }) 
 
        if (matchCounter === expectedHeaderCount){
+       console.log('Done matching');
         return true;
        }
-
+       console.log('Done matching');
        return false;
     }
 
-    const handleUploadSubscriberData = (subscriberData:[]) =>{
+    const handleUploadSubscriberData = async (subscriberData:[]) =>{
         console.log('Starting upload');
-        var counter = 1;
-
-        subscriberData.forEach(async(subData:{LASTNAME:string, FIRSTNAME:string, EMAIL:string,
-            IDNUMBER:string, COURSE:string, COLLEGE:string})=>{
-
-              console.log("beginning of foreach");
-              const docRef = await setDoc(doc(db, "Subscribers", subData.IDNUMBER), subData);
-
-              setcurrentUploadingCount(counter);
-              console.log('sent ' + counter);
-              counter++;
-        setTimeout(()=>{}, 250);
-        })
         setisUploading(value => !value);
+
+        for(var i = 0; i <= subscriberData.length-1; i++){
+          const subData:subscriberDataInterface = subscriberData[i];
+          const docRef = await setDoc(doc(db, "Subscribers", subData.IDNUMBER), subData)
+          .then(() =>{
+              setcurrentUploadingCount(i);
+          }).catch((error) => {
+            console.log(error.message);
+          })
+        }
         
-    }
+        Swal.fire(
+          'Finished uploading',
+          'Subscriber Data has been uploaded successfully.',
+          'success'
+        ).then(()=>{
+          // cleans the state of Arthur
+          setcurrentUploadingCount(0);
+          setuploadingMaxCount(0);
+          setcsvFile({data:[]})
+          setisUploading(value => !value);
+          handleClose();      
+        });
+
+
+        }
 
    
 
@@ -146,7 +164,7 @@ const ArthurPage = () => {
         <Container className="upload-loading">
             <div className='progress-bar-text'><h1><strong>Currently Uploading the Subscriber Data</strong></h1></div>
             <LoadingComponent></LoadingComponent>
-            <ProgressBar variant="success" animated min={1} max={uploadingMaxCount} now={currentUploadingCount} />
+            <ProgressBar variant="success" animated min={1} max={uploadingMaxCount} label={`${currentUploadingCount + "/" + uploadingMaxCount}`} now={currentUploadingCount} />
         </Container>
         </>
         

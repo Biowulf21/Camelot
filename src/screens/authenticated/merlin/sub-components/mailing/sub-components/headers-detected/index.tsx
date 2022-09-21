@@ -8,9 +8,9 @@ interface HeaderListInterface {
 const HeadersDetected = (headersInput: HeaderListInterface) => {
   const { headers } = headersInput;
   return (
-    <div>
+    <div className="headers-detected-div">
       <h1>Headers Detected</h1>
-      <ListGroup horizontal>
+      <ListGroup>
         {headers.length > 0 ? (
           headers.map((header) => {
             return <ListGroupItem>{header}</ListGroupItem>;
