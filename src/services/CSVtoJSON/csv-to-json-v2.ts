@@ -10,7 +10,7 @@ interface ParsedCSVFileInterface {
 }
 
 interface ReceipientObjectInterface {
-  [key: string]: string;
+  [key: string]: string | null;
 }
 
 export class CSVtoJson {
@@ -72,7 +72,7 @@ export class CSVtoJson {
     // get each individual receipient from the receipient list
     for (const receipient in receipientsArray) {
       const currentReceipient = receipientsArray[receipient];
-      var currentHeader = "";
+      var currentHeader: string | null = "";
       var currentHeaderValue: string | null = "";
       var currentObject: ReceipientObjectInterface = {};
       // console.log(currentReceipient)
@@ -83,9 +83,12 @@ export class CSVtoJson {
         // Will set default value to null if empty string
         if (currentHeaderValue === "") {
           currentHeaderValue = null;
-          console.log("current rec: "+ currentHeaderValue);
+          currentObject[currentHeader] = null;
+          console.log("current object "+ currentObject[currentHeader]);
+          console.log("value of current header: "+ currentHeaderValue);
         } else{
           currentObject[currentHeader] = currentHeaderValue;
+          console.log('not null current value of header: ' + currentHeaderValue);
         }
       }
       receipientsJSONArray.push(currentObject);

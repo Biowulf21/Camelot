@@ -23,7 +23,6 @@ const MerlinMailing = () => {
     try {
       // console.log(csvFile)
       const parsedCSVFile: any = CSVService.CSVtoJSON(csvFile);
-      console.log(parsedCSVFile);
       const { headers, body, emailIndex } = parsedCSVFile;
       if (parsedCSVFile instanceof Error) {
         Swal.fire({
@@ -36,7 +35,6 @@ const MerlinMailing = () => {
       updateHeaders(headers);
       updateReceipientList(body[0]);
       // updateEmailIndex(emailIndex);
-      console.log(body)
     } catch (error) {
       if (typeof error === "string") {
         Swal.fire({
