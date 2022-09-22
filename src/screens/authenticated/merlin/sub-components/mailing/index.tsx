@@ -35,6 +35,7 @@ const MerlinMailing = () => {
       updateHeaders(headers);
       updateReceipientList(body[0]);
       updateEmailIndex(emailIndex);
+      console.log(body);
     } catch (error) {
       if (typeof error === "string") {
         Swal.fire({

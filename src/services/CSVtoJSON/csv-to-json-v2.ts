@@ -49,9 +49,9 @@ export class CSVtoJson {
         }
         CSVColumnCounter += 1;
       });
+      
       this.receipientsJSON.push(this.arrToJSON(this.recepients));
-      // this.receipientsJSON.pop()
-      // console.log(this.receipientsJSON);
+
       return this.CSVData;
     } catch (error) {
       if (typeof error === "string") {
@@ -71,26 +71,24 @@ export class CSVtoJson {
     receipientsArray.pop();
     // get each individual receipient from the receipient list
     for (const receipient in receipientsArray) {
+
       const currentReceipient = receipientsArray[receipient];
-      var currentHeader: string | null = "";
-      var currentHeaderValue: string | null = "";
+      var currentObjectKey: string | null = "";
+      var currentObjectValue: string | null = "";
       var currentObject: ReceipientObjectInterface = {};
-      // console.log(currentReceipient)
-      for (const header in headers) {
-        currentHeader = headers[header];
-        console.log('currentHeader: ' + currentHeader);
-        currentHeaderValue = currentReceipient[header];
-        // Will set default value to null if empty string
-        if (currentHeaderValue === "") {
-          currentHeaderValue = null;
-          currentObject[currentHeader] = null;
-          console.log("current object "+ currentObject[currentHeader]);
-          console.log("value of current header: "+ currentHeaderValue);
-        } else{
-          currentObject[currentHeader] = currentHeaderValue;
-          console.log('not null current value of header: ' + currentHeaderValue);
+
+        for (const header in headers) {
+            currentObjectKey = headers[header];
+            console.log('currentObjectKey: ' + currentObjectKey);
+            currentObjectValue = currentReceipient[header];
+          // Will set default value to null if empty string
+          if (currentObjectValue === "") {
+              currentObjectValue = null;
+              currentObject[currentObjectKey] = null;
+          } else{
+              currentObject[currentObjectKey] = currentObjectValue;
+          }
         }
-      }
       receipientsJSONArray.push(currentObject);
     }
 
