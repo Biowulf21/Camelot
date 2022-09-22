@@ -1,4 +1,4 @@
-.subscriber-list-container{border: solid black 1px; height: 80vh; padding: 15px; overflow-y: scroll;}
+.subscriber-list-container{border: solid black 1px; height: 80vh; overflow-y: scroll;}
 .subscriber-list-item-button-div{display: flex; justify-content: end;}
 .sublist-main-div{display: flex; flex-direction: column;}
 .has-claimed-circle{height: 50px; width: 50px; border-radius: 50%; display: inline-block;}

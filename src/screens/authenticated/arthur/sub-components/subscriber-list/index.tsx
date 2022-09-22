@@ -23,12 +23,12 @@ const SubscriberListComponent = () => {
   
   return (
     <>
-      <Container className="subscriber-list-container">
+      <div className="subscriber-list-container">
       <ListGroup>
         {displaySubsList.length > 0 ? (
           displaySubsList.map((subscriber) => {
             return (
-            <ListGroupItem className="subscriber-list-item">
+            <ListGroupItem key={subscriber.IDNUMBER} className="subscriber-list-item">
                 <Row>
                   <Col lg="1">
                     <span style={{backgroundColor: subscriber.HASCLAIMED === "YES" ? "green" : "red"}} 
@@ -40,7 +40,7 @@ const SubscriberListComponent = () => {
                   </Col>
                   <Col>
                   <h6><strong>Email:</strong> {subscriber.EMAIL}</h6>
-                  <h6><strong>Colege:</strong> {subscriber.COLLEGE}</h6>
+                  <h6><strong>College:</strong> {subscriber.COLLEGE}</h6>
                   </Col>
                   <Col>
                   <h6><strong>Claimed Package:</strong> {subscriber.HASCLAIMED == "YES"? 'Yes' : "No"}</h6>
@@ -57,7 +57,7 @@ const SubscriberListComponent = () => {
           <p style={{ textAlign: "center" }}>No subscribers to display</p>
         )}
       </ListGroup>
-      </Container>
+      </div>
     </>
   )
 }
