@@ -7,10 +7,11 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import CSVReader from '../merlin/sub-components/mailing/sub-components/csv-reader';
 import { CSVtoJson } from '../../../services/CSVtoJSON/csv-to-json-v2';
 import Swal from 'sweetalert2';
-import { addDoc, doc, setDoc, getDocs, collection, DocumentData} from 'firebase/firestore';
+import { doc, setDoc, collection, DocumentData} from 'firebase/firestore';
 import {db} from "../../../services/firebase-config";
 import LoadingComponent from '../../global-components/loading-component';
 import {Subscribers} from "../../../services/Subscriber-Service/subscriber-service";
+import SubscriberListComponent from './sub-components/subscriber-list';
 
 interface ParsedCSVFileInterface{
     headers: string[]
@@ -18,14 +19,13 @@ interface ParsedCSVFileInterface{
     emailIndex: number
   };
 
-interface subscriberDataInterface{
+export  interface subscriberDataInterface{
 LASTNAME:string, FIRSTNAME:string, EMAIL:string,
     IDNUMBER:string, COURSE:string, COLLEGE:string
 }
 
 const ArthurPage = () => {
   
-    var SubsObj = new Subscribers();
     const [csvFile, setcsvFile] = useState<any>({ data: [] });
     const [SearchTerm, setSearchTerm] = useState("");
     const [show, setShow] = useState(false);
@@ -35,20 +35,12 @@ const ArthurPage = () => {
     const [currentUploadingCount, setcurrentUploadingCount] = useState(0);
     const [uploadingMaxCount, setuploadingMaxCount] = useState(1);
 
-    useEffect(() => {
-      fetchSubscribers();
-    }, []);
+   
     
      useEffect(() => {
       console.log(subscriberList);
     }, [subscriberList]);
 
-    const fetchSubscribers = async () => {
-    setisLoading(true);
-    const subs = await SubsObj.getSubscribers();
-    setsubscriberList(subs);
-    setisLoading(false);
-   }
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -186,7 +178,9 @@ const ArthurPage = () => {
                 <input onChange={(event)=>setSearchTerm(event.target.value)} type='text' className="search-box m-3 p-3 w-75" placeholder="Search ID or Last name"/>
             </div>
         </div>
-        <div className="subscribers-list-div">test</div>
+        <div >
+          <SubscriberListComponent></SubscriberListComponent>
+        </div>
         <Modal
         show={show}
         onHide={handleClose}
