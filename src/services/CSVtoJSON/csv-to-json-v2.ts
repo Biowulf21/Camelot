@@ -73,13 +73,20 @@ export class CSVtoJson {
     for (const receipient in receipientsArray) {
       const currentReceipient = receipientsArray[receipient];
       var currentHeader = "";
-      var currentHeaderValue = "";
+      var currentHeaderValue: string | null = "";
       var currentObject: ReceipientObjectInterface = {};
       // console.log(currentReceipient)
       for (const header in headers) {
         currentHeader = headers[header];
+        console.log('currentHeader: ' + currentHeader);
         currentHeaderValue = currentReceipient[header];
-        currentObject[currentHeader] = currentHeaderValue;
+        // Will set default value to null if empty string
+        if (currentHeaderValue === "") {
+          currentHeaderValue = null;
+          console.log("current rec: "+ currentHeaderValue);
+        } else{
+          currentObject[currentHeader] = currentHeaderValue;
+        }
       }
       receipientsJSONArray.push(currentObject);
     }

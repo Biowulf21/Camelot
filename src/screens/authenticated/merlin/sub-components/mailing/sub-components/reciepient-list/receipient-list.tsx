@@ -13,7 +13,6 @@ const ReceipientList = (receipientsList:ReceipientListInterface) => {
               {receipientList.length > 0 ? (
                 receipientList.map(
                   (receipient: { NAME: string; EMAIL: string }) => {
-                    console.log(receipient);
                     return (
                       <ListGroupItem id={receipient.EMAIL} key={receipient.EMAIL}>
                         {receipient.NAME !== undefined
