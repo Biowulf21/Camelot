@@ -5,7 +5,12 @@ import { Subscribers } from '../../../../../services/Subscriber-Service/subscrib
 import LoadingComponent from '../../../../global-components/loading-component';
 import './styles.css';
 
-const SubscriberListComponent = () => {
+interface subscriberListInterface{
+  searchQuery: string;
+}
+
+const SubscriberListComponent = (props:subscriberListInterface) => {
+  const { searchQuery } = props;
   const [displaySubsList, setdisplaySubsList] = useState<DocumentData[]>([]);
   const [isLoading, setisLoading] = useState(false);
   var SubsObj = new Subscribers();
@@ -14,6 +19,10 @@ const SubscriberListComponent = () => {
     fetchSubscribers();
   }, []);
 
+
+  useEffect(() => {
+  console.log('rendering child');
+  });
 
  const fetchSubscribers = async () => {
   setisLoading(true);
@@ -37,12 +46,23 @@ const SubscriberListComponent = () => {
       <div className="subscriber-list-container">
       <ListGroup>
         {displaySubsList.length > 0 ? (
-          displaySubsList.map((subscriber) => {
+          displaySubsList.filter((subscriber)=>{
+
+            if (searchQuery === "") {
+              return subscriber;
+            }
+            
+            if ( subscriber.LASTNAME.toLowerCase().includes(searchQuery.toLowerCase())
+            || subscriber.FIRSTNAME.toLowerCase().includes(searchQuery.toLowerCase())
+            || subscriber.IDNUMBER.toLowerCase().includes(searchQuery.toLowerCase())) {
+              return subscriber;
+            }
+          }).map((subscriber) => {
             return (
             <ListGroupItem key={subscriber.IDNUMBER} className="subscriber-list-item">
                 <Row>
                     <Col lg="1">
-                        <span style={{backgroundColor: subscriber.HASCLAIMED === "YES" ? "green" : "red"}} 
+                        <span style={{backgroundColor: subscriber.HASCLAIMED === null ? "red" : "green"}} 
                         className="has-claimed-circle"></span>
                     </Col>
                     <Col>
@@ -51,15 +71,15 @@ const SubscriberListComponent = () => {
                     </Col>
                     <Col>
                       <h6><strong>Email:</strong> {subscriber.EMAIL}</h6>
-                      <h6><strong>College:</strong> {subscriber.COLLEGE}</h6>
+                      <h6><strong>Batch Year:</strong> {subscriber.BATCHYEAR}</h6>
                     </Col>
                     <Col>
-                      <h6><strong>Claimed Package:</strong> {subscriber.HASCLAIMED == "YES"? 'Yes' : "No"}</h6>
-                      <h6><strong>Claim Date:</strong> {subscriber.CLAIMDATE === "" ? "Not Available" : "Yes"}</h6>
+                      <h6><strong>Claimed Package:</strong> {subscriber.HASCLAIMED === null? 'No' : 'Yes'}</h6>
+                      <h6><strong>Claim Date:</strong> {subscriber.CLAIMDATE === null ? "Not Available" : "Yes"}</h6>
                     </Col>
                     <Col className="subscriber-list-item-button-div">
                       <Button className="sublist-btn" variant='success'>Edit</Button>
-                      {subscriber.HASCLAIMED === "" ? 
+                      {subscriber.HASCLAIMED === null ? 
                       <Button className="sublist-btn" variant='danger'>Claim</Button> : null}
                     </Col>
                 </Row>

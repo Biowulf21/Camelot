@@ -7,44 +7,37 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import CSVReader from '../merlin/sub-components/mailing/sub-components/csv-reader';
 import { CSVtoJson } from '../../../services/CSVtoJSON/csv-to-json-v2';
 import Swal from 'sweetalert2';
-import { doc, setDoc, collection, DocumentData} from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 import {db} from "../../../services/firebase-config";
 import LoadingComponent from '../../global-components/loading-component';
-import {Subscribers} from "../../../services/Subscriber-Service/subscriber-service";
 import SubscriberListComponent from './sub-components/subscriber-list';
-
-interface ParsedCSVFileInterface{
-    headers: string[]
-    body: {}[]
-    emailIndex: number
-  };
+import useDebounce from '../../../hooks/useDebounce';
 
 export  interface subscriberDataInterface{
 LASTNAME:string, FIRSTNAME:string, EMAIL:string,
-    IDNUMBER:string, COURSE:string, COLLEGE:string
+IDNUMBER:string, COURSE:string, BATCHYEAR:string
 }
 
 const ArthurPage = () => {
   
     const [csvFile, setcsvFile] = useState<any>({ data: [] });
-    const [SearchTerm, setSearchTerm] = useState("");
+    const [TempSearchTerm, setTempSearchTerm] = useState("");
+    const [searchQuery, setSearchQuery] = useState("");
     const [show, setShow] = useState(false);
     const [isUploading, setisUploading] = useState<boolean>(false);
-    const [isLoading, setisLoading] = useState(false);
-    const [subscriberList, setsubscriberList] = useState<DocumentData[]>([]);
     const [currentUploadingCount, setcurrentUploadingCount] = useState(0);
     const [uploadingMaxCount, setuploadingMaxCount] = useState(1);
 
-   
-    
-     useEffect(() => {
-      console.log(subscriberList);
-    }, [subscriberList]);
+    const debouncedSearch = useDebounce(TempSearchTerm, 500);
 
+    useEffect(() => {
+      console.log(debouncedSearch);
+        setSearchQuery(debouncedSearch);
+    }, [debouncedSearch])
+    
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-
     const handleParseCSVFile = async () =>{
     const CSVParser = new CSVtoJson();
     const parsedUploadData:any = CSVParser.CSVtoJSON(csvFile);
@@ -78,6 +71,7 @@ const ArthurPage = () => {
             'The uploaded file is not a valid CSV file. Please refer to the documentation and try again',
             'error'
           )
+          setcsvFile([])
         }
 
         return;
@@ -94,7 +88,7 @@ const ArthurPage = () => {
             return Error(parsedData.message);
         }
         const expectedHeaders = ['LASTNAME', 'FIRSTNAME', 'IDNUMBER', 'EMAIL', 
-        'COURSE', 'COLLEGE', 'HASCLAIMED', 'CLAIMDATE'];
+        'COURSE', 'BATCHYEAR', 'HASCLAIMED', 'CLAIMDATE'];
 
         const hasAllHeaders = checkIfHeadersMatch(headers, expectedHeaders);
         console.log('Done checking headers.');
@@ -176,11 +170,11 @@ const ArthurPage = () => {
         </div>
         <div className="arthur-search-div">
             <div className='search-bar d-flex w-100 justify-content-center'>
-                <input onChange={(event)=>setSearchTerm(event.target.value)} type='text' className="search-box m-3 p-3 w-75" placeholder="Search ID or Last name"/>
+                <input onChange={(event)=>setTempSearchTerm(event.target.value)} type='text' className="search-box m-3 p-3 w-75" placeholder="Search ID or Last name"/>
             </div>
         </div>
         <div >
-          <SubscriberListComponent></SubscriberListComponent>
+          <SubscriberListComponent searchQuery={searchQuery}></SubscriberListComponent>
         </div>
         <Modal
         show={show}
@@ -201,7 +195,7 @@ const ArthurPage = () => {
             <p>Arthur only accepts CSV files when uploading, please make 
             sure the file is exported in the proper format.</p>
             <p><strong>Note: </strong> Please make sure that the file has the following headers:
-            <strong><code> LastName, FirstName, IDNumber, Email, Course, College, HasClaimed, and ClaimDate.</code></strong>
+            <strong><code> LastName, FirstName, IDNumber, Email, Course, BatchYear, HasClaimed, and ClaimDate.</code></strong>
             </p><br/>
             <CSVReader
             csvFile={csvFile}
