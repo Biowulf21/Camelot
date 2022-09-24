@@ -21,6 +21,7 @@ IDNUMBER:string, COURSE:string, BATCHYEAR:string
 interface ArthurProps{
   children: React.ReactNode;
   updateSearchQuery: Dispatch<SetStateAction<string>>;
+  subscriberCount: number;
 }
 
 const Arthur = (props:ArthurProps) => {
@@ -32,9 +33,13 @@ const Arthur = (props:ArthurProps) => {
     const [currentUploadingCount, setcurrentUploadingCount] = useState(0);
     const [uploadingMaxCount, setuploadingMaxCount] = useState(1);
 
-    const debouncedSearch = useDebounce(TempSearchTerm, 500);
+    // This function allows us to only save the current search strin to state
+    // once the user has finished typing
+    const debouncedSearch = useDebounce(TempSearchTerm, 200);
 
     useEffect(() => {
+      //update the search query from parent state 
+      // by getting the value of debouncedSearch
       props.updateSearchQuery(debouncedSearch);
     },[debouncedSearch])
 
@@ -49,6 +54,7 @@ const Arthur = (props:ArthurProps) => {
 
     const isValidCSV = handleValidatingCSVFile(parsedUploadData);
     if (isValidCSV instanceof Error) {
+      console.log(isValidCSV.message)
       Swal.fire(
         'Whoops... Something went wrong.',
         'Something went wrong with the uploaded file. Please try again later',
@@ -63,15 +69,16 @@ const Arthur = (props:ArthurProps) => {
 
       } catch(error){
         if (error instanceof Error){
+          console.log(error.message)
           Swal.fire(
             'Oops! Something went wrong.',
             error.message,
             'error'
           )
         } else {
+          console.log(error);
           Swal.fire(
             'Oops! Something went wrong.',
-            'The uploaded file is not a valid CSV file. Please refer to the documentation and try again',
             'error'
           )
           setcsvFile([])
@@ -176,6 +183,7 @@ const Arthur = (props:ArthurProps) => {
                 <input onChange={(event)=>setTempSearchTerm(event.target.value)} type='text' className="search-box m-3 p-3 w-75" placeholder="Search ID or Last name"/>
             </div>
             <div>
+              <h5>Subscriber Count: {props.subscriberCount}</h5>
               {props.children}
             </div>
         </div>

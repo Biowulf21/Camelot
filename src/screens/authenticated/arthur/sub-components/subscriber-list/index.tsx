@@ -7,6 +7,7 @@ import './styles.css';
 
 interface subscriberListInterface{
   searchQuery: string;
+  setSubscriberCount: Dispatch<SetStateAction<number>>;
 }
 
 const SubscriberListComponent = (props:subscriberListInterface) => {
@@ -19,14 +20,10 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
     fetchSubscribers();
   }, []);
 
-
-  useEffect(() => {
-  console.log('rendering child');
-  });
-
  const fetchSubscribers = async () => {
   setisLoading(true);
   const subs = await SubsObj.getSubscribers();
+  props.setSubscriberCount(subs.length);
   setdisplaySubsList(subs);
   setisLoading(false);
  }
@@ -47,10 +44,6 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
       <ListGroup>
         {displaySubsList.length > 0 ? (
           displaySubsList.filter((subscriber)=>{
-
-            if (searchQuery === "") {
-              return subscriber;
-            }
             
             if ( subscriber.LASTNAME.toLowerCase().includes(searchQuery.toLowerCase())
             || subscriber.FIRSTNAME.toLowerCase().includes(searchQuery.toLowerCase())

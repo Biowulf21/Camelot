@@ -79,7 +79,6 @@ export class CSVtoJson {
 
         for (const header in headers) {
             currentObjectKey = headers[header];
-            console.log('currentObjectKey: ' + currentObjectKey);
             currentObjectValue = currentReceipient[header];
           // Will set default value to null if empty string
           if (currentObjectValue === "") {
