@@ -1,5 +1,5 @@
 import { DocumentData } from 'firebase/firestore'
-import React, { useEffect, useState } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { Button, Col, Container, ListGroup, ListGroupItem, Row } from 'react-bootstrap';
 import { Subscribers } from '../../../../../services/Subscriber-Service/subscriber-service';
 import LoadingComponent from '../../../../global-components/loading-component';
