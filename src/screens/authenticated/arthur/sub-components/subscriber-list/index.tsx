@@ -20,6 +20,11 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
     fetchSubscribers();
   }, []);
 
+  
+  useEffect(() => {
+    console.log(searchQuery);
+  }, [searchQuery]);
+
  const fetchSubscribers = async () => {
   setisLoading(true);
   const subs = await SubsObj.getSubscribers();
@@ -44,7 +49,9 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
       <ListGroup>
         {displaySubsList.length > 0 ? (
           displaySubsList.filter((subscriber)=>{
-            
+
+            if (searchQuery=="") return subscriber;
+
             if ( subscriber.LASTNAME.toLowerCase().includes(searchQuery.toLowerCase())
             || subscriber.FIRSTNAME.toLowerCase().includes(searchQuery.toLowerCase())
             || subscriber.IDNUMBER.toLowerCase().includes(searchQuery.toLowerCase())) {

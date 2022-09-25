@@ -173,7 +173,7 @@ const Arthur = (props:ArthurProps) => {
     }
     
   return (
-    <Container>
+    <Container className="arthur-container">
         <div className='d-flex justify-content-end mt-3'>
             <Button onClick={handleShow} variant="success">Upload Data <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon></Button>
             <Button onClick={handleShow} style={{marginLeft: "5px"}}>Add Subscriber <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon></Button>
