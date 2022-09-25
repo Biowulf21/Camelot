@@ -35,8 +35,7 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
       if (localSearch != undefined){
         setdisplaySubsList((oldValue) => [...tempSubsList, ...oldValue]);
       } else{
-        setdisplaySubsList((oldValue) => [...tempSubsList]);
-        return;
+        setdisplaySubsList((oldValue) => [...initialSubsList]);
       }
     }
     console.log(searchQuery);
@@ -76,7 +75,7 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
       return;
     } else{
       if (subSearchResults.length === 0 ){
-        setdisplaySubsList([...initialSubsList]);
+        setdisplaySubsList([...initialSubsList ]);
       } else{
         setdisplaySubsList([...subSearchResults]);
       }
