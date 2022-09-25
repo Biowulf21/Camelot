@@ -15,7 +15,8 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
   const [isLoading, setisLoading] = useState(false);
   const [lastDoc, setlastDoc] = useState<DocumentData>();
   const [noMoreSubs, setnoMoreSubs] = useState(false);
-  const [searchResults, setsearchResults] = useState<DocumentData[]>();
+  const [searchResults, setsearchResults] = useState<DocumentData[]>([]);
+  const [tempSubsList, settempSubsList] = useState<DocumentData[]>([]);
 
 
   useEffect(() => {
@@ -23,30 +24,58 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
   }, []);
 
   useEffect(() => {
+    // Searching Logic: Since initial search is  only 100 docs long, if user searches for a user,
+    // firestoreSearch is ran, which will query Firestore for the search term. Once done,
+    // current list of subscribers will be updated to include the document results for the search term.
+    
+    const localSearch = displaySubsList.find(subscriber => subscriber.ID === props.searchQuery);
+    if (searchQuery === ""){
+      if (localSearch != undefined){
+        setdisplaySubsList((oldValue) => [...tempSubsList, ...oldValue]);
+      } else{
+        setdisplaySubsList((oldValue) => [...tempSubsList]);
+        return;
+      }
+    }
     console.log(searchQuery);
     firestoreSearch();
   }, [searchQuery]);
 
   useEffect(() => {
+    console.log('search: ');
     console.log(searchResults);
   }, [searchResults]);
+
+  useEffect(() => {
+    console.log('subsList: ')
+    console.log(displaySubsList);
+  },[displaySubsList])
 
   const firestoreSearch = async () => {
     if (props.searchQuery === "") return;
 
-    const subSearchResults: DocumentData[] = [];
+    const localSearch = displaySubsList.find(subscriber => subscriber.ID === props.searchQuery);
 
-    const searchQuery = query(collection(db, 'Subscribers'), orderBy('FIRSTNAME'),
-    where('FIRSTNAME', '==', props.searchQuery));
+    const subSearchResults: DocumentData[] = [];
+    const searchQueryID = query(collection(db, 'Subscribers'), orderBy('FIRSTNAME'),
+
+    where('IDNUMBER', '==', props.searchQuery));
     
-    // where('FIRSTNAME', '<=', props.searchQuery),
-    // where('LASTNAME', '<=', props.searchQuery), 
-    const results = await getDocs(searchQuery);
-    results.forEach((result) => {
+    const resultsID = await getDocs(searchQueryID)
+
+    resultsID.forEach((result) => {
       subSearchResults.push({...result.data(), key: result.id})
     });
 
+    settempSubsList(displaySubsList);
     setsearchResults(subSearchResults);
+    // If we can find the object inside our local copy of data, then there is no need to add it again
+    // to avoid duplicates.
+    if (localSearch != undefined){
+      return;
+    } else{
+      setdisplaySubsList([...subSearchResults]);
+    }
   }
 
  const fetchSubscribers = async () => {
@@ -116,10 +145,8 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
     <>
       <div className="subscriber-list-container">
       <ListGroup>
-        {displaySubsList.length > 0 && searchQuery !== "" ? (
+        {displaySubsList.length > 0 ? (
           displaySubsList.filter((subscriber)=>{
-
-            if (searchQuery=="") return subscriber;
 
             if ( subscriber.LASTNAME.toLowerCase().includes(searchQuery.toLowerCase())
             || subscriber.FIRSTNAME.toLowerCase().includes(searchQuery.toLowerCase())
@@ -144,7 +171,7 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
                     </Col>
                     <Col>
                       <h6><strong>Claimed Package:</strong> {subscriber.HASCLAIMED === null? 'No' : 'Yes'}</h6>
-                      <h6><strong>Claim Date:</strong> {subscriber.CLAIMDATE === null ? "Not Available" : "Yes"}</h6>
+                      <h6><strong>Claim Date:</strong> {subscriber.CLAIMDATE === null ? "Not Available" : subscriber.CLAIMDATE}</h6>
                     </Col>
                     <Col className="subscriber-list-item-button-div">
                       <Button className="sublist-btn" variant='success'>Edit</Button>
@@ -158,10 +185,10 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
           <p style={{ textAlign: "center" }}>No subscribers to display</p>
         )}
       </ListGroup>
-      {!noMoreSubs ?
+      {!noMoreSubs && displaySubsList.length > 0?
         <div className="load-more-div">
           <Button variant="secondary" onClick={handleLoadMoreSubs}>Load More...</Button>
-        </div> : <h2 className="load-more-text">No More Subscribers to Show</h2>
+        </div> : null 
       }
       </div>
     </>
