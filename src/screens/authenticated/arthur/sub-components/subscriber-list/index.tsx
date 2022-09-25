@@ -17,6 +17,7 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
   const [noMoreSubs, setnoMoreSubs] = useState(false);
   const [searchResults, setsearchResults] = useState<DocumentData[]>([]);
   const [tempSubsList, settempSubsList] = useState<DocumentData[]>([]);
+  const [initialSubsList, setinitialSubsList] = useState<DocumentData[]>([]);
 
 
   useEffect(() => {
@@ -24,9 +25,10 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
   }, []);
 
   useEffect(() => {
-    // Searching Logic: Since initial search is  only 100 docs long, if user searches for a user,
-    // firestoreSearch is ran, which will query Firestore for the search term. Once done,
-    // current list of subscribers will be updated to include the document results for the search term.
+    // Searching Logic: Since initial search is  only 20 docs long, if user searches for a subscriber,
+    // firestoreSearch is ran, which will query Firestore for the search term (ID Number only). 
+    // Once done, current list of subscribers (displaySubsList)
+    // will be updated to include the document results for the search term.
     
     const localSearch = displaySubsList.find(subscriber => subscriber.ID === props.searchQuery);
     if (searchQuery === ""){
@@ -58,7 +60,6 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
 
     const subSearchResults: DocumentData[] = [];
     const searchQueryID = query(collection(db, 'Subscribers'), orderBy('FIRSTNAME'),
-
     where('IDNUMBER', '==', props.searchQuery));
     
     const resultsID = await getDocs(searchQueryID)
@@ -74,7 +75,11 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
     if (localSearch != undefined){
       return;
     } else{
-      setdisplaySubsList([...subSearchResults]);
+      if (subSearchResults.length === 0 ){
+        setdisplaySubsList([...initialSubsList]);
+      } else{
+        setdisplaySubsList([...subSearchResults]);
+      }
     }
   }
 
@@ -82,6 +87,7 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
   setisLoading(true);
   const subs = await getSubscribers();
   setdisplaySubsList(subs);
+  setinitialSubsList(subs);
   setisLoading(false);
  }
 
@@ -99,7 +105,7 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
 
  const getSubscribers = async () =>{
   const subscribers:DocumentData[] = []
-        const q = query(collection(db, 'Subscribers'), orderBy('LASTNAME'), limit(100));
+        const q = query(collection(db, 'Subscribers'), orderBy('LASTNAME'), limit(10));
         const querySnapshot = await getDocs(q);
         const lastSubDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
         setlastDoc(lastSubDoc);
@@ -114,7 +120,7 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
       const moreSubscribers: DocumentData[] = []
             
       const moreSubsQuery = query(collection(db, 'Subscribers'),
-      orderBy('LASTNAME'), startAfter(lastDoc), limit(100));
+      orderBy('LASTNAME'), startAfter(lastDoc), limit(10));
 
       const moreSubsList = await getDocs(moreSubsQuery);
       const lastSubDoc = moreSubsList.docs[moreSubsList.docs.length - 1];
@@ -185,7 +191,7 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
           <p style={{ textAlign: "center" }}>No subscribers to display</p>
         )}
       </ListGroup>
-      {!noMoreSubs && displaySubsList.length > 0?
+      {!noMoreSubs && displaySubsList.length > 1?
         <div className="load-more-div">
           <Button variant="secondary" onClick={handleLoadMoreSubs}>Load More...</Button>
         </div> : null 

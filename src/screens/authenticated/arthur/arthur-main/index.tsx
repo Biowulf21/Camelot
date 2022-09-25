@@ -33,9 +33,9 @@ const Arthur = (props:ArthurProps) => {
     const [currentUploadingCount, setcurrentUploadingCount] = useState(0);
     const [uploadingMaxCount, setuploadingMaxCount] = useState(1);
 
-    // This function allows us to only save the current search strin to state
+    // This function allows us to only save the current search string to state
     // once the user has finished typing
-    const debouncedSearch = useDebounce(TempSearchTerm, 200);
+    const debouncedSearch = useDebounce(TempSearchTerm, 500);
 
     useEffect(() => {
       //update the search query from parent state 
@@ -180,7 +180,7 @@ const Arthur = (props:ArthurProps) => {
         </div>
         <div className="arthur-search-div">
             <div className='search-bar d-flex w-100 justify-content-center'>
-                <input onChange={(event)=>setTempSearchTerm(event.target.value)} type='text' className="search-box m-3 p-3 w-75" placeholder="Search ID or Last name"/>
+                <input onChange={(event)=>setTempSearchTerm(event.target.value)} type='text' className="search-box m-3 p-3 w-75" placeholder="Search Subscriber's ID Number"/>
             </div>
             <div>
               {props.children}
