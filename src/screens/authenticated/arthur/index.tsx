@@ -9,7 +9,7 @@ const ArthurPage = () => {
 
   return (
     <Arthur updateSearchQuery={setSearchQuery} subscriberCount={subscriberCount}>
-          <SubscriberListComponent searchQuery={searchQuery} setSubscriberCount={setSubscriberCount}></SubscriberListComponent>
+          <SubscriberListComponent searchQuery={searchQuery}></SubscriberListComponent>
     </Arthur>
   )
 }

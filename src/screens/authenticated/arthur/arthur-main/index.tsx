@@ -183,7 +183,6 @@ const Arthur = (props:ArthurProps) => {
                 <input onChange={(event)=>setTempSearchTerm(event.target.value)} type='text' className="search-box m-3 p-3 w-75" placeholder="Search ID or Last name"/>
             </div>
             <div>
-              <h5>Subscriber Count: {props.subscriberCount}</h5>
               {props.children}
             </div>
         </div>
