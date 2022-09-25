@@ -1,6 +1,7 @@
-import { collection, DocumentData, getDocs, limit, orderBy, query, startAfter, where } from 'firebase/firestore'
+import { collection, doc, DocumentData, getDocs, limit, orderBy, query, serverTimestamp, setDoc, startAfter, where } from 'firebase/firestore'
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { Button, Col, Container, ListGroup, ListGroupItem, Row } from 'react-bootstrap';
+import Swal from 'sweetalert2';
 import { db } from '../../../../../services/firebase-config';
 import LoadingComponent from '../../../../global-components/loading-component';
 import './styles.css';
@@ -32,7 +33,7 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
     
     const localSearch = displaySubsList.find(subscriber => subscriber.ID === props.searchQuery);
     if (searchQuery === ""){
-      if (localSearch != undefined){
+      if (localSearch !== undefined){
         setdisplaySubsList((oldValue) => [...tempSubsList, ...oldValue]);
       } else{
         setdisplaySubsList((oldValue) => [...initialSubsList]);
@@ -136,6 +137,39 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
       return moreSubscribers;
  }
 
+ const handleClaimPackage = async (id: string, lastName:string, firstName:string) => {
+  Swal.fire({
+   title: 'Mark this package as claimed?',
+   html: '<p>Are you sure you want to mark <strong>' + firstName + ', ' 
+   + lastName + '\'s </strong> package as <strong>claimed?</strong></p>',
+   icon: 'question',
+   showConfirmButton: true,
+   confirmButtonText: 'Yes',
+   showCancelButton: true
+  }).then(async (result)=>{
+    if (result.isConfirmed){
+      const docRef = await setDoc(doc(db, "Subscribers", id), {
+        HASCLAIMED: 'yes',
+        CLAIMDATE: serverTimestamp()
+      }, {merge: true}).then(()=>{
+        Swal.fire(
+          'Success!',
+          'Subscriber info has been successfully updated.',
+          'success'
+        ).then(()=>{
+          fetchSubscribers()
+        });
+      }).catch((error)=>{
+        Swal.fire(
+          'Error!',
+          error.message,
+          'error'
+        )
+      })
+    }
+  })
+ }
+
  if (isLoading === true) {
   return(
     <>
@@ -176,12 +210,14 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
                     </Col>
                     <Col>
                       <h6><strong>Claimed Package:</strong> {subscriber.HASCLAIMED === null? 'No' : 'Yes'}</h6>
-                      <h6><strong>Claim Date:</strong> {subscriber.CLAIMDATE === null ? "Not Available" : subscriber.CLAIMDATE}</h6>
+                      <h6><strong>Claim Date:</strong> {subscriber.CLAIMDATE === null ?
+                       "Not Available" : subscriber.CLAIMDATE.toDate().toLocaleDateString()}</h6>
                     </Col>
                     <Col className="subscriber-list-item-button-div">
                       <Button className="sublist-btn" variant='success'>Edit</Button>
                       {subscriber.HASCLAIMED === null ? 
-                      <Button className="sublist-btn" variant='danger'>Claim</Button> : null}
+                      <Button onClick={()=>handleClaimPackage(subscriber.IDNUMBER, subscriber.LASTNAME, subscriber.FIRSTNAME)} 
+                      className="sublist-btn" variant='danger'>Claim</Button> : null}
                     </Col>
                 </Row>
             </ListGroupItem>);
