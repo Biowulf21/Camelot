@@ -146,7 +146,7 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
           'Subscriber info has been successfully updated.',
           'success'
         ).then(()=>{
-          fetchSubscribers()
+          getSearchedSubscriber();
         });
       }).catch((error)=>{
         Swal.fire(
