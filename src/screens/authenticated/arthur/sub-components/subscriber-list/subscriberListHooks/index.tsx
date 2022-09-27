@@ -30,7 +30,9 @@ const SubscriberListHook = (props: SubscriberListHooksInterface) => {
   useEffect(() => {
     console.log('subsList: ')
     console.log(props.displaySubsList);
-  },[props.displaySubsList]);
+    console.log('initial: ')
+    console.log(initialSubsList)
+  },[props.displaySubsList, initialSubsList]);
 
   useEffect(() => {
     console.log('query is: ' + props.searchQuery);
@@ -82,7 +84,8 @@ const SubscriberListHook = (props: SubscriberListHooksInterface) => {
     return;
   }
   // Adds the array of newly fetched subscribers to the display list of subscribers
-  props.setdisplaySubsList((newSubsList) => [...newSubsList, ...moreSubs]);
+  props.setdisplaySubsList((oldSubsList) => [...oldSubsList, ...moreSubs]);
+  setinitialSubsList((oldSubsList) => [...oldSubsList, ...moreSubs]);
   props.setisLoading(false);
  }
 
