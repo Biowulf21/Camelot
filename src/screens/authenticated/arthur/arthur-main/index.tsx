@@ -5,14 +5,8 @@ import { Button, Container, Modal, ProgressBar } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import CSVReader from '../../merlin/sub-components/mailing/sub-components/csv-reader';
-import { CSVtoJson } from '../../../../services/CSVtoJSON/csv-to-json-v2';
-import Swal from 'sweetalert2';
-import { doc, setDoc } from 'firebase/firestore';
-import {db} from "../../../../services/firebase-config";
 import LoadingComponent from '../../../global-components/loading-component';
-import SubscriberListComponent from '../sub-components/subscriber-list';
 import useDebounce from '../../../../hooks/useDebounce';
-import useSubscriberCountIncrement from '../../../../services/customHooks/useSubscriberCount';
 import ArthurMainHooks from './arthurMainHooks';
 
 export  interface subscriberDataInterface{
@@ -111,6 +105,7 @@ const Arthur = (props:ArthurProps) => {
           <Button onClick={handleParseCSVFile} variant="primary">Upload</Button> 
         </Modal.Footer>
       </Modal>
+      
     </Container>
   )
 }

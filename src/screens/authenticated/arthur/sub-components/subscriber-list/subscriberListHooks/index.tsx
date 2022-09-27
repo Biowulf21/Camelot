@@ -1,4 +1,4 @@
-import { collection, doc, DocumentData, getDocs, limit, orderBy, query, serverTimestamp, setDoc, startAfter, where } from 'firebase/firestore'
+import { collection, doc, DocumentData, getDocs, limit, orderBy, query, serverTimestamp, setDoc, startAfter, Timestamp, where } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import Swal from 'sweetalert2';
 import { db } from '../../../../../../services/firebase-config';
@@ -135,7 +135,7 @@ const SubscriberListHook = (props: SubscriberListHooksInterface) => {
         HASCLAIMED: 'yes',
         CLAIMDATE: serverTimestamp()
       }, {merge: true}).then(()=>{
-        Swal.fire(
+       Swal.fire(
           'Success!',
           'Subscriber info has been successfully updated.',
           'success'
@@ -153,7 +153,40 @@ const SubscriberListHook = (props: SubscriberListHooksInterface) => {
     }
   })
  }
-  return {handleClaimPackage, handleLoadMoreSubs}
+
+ const handleOpenEditModal = ()=>{
+
+    
+    }
+
+ const handleEditSubscriber = (id: string, fname:string, lname:string, hasclaimed:boolean|null,
+     claimdate:Timestamp|null, batchyear:string) => {
+
+        const subscriberRef = doc(db, 'Subscribers', id);
+        setDoc(subscriberRef,{
+             FIRSTNAME: fname,
+             LASTNAME: lname,
+             HASCLAIMED: hasclaimed,
+             CLAIMEDATE: claimdate,
+             BATCHYEAR: batchyear
+            },{ merge: true }).then(() => {
+            Swal.fire(
+                'Subscriber Data Saved!',
+                'The subscriber information has been edited successfully.',
+                'success'
+            )
+            }).catch(() => {
+                Swal.fire(
+                    'Oops! Something went wrong.',
+                    'The subscriber information was not saved successfully. Please try again.',
+                    'error'
+                )
+            });
+            
+
+     }
+
+  return {handleClaimPackage, handleLoadMoreSubs, handleEditSubscriber}
 }
 
 export default SubscriberListHook

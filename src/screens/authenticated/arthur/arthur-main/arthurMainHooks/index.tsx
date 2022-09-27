@@ -57,7 +57,7 @@ const ArthurMainHooks = (props: ArthurMainHooksInterface) => {
       }
 
       props.setuploadingMaxCount(body[0].length);
-      const isDone = handleUploadSubscriberData(body[0]);
+      handleUploadSubscriberData(body[0]);
     }
 
     const handleValidatingCSVFile = (parsedData:any) =>{
@@ -102,7 +102,8 @@ const ArthurMainHooks = (props: ArthurMainHooksInterface) => {
 
         for(var i = 0; i <= subscriberData.length-1; i++){
           const subData:subscriberDataInterface = subscriberData[i];
-          const docRef = await setDoc(doc(db, "Subscribers", subData.IDNUMBER), subData)
+          await setDoc(doc(db, "Subscribers", subData.IDNUMBER), subData)
+          // eslint-disable-next-line no-loop-func
           .then(() =>{
               props.setcurrentUploadingCount(i);
           }).catch((error) => {

@@ -1,6 +1,6 @@
-import { DocumentData } from 'firebase/firestore';
-import React, {  useState } from 'react'
-import { Button, Col, ListGroup, ListGroupItem, Row } from 'react-bootstrap';
+import { DocumentData, Timestamp } from 'firebase/firestore';
+import React, {  useEffect, useState } from 'react'
+import { Button, Col, Form, ListGroup, ListGroupItem, Modal, Row } from 'react-bootstrap';
 import LoadingComponent from '../../../../global-components/loading-component';
 import './styles.css';
 import SubscriberListHook from './subscriberListHooks';
@@ -14,12 +14,47 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
   const [isLoading, setisLoading] = useState(false);
   const [noMoreSubs, setnoMoreSubs] = useState(false);
   const [displaySubsList, setdisplaySubsList] = useState<DocumentData[]>([]);
+  const [show, setShow] = useState(false);
 
+  // Current subscriber that's being edited's information
+  const [currentID, setcurrentID] = useState<string | null>("");
+  const [currentFName, setcurrentFName] = useState<string | null>("");
+  const [currentLName, setcurrentLName] = useState<string | null>("");
+  const [currentBatchYear, setcurrentBatchYear] = useState<string | null>("");
+  const [currentEmail, setcurrentEmail] = useState<string | null>("");
+  const [currentHasClaimedPackage, setcurrentHasClaimedPackage] = useState<boolean | null>();
+  const [currentClaimDate, setcurrentClaimDate] = useState<Timestamp | null>();
+  const [currentCourse, setcurrentCourse] = useState<string | null>("");
 
-  const {handleClaimPackage, handleLoadMoreSubs } = SubscriberListHook({searchQuery, setisLoading, displaySubsList, 
+   // New subscriber data
+   const [newID, setNewID] = useState<string | null>("");
+   const [newFName, setNewFName] = useState<string | null>("");
+   const [newLName, setNewLName] = useState<string | null>("");
+   const [newBatchYear, setNewBatchYear] = useState<string | null>("");
+   const [newEmail, setNewEmail] = useState<string | null>("");
+   const [newHasClaimedPackage, setNewHasClaimedPackage] = useState<boolean | null>();
+   const [newClaimDate, setNewClaimDate] = useState<Timestamp | null>();
+   const [newCourse, setNewCourse] = useState<string | null>("");
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const handlePassDataToEditModal = (id:string|null, fName:string|null, lName:string|null, email:string|null, 
+    course:string|null, batchyear:string|null, hasClaimed:boolean|null, currentClaimDate:Timestamp | null) => {
+    setcurrentFName(fName);
+    setcurrentLName(lName);
+    setcurrentEmail(email);
+    setcurrentCourse(course);
+    setcurrentBatchYear(batchyear);
+    setcurrentHasClaimedPackage(hasClaimed);
+    setcurrentClaimDate(currentClaimDate);
+    handleShow();
+  }
+  const {handleClaimPackage, handleLoadMoreSubs, handleEditSubscriber } = 
+  SubscriberListHook({searchQuery, setisLoading, displaySubsList, 
     setdisplaySubsList, setnoMoreSubs});
 
-  
+
 
  if (isLoading === true) {
   return(
@@ -30,10 +65,81 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
     </>
   );
  }
+
   
   return (
     <>
       <div className="subscriber-list-container">
+      <Modal
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+      show={show}
+      onShow={handleShow}
+      onHide={handleClose}
+    >
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">
+          <strong>Editing Subscriber</strong>
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form>
+          <Form.Group>
+            <Row>
+              <Col>
+                <Form.Label><strong>Last Name</strong></Form.Label>
+                <Form.Control defaultValue={currentLName != null ? currentLName : "Not available"} type='text'
+                onChange={(event)=> setNewLName(event.target.value)} 
+                placeholder="Doe"></Form.Control>
+              </Col>
+              <Col>
+                <Form.Label><strong>First Name</strong></Form.Label>
+                <Form.Control defaultValue={currentFName != null ? currentFName : "Not available"} type='text'
+                onChange={(event)=> setNewFName(event.target.value)} 
+                placeholder="John"></Form.Control>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Label><strong>Email</strong></Form.Label>
+                <Form.Control defaultValue={currentEmail != null ? currentEmail : "Not available"} type='email'
+                onChange={(event)=> setNewEmail(event.target.value)} 
+                placeholder="johndoe@example.com"></Form.Control>
+              </Col>
+              <Col>
+                <Form.Label><strong>Batch Year</strong></Form.Label>
+                <Form.Control defaultValue={currentBatchYear != null ? parseInt(currentBatchYear) : 2021} type='number' min={1948} max={2099}
+                onChange={(event)=> setNewBatchYear(event.target.value.toString())} 
+                placeholder="ex. 2020"></Form.Control>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Label><strong>Claim Date</strong></Form.Label>
+                <Form.Control disabled={currentHasClaimedPackage == null ? true : false} 
+                defaultValue={currentClaimDate?.toDate().toISOString().substring(0, 10)} type='date' 
+               placeholder="Input claim date"></Form.Control>
+              </Col>
+              <Col>
+                <Form.Label><strong>Has Claimed?</strong></Form.Label>
+                <Form.Select aria-label='has-claimed-select'>
+                    {currentHasClaimedPackage == null? 
+                     <option value="false">No</option> :
+                    <option value="true">Yes</option> 
+                                    }
+                  {currentHasClaimedPackage == null ? <option value="true">Yes</option> : <option value="false">No</option> }
+                </Form.Select>
+              </Col>
+            </Row>
+          </Form.Group>
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="success" >Save</Button>
+        <Button variant="secondary" onClick={handleClose}>Close</Button>
+      </Modal.Footer>
+    </Modal>
       <ListGroup>
         {displaySubsList.length > 0 ? (
           displaySubsList.filter((subscriber)=>{
@@ -65,7 +171,10 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
                        "Not Available" : subscriber.CLAIMDATE.toDate().toLocaleDateString()}</h6>
                     </Col>
                     <Col className="subscriber-list-item-button-div">
-                      <Button className="sublist-btn" variant='success'>Edit</Button>
+                      <Button onClick={() => handlePassDataToEditModal(
+                        subscriber.IDNUMBER, subscriber.FIRSTNAME, subscriber.LASTNAME, subscriber.EMAIL,
+                        subscriber.COURSE, subscriber.BATCHYEAR, subscriber.HASCLAIMED, subscriber.CLAIMDATE
+                      )} className="sublist-btn" variant='success'>Edit</Button>
                       {subscriber.HASCLAIMED === null ? 
                       <Button onClick={()=>handleClaimPackage(subscriber.IDNUMBER, subscriber.LASTNAME, subscriber.FIRSTNAME)} 
                       className="sublist-btn" variant='danger'>Claim</Button> : null}
