@@ -16,7 +16,7 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
   const [isLoading, setisLoading] = useState(false);
   const [lastDoc, setlastDoc] = useState<DocumentData>();
   const [noMoreSubs, setnoMoreSubs] = useState(false);
-  const [searchResults, setsearchResults] = useState<DocumentData[]>([]);
+  const [searchResultsList, setsearchResultsList] = useState<DocumentData[]>([]);
   const [tempSubsList, settempSubsList] = useState<DocumentData[]>([]);
   const [initialSubsList, setinitialSubsList] = useState<DocumentData[]>([]);
 
@@ -26,61 +26,49 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
   }, []);
 
   useEffect(() => {
-    // Searching Logic: Since initial search is  only 20 docs long, if user searches for a subscriber,
-    // firestoreSearch is ran, which will query Firestore for the search term (ID Number only). 
-    // Once done, current list of subscribers (displaySubsList)
-    // will be updated to include the document results for the search term.
-    
-    const localSearch = displaySubsList.find(subscriber => subscriber.ID === props.searchQuery);
-    if (searchQuery === ""){
-      if (localSearch !== undefined){
-        setdisplaySubsList((oldValue) => [...tempSubsList, ...oldValue]);
-      } else{
-        setdisplaySubsList((oldValue) => [...initialSubsList]);
-      }
-    }
-    console.log(searchQuery);
-    firestoreSearch();
-  }, [searchQuery]);
-
-  useEffect(() => {
     console.log('search: ');
-    console.log(searchResults);
-  }, [searchResults]);
+    console.log(searchResultsList);
+    setdisplaySubsList(searchResultsList);
+  }, [searchResultsList]);
 
   useEffect(() => {
     console.log('subsList: ')
     console.log(displaySubsList);
-  },[displaySubsList])
+    console.log('temp list: ')
+    console.log(tempSubsList);
+  },[displaySubsList, tempSubsList]);
 
-  const firestoreSearch = async () => {
-    if (props.searchQuery === "") return;
+  useEffect(() => {
+    console.log('query is: ' + searchQuery);
 
-    const localSearch = displaySubsList.find(subscriber => subscriber.ID === props.searchQuery);
+    if (searchQuery === ""){
+      setdisplaySubsList(initialSubsList);
+      console.log('reverted to original list')
+      return;
+    }
 
-    const subSearchResults: DocumentData[] = [];
+    setisLoading(true);
+    getSearchedSubscriber();
+    setisLoading(false);
+
+  }, [searchQuery]);
+
+  
+
+  const getSearchedSubscriber = async () => {
+    const searchResults : DocumentData[] = [];
+
+
     const searchQueryID = query(collection(db, 'Subscribers'), orderBy('FIRSTNAME'),
     where('IDNUMBER', '==', props.searchQuery));
-    
     const resultsID = await getDocs(searchQueryID)
 
     resultsID.forEach((result) => {
-      subSearchResults.push({...result.data(), key: result.id})
+      searchResults.push({...result.data(), key: result.id})
     });
 
-    settempSubsList(displaySubsList);
-    setsearchResults(subSearchResults);
-    // If we can find the object inside our local copy of data, then there is no need to add it again
-    // to avoid duplicates.
-    if (localSearch != undefined){
-      return;
-    } else{
-      if (subSearchResults.length === 0 ){
-        setdisplaySubsList([...initialSubsList ]);
-      } else{
-        setdisplaySubsList([...subSearchResults]);
-      }
-    }
+    setsearchResultsList([...searchResults]);
+    // Sets the display list to be only the subscriber that was searched
   }
 
  const fetchSubscribers = async () => {
@@ -99,6 +87,7 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
     setisLoading(false);
     return;
   }
+  // Adds the array of newly fetched subscribers to the display list of subscribers
   setdisplaySubsList((newSubsList) => [...newSubsList, ...moreSubs]);
   setisLoading(false);
  }
