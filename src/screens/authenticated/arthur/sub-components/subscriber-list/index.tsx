@@ -1,6 +1,6 @@
 import { DocumentData, Timestamp } from 'firebase/firestore';
 import React, {  useEffect, useState } from 'react'
-import { Button, Col, Form, ListGroup, ListGroupItem, Modal, Row } from 'react-bootstrap';
+import { Button, Col, Form, FormGroup, ListGroup, ListGroupItem, Modal, Row } from 'react-bootstrap';
 import LoadingComponent from '../../../../global-components/loading-component';
 import './styles.css';
 import SubscriberListHook from './subscriberListHooks';
@@ -17,24 +17,24 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
   const [show, setShow] = useState(false);
 
   // Current subscriber that's being edited's information
-  const [currentID, setcurrentID] = useState<string | null>("");
-  const [currentFName, setcurrentFName] = useState<string | null>("");
-  const [currentLName, setcurrentLName] = useState<string | null>("");
-  const [currentBatchYear, setcurrentBatchYear] = useState<string | null>("");
+  const [currentID, setcurrentID] = useState<string | null>();
+  const [currentFName, setcurrentFName] = useState<string | null>();
+  const [currentLName, setcurrentLName] = useState<string | null>();
+  const [currentBatchYear, setcurrentBatchYear] = useState<string | null>();
   const [currentEmail, setcurrentEmail] = useState<string | null>("");
   const [currentHasClaimedPackage, setcurrentHasClaimedPackage] = useState<boolean | null>();
   const [currentClaimDate, setcurrentClaimDate] = useState<Timestamp | null>();
-  const [currentCourse, setcurrentCourse] = useState<string | null>("");
+  const [currentCourse, setcurrentCourse] = useState<string | null>();
 
    // New subscriber data
-   const [newID, setNewID] = useState<string | null>("");
-   const [newFName, setNewFName] = useState<string | null>("");
-   const [newLName, setNewLName] = useState<string | null>("");
-   const [newBatchYear, setNewBatchYear] = useState<string | null>("");
-   const [newEmail, setNewEmail] = useState<string | null>("");
+   const [newID, setNewID] = useState<string | null>();
+   const [newFName, setNewFName] = useState<string | null>();
+   const [newLName, setNewLName] = useState<string | null>();
+   const [newBatchYear, setNewBatchYear] = useState<string | null>();
+   const [newEmail, setNewEmail] = useState<string | null>();
    const [newHasClaimedPackage, setNewHasClaimedPackage] = useState<boolean | null>();
    const [newClaimDate, setNewClaimDate] = useState<Timestamp | null>();
-   const [newCourse, setNewCourse] = useState<string | null>("");
+   const [newCourse, setNewCourse] = useState<string | null>();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -50,6 +50,14 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
     setcurrentClaimDate(currentClaimDate);
     handleShow();
   }
+
+  useEffect(() => {
+    console.log(newClaimDate?.toDate())
+    console.log(currentHasClaimedPackage)
+  
+  }, [newClaimDate, currentHasClaimedPackage])
+  
+
   const {handleClaimPackage, handleLoadMoreSubs, handleEditSubscriber } = 
   SubscriberListHook({searchQuery, setisLoading, displaySubsList, 
     setdisplaySubsList, setnoMoreSubs});
@@ -117,20 +125,24 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
             <Row>
               <Col>
                 <Form.Label><strong>Claim Date</strong></Form.Label>
-                <Form.Control disabled={currentHasClaimedPackage == null ? true : false} 
-                defaultValue={currentClaimDate?.toDate().toISOString().substring(0, 10)} type='date' 
+                <Form.Control disabled={currentHasClaimedPackage == null ? false : true} 
+                defaultValue={currentClaimDate?.toDate().toISOString().substring(0, 10)} type='date'
+                onChange={(event)=>setNewClaimDate(Timestamp.fromDate(new Date(event.target.value)))} 
                placeholder="Input claim date"></Form.Control>
               </Col>
               <Col>
                 <Form.Label><strong>Has Claimed?</strong></Form.Label>
-                <Form.Select aria-label='has-claimed-select'>
-                    {currentHasClaimedPackage == null? 
-                     <option value="false">No</option> :
-                    <option value="true">Yes</option> 
-                                    }
-                  {currentHasClaimedPackage == null ? <option value="true">Yes</option> : <option value="false">No</option> }
+                <Form.Select aria-label='has-claimed-select'  
+                onChange={(event)=>setcurrentHasClaimedPackage(event.target.value === "true"? true: null)}>
+                <option value="false">Yes</option> 
+                <option value="true">No</option>
                 </Form.Select>
               </Col>
+            </Row>
+            <Row style={{paddingLeft: "10px", paddingRight: "10px"}}>
+              <Form.Label><strong>Course</strong></Form.Label>
+              <Form.Control  defaultValue={currentCourse != null ? currentCourse : 
+                "Not available"} type='text'></Form.Control>
             </Row>
           </Form.Group>
         </Form>
