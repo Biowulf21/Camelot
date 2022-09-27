@@ -30,7 +30,6 @@ const SubscriberListHook = (props: SubscriberListHooksInterface) => {
   useEffect(() => {
     console.log('subsList: ')
     console.log(props.displaySubsList);
-    console.log('temp list: ')
   },[props.displaySubsList]);
 
   useEffect(() => {
@@ -141,6 +140,7 @@ const SubscriberListHook = (props: SubscriberListHooksInterface) => {
           'Subscriber info has been successfully updated.',
           'success'
         ).then(()=>{
+            if (props.searchQuery === "") {fetchSubscribers(); return;}
           getSearchedSubscriber();
         });
       }).catch((error)=>{

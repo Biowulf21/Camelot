@@ -1,8 +1,6 @@
 import { DocumentData } from 'firebase/firestore';
-import React, {  useEffect, useState } from 'react'
+import React, {  useState } from 'react'
 import { Button, Col, ListGroup, ListGroupItem, Row } from 'react-bootstrap';
-import Swal from 'sweetalert2';
-import { db } from '../../../../../services/firebase-config';
 import LoadingComponent from '../../../../global-components/loading-component';
 import './styles.css';
 import SubscriberListHook from './subscriberListHooks';
