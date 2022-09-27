@@ -12,6 +12,8 @@ import {db} from "../../../../services/firebase-config";
 import LoadingComponent from '../../../global-components/loading-component';
 import SubscriberListComponent from '../sub-components/subscriber-list';
 import useDebounce from '../../../../hooks/useDebounce';
+import useSubscriberCountIncrement from '../../../../services/customHooks/useSubscriberCount';
+import ArthurMainHooks from './arthurMainHooks';
 
 export  interface subscriberDataInterface{
 LASTNAME:string, FIRSTNAME:string, EMAIL:string,
@@ -33,6 +35,7 @@ const Arthur = (props:ArthurProps) => {
     const [currentUploadingCount, setcurrentUploadingCount] = useState(0);
     const [uploadingMaxCount, setuploadingMaxCount] = useState(1);
 
+
     // This function allows us to only save the current search string to state
     // once the user has finished typing
     const debouncedSearch = useDebounce(TempSearchTerm, 500);
@@ -45,120 +48,10 @@ const Arthur = (props:ArthurProps) => {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    const handleParseCSVFile = async () =>{
 
-    const CSVParser = new CSVtoJson();
-    const parsedUploadData:any = CSVParser.CSVtoJSON(csvFile);
+    const {handleParseCSVFile} = ArthurMainHooks({csvFile, setcsvFile, setuploadingMaxCount, 
+      setcurrentUploadingCount, setisUploading, handleClose});
     
-    const {body} = parsedUploadData;
-
-    const isValidCSV = handleValidatingCSVFile(parsedUploadData);
-    if (isValidCSV instanceof Error) {
-      console.log(isValidCSV.message)
-      Swal.fire(
-        'Whoops... Something went wrong.',
-        'Something went wrong with the uploaded file. Please try again later',
-        'error'
-        );
-      }
-     
-      try{
-        if (isValidCSV instanceof Error) throw isValidCSV;
-        if (isValidCSV === false) throw new Error(`The uploaded file is not a valid CSV file. 
-        Please refer to the documentation and try again.`);
-
-      } catch(error){
-        if (error instanceof Error){
-          console.log(error.message)
-          Swal.fire(
-            'Oops! Something went wrong.',
-            error.message,
-            'error'
-          )
-        } else {
-          console.log(error);
-          Swal.fire(
-            'Oops! Something went wrong.',
-            'error'
-          )
-          setcsvFile([])
-        }
-
-        return;
-      }
-
-      setuploadingMaxCount(body[0].length);
-      const isDone = handleUploadSubscriberData(body[0]);
-    }
-
-    const handleValidatingCSVFile = (parsedData:any) =>{
-      const {headers} = parsedData;
-
-        if(parsedData instanceof Error){
-            return Error(parsedData.message);
-        }
-        const expectedHeaders = ['LASTNAME', 'FIRSTNAME', 'IDNUMBER', 'EMAIL', 
-        'COURSE', 'BATCHYEAR', 'HASCLAIMED', 'CLAIMDATE'];
-
-        const hasAllHeaders = checkIfHeadersMatch(headers, expectedHeaders);
-        console.log('Done checking headers.');
-        return hasAllHeaders;
-
-    }
-
-    const checkIfHeadersMatch  = (target:string[], pattern:string[]) => {
-        console.log('checking if headers match');
-        // Check if all the headers of the CSV File are matched against Firebase expected fields for 
-        // subscriber data
-
-       let matchCounter = 0; 
-       const expectedHeaderCount = pattern.length;
-       pattern.forEach((header)=>{
-        if (target.includes(header)){
-        matchCounter++;
-        }
-       }) 
-
-       if (matchCounter === expectedHeaderCount){
-       console.log('Done matching');
-        return true;
-       }
-       console.log('Done matching');
-       return false;
-    }
-
-    const handleUploadSubscriberData = async (subscriberData:[]) =>{
-        console.log('Starting upload');
-        setisUploading(value => !value);
-
-        for(var i = 0; i <= subscriberData.length-1; i++){
-          const subData:subscriberDataInterface = subscriberData[i];
-          const docRef = await setDoc(doc(db, "Subscribers", subData.IDNUMBER), subData)
-          .then(() =>{
-              setcurrentUploadingCount(i);
-          }).catch((error) => {
-            console.log(error.message);
-          })
-        }
-        
-        Swal.fire(
-          'Finished uploading',
-          'Subscriber Data has been uploaded successfully.',
-          'success'
-        ).then(()=>{
-          // cleans the state of Arthur
-          setcurrentUploadingCount(0);
-          setuploadingMaxCount(0);
-          setcsvFile({data:[]})
-          setisUploading(value => !value);
-          handleClose();      
-        });
-
-
-        }
-
-   
-
     if(isUploading === true) {
         return(
         <>
