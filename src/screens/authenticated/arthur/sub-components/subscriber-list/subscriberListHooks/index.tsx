@@ -25,6 +25,19 @@ interface SubscriberListHooksInterface {
   setnoMoreSubs: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+interface editSubscriberInterface {
+  IDNUMBER: string;
+  FIRSTNAME: string;
+  LASTNAME: string;
+  EMAIL: string;
+  COURSE: string;
+  BATCHYEAR: string;
+  HASCLAIMED_PP: boolean | null;
+  PP_CLAIM_DATE: Timestamp | null;
+  HASCLAIMED_YB: boolean | null;
+  YB_CLAIM_DATE: Timestamp | null;
+}
+
 const SubscriberListHook = (props: SubscriberListHooksInterface) => {
   const [lastDoc, setlastDoc] = useState<DocumentData>();
   const [searchResultsList, setsearchResultsList] = useState<DocumentData[]>(
@@ -274,26 +287,9 @@ const SubscriberListHook = (props: SubscriberListHooksInterface) => {
       });
   };
 
-  const handleEditSubscriber = (
-    id: string,
-    fname: string,
-    lname: string,
-    hasclaimed: boolean | null,
-    claimdate: Timestamp | null,
-    batchyear: string
-  ) => {
-    const subscriberRef = doc(db, "Subscribers", id);
-    setDoc(
-      subscriberRef,
-      {
-        FIRSTNAME: fname,
-        LASTNAME: lname,
-        HASCLAIMED: hasclaimed,
-        CLAIMEDATE: claimdate,
-        BATCHYEAR: batchyear,
-      },
-      { merge: true }
-    )
+  const handleEditSubscriber = (editSubsProps: editSubscriberInterface) => {
+    const subscriberRef = doc(db, "Subscribers", editSubsProps.IDNUMBER);
+    setDoc(subscriberRef, editSubsProps, { merge: true })
       .then(() => {
         Swal.fire(
           "Subscriber Data Saved!",
