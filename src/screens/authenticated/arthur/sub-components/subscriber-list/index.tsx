@@ -45,7 +45,7 @@ const SubscriberListComponent = (props: subscriberListInterface) => {
   const handleShow = () => setShow(true);
 
   const {
-    handleClaimPackage,
+    handleClaimPhotoPackage,
     handleLoadMoreSubs,
     handleEditSubscriber,
     handleDeleteSubscriber,
@@ -102,7 +102,9 @@ const SubscriberListComponent = (props: subscriberListInterface) => {
                           className="package-type-display"
                           style={{
                             backgroundColor:
-                              subscriber.HASCLAIMED === null ? "red" : "green",
+                              subscriber.HASCLAIMED_PP === null
+                                ? "red"
+                                : "green",
                           }}
                         >
                           <h2>
@@ -159,20 +161,26 @@ const SubscriberListComponent = (props: subscriberListInterface) => {
                         >
                           Edit
                         </Button>
-                        {subscriber.HASCLAIMED_YB === null ? (
+                        {subscriber.HASCLAIMED_PP === null ? (
                           <Button
                             onClick={() =>
-                              handleClaimPackage(
+                              handleClaimPhotoPackage(
                                 subscriber.IDNUMBER,
                                 subscriber.LASTNAME,
-                                subscriber.FIRSTNAME
+                                subscriber.FIRSTNAME,
+                                subscriber.PACKAGE_TYPE
                               )
                             }
                             className="sublist-btn"
                             variant="danger"
                           >
-                            Claim
+                            Claim PP
                           </Button>
+                        ) : null}
+
+                        {subscriber.PACKAGE_TYPE === "A" &&
+                        subscriber.HASCLAIMED_YB === null ? (
+                          <Button className="sublist-btn">Claim YB</Button>
                         ) : null}
                       </Col>
                     </Row>

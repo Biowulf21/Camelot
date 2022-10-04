@@ -144,51 +144,59 @@ const SubscriberListHook = (props: SubscriberListHooksInterface) => {
     return moreSubscribers;
   };
 
-  const handleClaimPackage = async (
+  const handleClaimPhotoPackage = async (
     id: string,
     lastName: string,
-    firstName: string
+    firstName: string,
+    type: string
   ) => {
-    Swal.fire({
-      title: "Mark this package as claimed?",
-      html:
-        "<p>Are you sure you want to mark <strong>" +
-        firstName +
-        ", " +
-        lastName +
-        "'s </strong> package as <strong>claimed?</strong></p>",
-      icon: "question",
-      showConfirmButton: true,
-      confirmButtonText: "Yes",
-      showCancelButton: true,
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const docRef = await setDoc(
-          doc(db, "Subscribers", id),
-          {
-            HASCLAIMED: "yes",
-            CLAIMDATE: serverTimestamp(),
-          },
-          { merge: true }
-        )
-          .then(() => {
-            Swal.fire(
-              "Success!",
-              "Subscriber info has been successfully updated.",
-              "success"
-            ).then(() => {
-              if (props.searchQuery === "") {
-                fetchSubscribers();
-                return;
-              }
-              getSearchedSubscriber();
+    const packageType = type.toUpperCase();
+
+    if (packageType === "B") {
+      Swal.fire({
+        title: "Mark this package as claimed?",
+        html:
+          "<p>Are you sure you want to mark <strong>" +
+          firstName +
+          ", " +
+          lastName +
+          "'s </strong> package as <strong>claimed?</strong></p>",
+        icon: "question",
+        showConfirmButton: true,
+        confirmButtonText: "Yes",
+        showCancelButton: true,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const docRef = await setDoc(
+            doc(db, "Subscribers", id),
+            {
+              HASCLAIMED_PP: "yes",
+              PP_CLAIM_DATE: serverTimestamp(),
+            },
+            { merge: true }
+          )
+            .then(() => {
+              Swal.fire(
+                "Success!",
+                "Subscriber info has been successfully updated.",
+                "success"
+              ).then(() => {
+                if (props.searchQuery === "") {
+                  fetchSubscribers();
+                  return;
+                }
+                getSearchedSubscriber();
+              });
+            })
+            .catch((error) => {
+              Swal.fire("Error!", error.message, "error");
             });
-          })
-          .catch((error) => {
-            Swal.fire("Error!", error.message, "error");
-          });
-      }
-    });
+        }
+      });
+    }
+
+    if (packageType === "A") {
+    }
   };
 
   const handleOpenEditModal = () => {};
@@ -279,7 +287,7 @@ const SubscriberListHook = (props: SubscriberListHooksInterface) => {
   };
 
   return {
-    handleClaimPackage,
+    handleClaimPhotoPackage,
     handleLoadMoreSubs,
     handleEditSubscriber,
     handleDeleteSubscriber,
