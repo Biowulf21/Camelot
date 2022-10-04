@@ -1,9 +1,5 @@
 import React, { useState } from "react";
-import {
-  Button,
-  Col,
-  Container, Row
-} from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { CSVtoJson } from "../../../../../services/CSVtoJSON/csv-to-json-v2";
 import "./styles.css";
@@ -21,7 +17,6 @@ const MerlinMailing = () => {
 
   const handleCSV = async () => {
     try {
-      // console.log(csvFile)
       const parsedCSVFile: any = CSVService.CSVtoJSON(csvFile);
       const { headers, body, emailIndex } = parsedCSVFile;
       if (parsedCSVFile instanceof Error) {
@@ -35,7 +30,6 @@ const MerlinMailing = () => {
       updateHeaders(headers);
       updateReceipientList(body[0]);
       updateEmailIndex(emailIndex);
-      console.log(body);
     } catch (error) {
       if (typeof error === "string") {
         Swal.fire({
@@ -75,7 +69,7 @@ const MerlinMailing = () => {
       <Row>
         <Col className="align-items-center">
           <HeadersDetected headers={headers}></HeadersDetected>
-        </Col>  
+        </Col>
         <Col className="align-items-center">
           <h2 style={{ textAlign: "center" }}>Receipients Detected</h2>
           <Row>
@@ -87,7 +81,7 @@ const MerlinMailing = () => {
             </Col>
           </Row>
           <div className="receipient-div">
-              <ReceipientList receipientList={receipientList}></ReceipientList> 
+            <ReceipientList receipientList={receipientList}></ReceipientList>
           </div>
         </Col>
       </Row>

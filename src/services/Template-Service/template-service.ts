@@ -42,7 +42,6 @@ export class Template {
        } 
     
        async deleteTemplate (id:string):Promise<void>{
-         console.log('deleteing template with id ' + id)
         const deleteRef = await deleteDoc(doc(db, 'Templates', id))
        }
 }

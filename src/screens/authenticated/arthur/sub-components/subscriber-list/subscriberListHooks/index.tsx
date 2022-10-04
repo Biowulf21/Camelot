@@ -37,24 +37,12 @@ const SubscriberListHook = (props: SubscriberListHooksInterface) => {
   }, []);
 
   useEffect(() => {
-    console.log("search: ");
-    console.log(searchResultsList);
     props.setdisplaySubsList(searchResultsList);
   }, [searchResultsList]);
 
   useEffect(() => {
-    console.log("subsList: ");
-    console.log(props.displaySubsList);
-    console.log("initial: ");
-    console.log(initialSubsList);
-  }, [props.displaySubsList, initialSubsList]);
-
-  useEffect(() => {
-    console.log("query is: " + props.searchQuery);
-
     if (props.searchQuery === "") {
       props.setdisplaySubsList(initialSubsList);
-      console.log("reverted to original list");
       return;
     }
 
@@ -90,7 +78,6 @@ const SubscriberListHook = (props: SubscriberListHooksInterface) => {
   };
 
   const handleLoadMoreSubs = async () => {
-    console.log("Displaying more subscribers");
     props.setisLoading(true);
     const moreSubs = await getMoreSubscribers();
     if (moreSubs === undefined) {
@@ -134,7 +121,6 @@ const SubscriberListHook = (props: SubscriberListHooksInterface) => {
     setlastDoc(lastSubDoc);
     if (moreSubsList.size === 0) {
       props.setnoMoreSubs(true);
-      console.log("No more documents to fetch.");
       return;
     }
     moreSubsList.forEach((doc) => {
@@ -260,7 +246,6 @@ const SubscriberListHook = (props: SubscriberListHooksInterface) => {
     })
       .then(async (result) => {
         if (result.isConfirmed) {
-          console.log("deleting subscriber wit ID: " + id);
           await deleteDoc(doc(db, "Subscribers", id))
             .then(() => {
               Swal.fire(

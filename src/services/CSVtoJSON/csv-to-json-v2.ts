@@ -27,7 +27,6 @@ export class CSVtoJson {
   };
 
   CSVtoJSON = (file: CSVFileInterface) => {
-    // console.log(file.data)
     const { data } = file;
     this.CSVBody = data;
     var CSVColumnCounter = 0;
@@ -95,10 +94,8 @@ export class CSVtoJson {
   };
 
   ParseCSVHeaders = () => {
-    console.log("Parsing CSV Headers");
   };
 
   FindEmailColumn = () => {
-    console.log("Finding EMAIL column");
   };
 }

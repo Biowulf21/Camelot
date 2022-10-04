@@ -23,7 +23,6 @@ const ArthurMainHooks = (props: ArthurMainHooksInterface) => {
 
     const isValidCSV = handleValidatingCSVFile(parsedUploadData);
     if (isValidCSV instanceof Error) {
-      console.log(isValidCSV.message);
       Swal.fire(
         "Whoops... Something went wrong.",
         "Something went wrong with the uploaded file. Please try again later",
@@ -38,10 +37,8 @@ const ArthurMainHooks = (props: ArthurMainHooksInterface) => {
         Please refer to the documentation and try again.`);
     } catch (error) {
       if (error instanceof Error) {
-        console.log(error.message);
         Swal.fire("Oops! Something went wrong.", error.message, "error");
       } else {
-        console.log(error);
         Swal.fire("Oops! Something went wrong.", "error");
         props.setcsvFile([]);
       }
@@ -74,12 +71,10 @@ const ArthurMainHooks = (props: ArthurMainHooksInterface) => {
     ];
 
     const hasAllHeaders = checkIfHeadersMatch(headers, expectedHeaders);
-    console.log("Done checking headers.");
     return hasAllHeaders;
   };
 
   const checkIfHeadersMatch = (target: string[], pattern: string[]) => {
-    console.log("checking if headers match");
     // Check if all the headers of the CSV File are matched against Firebase expected fields for
     // subscriber data
 
@@ -92,15 +87,12 @@ const ArthurMainHooks = (props: ArthurMainHooksInterface) => {
     });
 
     if (matchCounter === expectedHeaderCount) {
-      console.log("Done matching");
       return true;
     }
-    console.log("Done matching");
     return false;
   };
 
   const handleUploadSubscriberData = async (subscriberData: []) => {
-    console.log("Starting upload");
     props.setisUploading((value) => !value);
 
     for (var i = 0; i <= subscriberData.length - 1; i++) {
