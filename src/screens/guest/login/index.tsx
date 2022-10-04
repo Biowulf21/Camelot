@@ -1,93 +1,106 @@
-import React from 'react'
-import { Col, Container, Form, FormLabel, Row } from 'react-bootstrap'
-import Button from 'react-bootstrap/Button';
-import "./styles.css"
-import { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faEye, faEyeSlash} from "@fortawesome/free-regular-svg-icons";
-import { InputGroup } from 'react-bootstrap';
-import { FormControl } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import auth from '../../../services/firebase-config'
-import Swal from 'sweetalert2';
+import React from "react";
+import { Col, Container, Form, FormLabel, Row } from "react-bootstrap";
+import Button from "react-bootstrap/Button";
+import "./styles.css";
+import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
+import { InputGroup } from "react-bootstrap";
+import { FormControl } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import auth from "../../../services/firebase-config";
+import Swal from "sweetalert2";
 
 const Login = () => {
-  const [passIsVisible, setPassVisibility ] = useState(false);
+  const [passIsVisible, setPassVisibility] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-
-  const passwordChanged = (newPass: React.SetStateAction<string>) =>{
+  const passwordChanged = (newPass: React.SetStateAction<string>) => {
     setPassword(newPass);
-  }
+  };
 
   const logIn = () => {
-    try{
-      if (email === "" || password === ""){
-        throw new Error('One or more fields empty. Please fill in all fields.')
+    try {
+      if (email === "" || password === "") {
+        throw new Error("One or more fields empty. Please fill in all fields.");
       }
-      const authentication = getAuth()
-      signInWithEmailAndPassword(auth, email, password).then((response)=>{
-        navigate('/dashboard')
-        sessionStorage.setItem('Auth_Token', response.user.refreshToken
-        )}).catch((error)=>{
-          if (error instanceof Error){
-            Swal.fire(
-              'Whoops... Something went wrong.',
-              error.message,
-              'error'
-            )
-          }
+      const authentication = getAuth();
+      signInWithEmailAndPassword(auth, email, password)
+        .then((response) => {
+          navigate("/dashboard");
+          sessionStorage.setItem("Auth_Token", response.user.refreshToken);
         })
-      } catch(e){
-        if (e instanceof Error){
-          Swal.fire(
-            'Whoops... Something went wrong.',
-            e.message,
-            'error'
-          )
-        }
+        .catch((error) => {
+          if (error instanceof Error) {
+            Swal.fire(
+              "Whoops... Something went wrong.",
+              error.message,
+              "error"
+            );
+          }
+        });
+    } catch (e) {
+      if (e instanceof Error) {
+        Swal.fire("Whoops... Something went wrong.", e.message, "error");
       }
-  }
+    }
+  };
 
   const emailChanged = (newemail: React.SetStateAction<string>) => {
     setEmail(newemail);
-  }
+  };
 
-  const toggleVisibility = () =>{
+  const toggleVisibility = () => {
     setPassVisibility(!passIsVisible);
-  }
+  };
   return (
-    <Container >
+    <Container>
       <h1>CAMELOT - CRUSADER YEARBOOK TOOL HUB</h1>
       <Col>
         <Form>
           <InputGroup>
-            <Form.Control onChange={(event)=>emailChanged(event.target.value)} type='email' placeholder='Enter your email' style={{marginBottom: "10px"}}></Form.Control>
+            <Form.Control
+              onChange={(event) => emailChanged(event.target.value)}
+              type="email"
+              placeholder="Enter your email"
+              style={{ marginBottom: "10px" }}
+            ></Form.Control>
           </InputGroup>
 
           <InputGroup className="mb-2">
-              <Form.Control
-              onChange={(event)=> passwordChanged(event.target.value)}
-              type={passIsVisible? "text" : "password"}
-                placeholder="Password"
-                aria-label="Password"
-                aria-describedby="basic-addon2"
-              />
-              <Button onClick={toggleVisibility} variant="outline-primary" id="button-addon2"><FontAwesomeIcon icon={passIsVisible ? faEye : faEyeSlash}></FontAwesomeIcon></Button>
+            <Form.Control
+              onChange={(event) => passwordChanged(event.target.value)}
+              type={passIsVisible ? "text" : "password"}
+              placeholder="Password"
+              aria-label="Password"
+              aria-describedby="basic-addon2"
+            />
+            <Button
+              onClick={toggleVisibility}
+              variant="outline-primary"
+              id="button-addon2"
+            >
+              <FontAwesomeIcon
+                icon={passIsVisible ? faEye : faEyeSlash}
+              ></FontAwesomeIcon>
+            </Button>
           </InputGroup>
           <Col>
-          <a className='mb-2' href="https://gmail.com/">Forgot Password</a>
+            <a className="mb-2" href="https://gmail.com/">
+              Forgot Password
+            </a>
           </Col>
-          <Button variant="primary" className="btn-primary" onClick={logIn}>Login</Button>
-          <Col>
-          </Col>
+          <Button variant="primary" className="btn-primary" onClick={logIn}>
+            Login
+          </Button>
+          <Col></Col>
         </Form>
       </Col>
     </Container>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

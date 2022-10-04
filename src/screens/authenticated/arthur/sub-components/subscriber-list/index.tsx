@@ -13,6 +13,7 @@ import {
 import Swal from "sweetalert2";
 import LoadingComponent from "../../../../global-components/loading-component";
 import "./styles.css";
+import EditModal from "./sub-components/edit-modal";
 import SubscriberListHook from "./subscriberListHooks";
 
 interface subscriberListInterface {
@@ -40,26 +41,8 @@ const SubscriberListComponent = (props: subscriberListInterface) => {
   const [displaySubsList, setdisplaySubsList] = useState<DocumentData[]>([]);
   const [show, setShow] = useState(false);
 
-  // Current subscriber that's being edited's information
-  const [currentID, setcurrentID] = useState<string | null>();
-  const [currentFName, setcurrentFName] = useState<string | null>();
-  const [currentLName, setcurrentLName] = useState<string | null>();
-  const [currentBatchYear, setcurrentBatchYear] = useState<string | null>();
-  const [currentEmail, setcurrentEmail] = useState<string | null>("");
-  const [currentHasClaimedPackage, setcurrentHasClaimedPackage] = useState<
-    boolean | null
-  >();
-  const [currentClaimDate, setcurrentClaimDate] = useState<Timestamp | null>();
-  const [currentCourse, setcurrentCourse] = useState<string | null>();
-
-  const [currentSubscriber, setcurrentSubscriber] = useState({});
-
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
-  useEffect(() => {
-    console.log("has Claimed: " + currentHasClaimedPackage);
-  }, [currentHasClaimedPackage]);
 
   const {
     handleClaimPackage,
@@ -90,169 +73,16 @@ const SubscriberListComponent = (props: subscriberListInterface) => {
   return (
     <>
       <div className="subscriber-list-container">
-        <Modal
-          size="lg"
-          aria-labelledby="contained-modal-title-vcenter"
-          centered
+        <EditModal
           show={show}
-          onShow={handleShow}
-          onHide={handleClose}
-        >
-          <Modal.Header closeButton>
-            <Modal.Title id="contained-modal-title-vcenter">
-              <strong>Editing Subscriber</strong>
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form>
-              <Form.Group>
-                <Row>
-                  <Col>
-                    <Form.Label>
-                      <strong>Last Name</strong>
-                    </Form.Label>
-                    <Form.Control
-                      defaultValue={
-                        currentLName != null ? currentLName : "Not available"
-                      }
-                      type="text"
-                      placeholder="Doe"
-                    ></Form.Control>
-                  </Col>
-                  <Col>
-                    <Form.Label>
-                      <strong>First Name</strong>
-                    </Form.Label>
-                    <Form.Control
-                      defaultValue={
-                        currentFName != null ? currentFName : "Not available"
-                      }
-                      type="text"
-                      placeholder="John"
-                    ></Form.Control>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <Form.Label>
-                      <strong>Email</strong>
-                    </Form.Label>
-                    <Form.Control
-                      defaultValue={
-                        currentEmail != null ? currentEmail : "Not available"
-                      }
-                      type="email"
-                      placeholder="johndoe@example.com"
-                    ></Form.Control>
-                  </Col>
-                  <Col>
-                    <Form.Label>
-                      <strong>Batch Year</strong>
-                    </Form.Label>
-                    <Form.Control
-                      defaultValue={
-                        currentBatchYear != null
-                          ? parseInt(currentBatchYear)
-                          : 2021
-                      }
-                      type="number"
-                      min={1948}
-                      max={2099}
-                      placeholder="ex. 2020"
-                    ></Form.Control>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <Form.Label>
-                      <strong>Claim Date</strong>
-                    </Form.Label>
-                    <Form.Control
-                      disabled={currentHasClaimedPackage == null ? true : false}
-                      defaultValue={
-                        currentClaimDate
-                          ?.toDate()
-                          .toISOString()
-                          .substring(0, 10) != null
-                          ? currentClaimDate
-                              .toDate()
-                              .toISOString()
-                              .substring(0, 10)
-                          : "Not Available"
-                      }
-                      type={
-                        currentHasClaimedPackage == null &&
-                        currentClaimDate == null
-                          ? "text"
-                          : "date"
-                      }
-                    ></Form.Control>
-                  </Col>
-                  <Col>
-                    <Form.Label>
-                      <strong>Has Claimed?</strong>
-                    </Form.Label>
-                    <Form.Select
-                      aria-label="has-claimed-select"
-                      onChange={(event) =>
-                        setcurrentHasClaimedPackage(
-                          event.target.value === "true" ? true : null
-                        )
-                      }
-                    >
-                      <option disabled>
-                        {currentHasClaimedPackage ? "Yes" : "No"}
-                      </option>
-                      <option value="false">No</option>
-                      <option value="true">Yes</option>
-                    </Form.Select>
-                  </Col>
-                </Row>
-                <Row style={{ paddingLeft: "10px", paddingRight: "10px" }}>
-                  <Form.Label>
-                    <strong>Course</strong>
-                  </Form.Label>
-                  <Form.Control
-                    defaultValue={
-                      currentCourse != null ? currentCourse : "Not available"
-                    }
-                    type="text"
-                  ></Form.Control>
-                </Row>
-              </Form.Group>
-            </Form>
-          </Modal.Body>
-          <Modal.Footer>
-            <Col>
-              <Button
-                onClick={async () => {
-                  handleDeleteSubscriber(currentID).finally(() => {
-                    handleClose();
-                  });
-                }}
-                variant="danger"
-              >
-                Delete
-              </Button>
-            </Col>
-            <Col className="d-flex justify-content-end">
-              <Button className="ms-1 ps-4 pe-4" variant="success">
-                Save
-              </Button>
-            </Col>
-          </Modal.Footer>
-        </Modal>
+          handleClose={handleClose}
+          handleShow={handleShow}
+        />
         <ListGroup>
           {displaySubsList.length > 0 ? (
             displaySubsList
               .filter((subscriber) => {
                 if (
-                  subscriber.LASTNAME.toLowerCase().includes(
-                    searchQuery.toLowerCase()
-                  ) ||
-                  subscriber.FIRSTNAME.toLowerCase().includes(
-                    searchQuery.toLowerCase()
-                  ) ||
                   subscriber.IDNUMBER.toLowerCase().includes(
                     searchQuery.toLowerCase()
                   )
