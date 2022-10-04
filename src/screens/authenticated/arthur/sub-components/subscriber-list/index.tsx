@@ -152,7 +152,11 @@ const SubscriberListComponent = (props: subscriberListInterface) => {
                         </h6>
                       </Col>
                       <Col className="subscriber-list-item-button-div">
-                        <Button className="sublist-btn" variant="success">
+                        <Button
+                          disabled
+                          className="sublist-btn"
+                          variant="success"
+                        >
                           Edit
                         </Button>
                         {subscriber.HASCLAIMED_YB === null ? (
