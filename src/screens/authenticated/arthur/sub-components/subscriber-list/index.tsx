@@ -103,8 +103,29 @@ const SubscriberListComponent = (props: subscriberListInterface) => {
                           className="package-type-display"
                           style={{
                             backgroundColor:
+                              // package type is B and has not claimed photo package
+                              subscriber.PACKAGE_TYPE === "B" &&
                               subscriber.HASCLAIMED_PP === null
                                 ? "red"
+                                : // package type B and has claimed photo package
+                                subscriber.PACKAGE_TYPE === "B" &&
+                                  subscriber.HASCLAIMED_PP !== null
+                                ? "green"
+                                : // package type A and has claimed yb and photo package
+                                subscriber.PACKAGE_TYPE === "A" &&
+                                  subscriber.HASCLAIMED_PP !== null &&
+                                  subscriber.HASCLAIMED_YB !== null
+                                ? "green"
+                                : // package type A and has claimed yb but not photo package
+                                subscriber.PACKAGE_TYPE === "A" &&
+                                  subscriber.HASCLAIMED_PP === null &&
+                                  subscriber.HASCLAIMED_YB !== null
+                                ? "yellow"
+                                : // package type A and has claimed photo package but not yb
+                                subscriber.PACKAGE_TYPE === "A" &&
+                                  subscriber.HASCLAIMED_PP !== null &&
+                                  subscriber.HASCLAIMED_YB === null
+                                ? "yellow"
                                 : "green",
                           }}
                         >
