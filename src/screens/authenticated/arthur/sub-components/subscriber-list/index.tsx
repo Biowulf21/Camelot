@@ -45,6 +45,7 @@ const SubscriberListComponent = (props: subscriberListInterface) => {
   const handleShow = () => setShow(true);
 
   const {
+    handleClaimYearbook,
     handleClaimPhotoPackage,
     handleLoadMoreSubs,
     handleEditSubscriber,
@@ -167,8 +168,7 @@ const SubscriberListComponent = (props: subscriberListInterface) => {
                               handleClaimPhotoPackage(
                                 subscriber.IDNUMBER,
                                 subscriber.LASTNAME,
-                                subscriber.FIRSTNAME,
-                                subscriber.PACKAGE_TYPE
+                                subscriber.FIRSTNAME
                               )
                             }
                             className="sublist-btn"
@@ -180,7 +180,19 @@ const SubscriberListComponent = (props: subscriberListInterface) => {
 
                         {subscriber.PACKAGE_TYPE === "A" &&
                         subscriber.HASCLAIMED_YB === null ? (
-                          <Button className="sublist-btn">Claim YB</Button>
+                          <Button
+                            onClick={() =>
+                              handleClaimYearbook(
+                                subscriber.IDNUMBER,
+                                subscriber.LASTNAME,
+                                subscriber.FIRSTNAME
+                              )
+                            }
+                            variant="warning"
+                            className="sublist-btn"
+                          >
+                            Claim YB
+                          </Button>
                         ) : null}
                       </Col>
                     </Row>

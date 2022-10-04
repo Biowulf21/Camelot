@@ -144,59 +144,98 @@ const SubscriberListHook = (props: SubscriberListHooksInterface) => {
     return moreSubscribers;
   };
 
+  const handleClaimYearbook = async (
+    id: string,
+    lastName: string,
+    firstName: string
+  ) => {
+    Swal.fire({
+      title: "Mark this yearbook as claimed?",
+      html:
+        "<p>Are you sure you want to mark <strong>" +
+        firstName +
+        ", " +
+        lastName +
+        "'s </strong> yearbook as <strong>claimed?</strong></p>",
+      icon: "question",
+      showConfirmButton: true,
+      confirmButtonText: "Yes",
+      showCancelButton: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const docRef = await setDoc(
+          doc(db, "Subscribers", id),
+          {
+            HASCLAIMED_YB: "yes",
+            YB_CLAIM_DATE: serverTimestamp(),
+          },
+          { merge: true }
+        )
+          .then(() => {
+            Swal.fire(
+              "Success!",
+              "Subscriber info has been successfully updated.",
+              "success"
+            ).then(() => {
+              if (props.searchQuery === "") {
+                fetchSubscribers();
+                return;
+              }
+              getSearchedSubscriber();
+            });
+          })
+          .catch((error) => {
+            Swal.fire("Error!", error.message, "error");
+          });
+      }
+    });
+  };
+
   const handleClaimPhotoPackage = async (
     id: string,
     lastName: string,
-    firstName: string,
-    type: string
+    firstName: string
   ) => {
-    const packageType = type.toUpperCase();
-
-    if (packageType === "B") {
-      Swal.fire({
-        title: "Mark this package as claimed?",
-        html:
-          "<p>Are you sure you want to mark <strong>" +
-          firstName +
-          ", " +
-          lastName +
-          "'s </strong> package as <strong>claimed?</strong></p>",
-        icon: "question",
-        showConfirmButton: true,
-        confirmButtonText: "Yes",
-        showCancelButton: true,
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          const docRef = await setDoc(
-            doc(db, "Subscribers", id),
-            {
-              HASCLAIMED_PP: "yes",
-              PP_CLAIM_DATE: serverTimestamp(),
-            },
-            { merge: true }
-          )
-            .then(() => {
-              Swal.fire(
-                "Success!",
-                "Subscriber info has been successfully updated.",
-                "success"
-              ).then(() => {
-                if (props.searchQuery === "") {
-                  fetchSubscribers();
-                  return;
-                }
-                getSearchedSubscriber();
-              });
-            })
-            .catch((error) => {
-              Swal.fire("Error!", error.message, "error");
+    Swal.fire({
+      title: "Mark this package as claimed?",
+      html:
+        "<p>Are you sure you want to mark <strong>" +
+        firstName +
+        ", " +
+        lastName +
+        "'s </strong> package as <strong>claimed?</strong></p>",
+      icon: "question",
+      showConfirmButton: true,
+      confirmButtonText: "Yes",
+      showCancelButton: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const docRef = await setDoc(
+          doc(db, "Subscribers", id),
+          {
+            HASCLAIMED_PP: "yes",
+            PP_CLAIM_DATE: serverTimestamp(),
+          },
+          { merge: true }
+        )
+          .then(() => {
+            Swal.fire(
+              "Success!",
+              "Subscriber info has been successfully updated.",
+              "success"
+            ).then(() => {
+              if (props.searchQuery === "") {
+                fetchSubscribers();
+                return;
+              }
+              getSearchedSubscriber();
             });
-        }
-      });
-    }
-
-    if (packageType === "A") {
-    }
+          })
+          .catch((error) => {
+            Swal.fire("Error!", error.message, "error");
+          });
+      }
+    });
   };
 
   const handleOpenEditModal = () => {};
@@ -287,6 +326,7 @@ const SubscriberListHook = (props: SubscriberListHooksInterface) => {
   };
 
   return {
+    handleClaimYearbook,
     handleClaimPhotoPackage,
     handleLoadMoreSubs,
     handleEditSubscriber,
