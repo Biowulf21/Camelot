@@ -1,15 +1,39 @@
-import { DocumentData, Timestamp } from 'firebase/firestore';
-import React, {  useEffect, useState } from 'react'
-import { Button, Col, Form, FormGroup, ListGroup, ListGroupItem, Modal, Row } from 'react-bootstrap';
-import LoadingComponent from '../../../../global-components/loading-component';
-import './styles.css';
-import SubscriberListHook from './subscriberListHooks';
+import { DocumentData, Timestamp } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import {
+  Button,
+  Col,
+  Form,
+  FormGroup,
+  ListGroup,
+  ListGroupItem,
+  Modal,
+  Row,
+} from "react-bootstrap";
+import Swal from "sweetalert2";
+import LoadingComponent from "../../../../global-components/loading-component";
+import "./styles.css";
+import SubscriberListHook from "./subscriberListHooks";
 
-interface subscriberListInterface{
+interface subscriberListInterface {
   searchQuery: string;
 }
 
-const SubscriberListComponent = (props:subscriberListInterface) => {
+interface SubscriberInterface {
+  IDNUMBER: string | null;
+  FIRSTNAME: string | null;
+  LASTNAME: string | null;
+  EMAIL: string | null;
+  COURSE: string | null;
+  BATCHYEAR: string | null;
+  PACKAGE_TYPE: string | null;
+  HASCLAIMED_PP: boolean | null;
+  PP_CLAIM_DATE: Timestamp | null;
+  HASCLAIMED_YB: boolean | null;
+  YB_CLAIM_DATE: Timestamp | null;
+}
+
+const SubscriberListComponent = (props: subscriberListInterface) => {
   const { searchQuery } = props;
   const [isLoading, setisLoading] = useState(false);
   const [noMoreSubs, setnoMoreSubs] = useState(false);
@@ -22,197 +46,301 @@ const SubscriberListComponent = (props:subscriberListInterface) => {
   const [currentLName, setcurrentLName] = useState<string | null>();
   const [currentBatchYear, setcurrentBatchYear] = useState<string | null>();
   const [currentEmail, setcurrentEmail] = useState<string | null>("");
-  const [currentHasClaimedPackage, setcurrentHasClaimedPackage] = useState<boolean | null>();
+  const [currentHasClaimedPackage, setcurrentHasClaimedPackage] = useState<
+    boolean | null
+  >();
   const [currentClaimDate, setcurrentClaimDate] = useState<Timestamp | null>();
   const [currentCourse, setcurrentCourse] = useState<string | null>();
 
-   // New subscriber data
-   const [newFName, setNewFName] = useState<string | null>();
-   const [newLName, setNewLName] = useState<string | null>();
-   const [newBatchYear, setNewBatchYear] = useState<string | null>();
-   const [newEmail, setNewEmail] = useState<string | null>();
-   const [newClaimDate, setNewClaimDate] = useState<Timestamp | null>();
-   const [newCourse, setNewCourse] = useState<string | null>();
+  const [currentSubscriber, setcurrentSubscriber] = useState({});
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const handlePassDataToEditModal = (id:string|null, fName:string|null, lName:string|null, email:string|null, 
-    course:string|null, batchyear:string|null, hasClaimed:boolean|null, currentClaimDate:Timestamp | null) => {
-    setcurrentFName(fName);
-    setcurrentLName(lName);
-    setcurrentEmail(email);
-    setcurrentCourse(course);
-    setcurrentBatchYear(batchyear);
-    setcurrentHasClaimedPackage(hasClaimed);
-    setcurrentClaimDate(currentClaimDate);
-    handleShow();
+  useEffect(() => {
+    console.log("has Claimed: " + currentHasClaimedPackage);
+  }, [currentHasClaimedPackage]);
+
+  const {
+    handleClaimPackage,
+    handleLoadMoreSubs,
+    handleEditSubscriber,
+    handleDeleteSubscriber,
+  } = SubscriberListHook({
+    searchQuery,
+    setisLoading,
+    displaySubsList,
+    setdisplaySubsList,
+    setnoMoreSubs,
+  });
+
+  if (isLoading === true) {
+    return (
+      <>
+        <div
+          className="subscriber-list-container"
+          style={{ display: "flex", alignItems: "center" }}
+        >
+          <LoadingComponent></LoadingComponent>
+        </div>
+      </>
+    );
   }
 
-  useEffect(() => {
-    console.log("has Claimed: " + currentHasClaimedPackage)
-  
-  }, [currentHasClaimedPackage])
-  
-
-  const {handleClaimPackage, handleLoadMoreSubs, handleEditSubscriber } = 
-  SubscriberListHook({searchQuery, setisLoading, displaySubsList, 
-    setdisplaySubsList, setnoMoreSubs});
-
-
-
- if (isLoading === true) {
-  return(
-    <>
-      <div className="subscriber-list-container" style={{display: 'flex', alignItems: 'center'}}>
-        <LoadingComponent></LoadingComponent>
-      </div>
-    </>
-  );
- }
-
-  
   return (
     <>
       <div className="subscriber-list-container">
-      <Modal
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-      show={show}
-      onShow={handleShow}
-      onHide={handleClose}
-    >
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          <strong>Editing Subscriber</strong>
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Form>
-          <Form.Group>
-            <Row>
-              <Col>
-                <Form.Label><strong>Last Name</strong></Form.Label>
-                <Form.Control defaultValue={currentLName != null ? currentLName : "Not available"} type='text'
-                onChange={(event)=> setNewLName(event.target.value != "" ? event.target.value : null)} 
-                placeholder="Doe"></Form.Control>
-              </Col>
-              <Col>
-                <Form.Label><strong>First Name</strong></Form.Label>
-                <Form.Control defaultValue={currentFName != null ? currentFName : "Not available"} type='text'
-                onChange={(event)=> setNewFName(event.target.value != "" ? event.target.value : null)} 
-                placeholder="John"></Form.Control>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Form.Label><strong>Email</strong></Form.Label>
-                <Form.Control defaultValue={currentEmail != null ? currentEmail : "Not available"} type='email'
-                onChange={(event)=> setNewEmail(event.target.value != "" ? event.target.value : null)} 
-                placeholder="johndoe@example.com"></Form.Control>
-              </Col>
-              <Col>
-                <Form.Label><strong>Batch Year</strong></Form.Label>
-                <Form.Control defaultValue={currentBatchYear != null ? parseInt(currentBatchYear) : 2021} type='number' min={1948} max={2099}
-                onChange={(event)=> setNewBatchYear(event.target.value != "" ? event.target.value.toString() : null)} 
-                placeholder="ex. 2020"></Form.Control>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Form.Label><strong>Claim Date</strong></Form.Label>
-                <Form.Control disabled={currentHasClaimedPackage == null ? true : false} 
-                defaultValue={currentClaimDate?.toDate().toISOString().substring(0, 10) != null ? 
-                  currentClaimDate.toDate().toISOString().substring(0, 10) : "Not Available"} 
-                  type={currentHasClaimedPackage == null && currentClaimDate == null ? 'text' : 'date'}
-                onChange={(event)=>setNewClaimDate(event.target.value != "" ? 
-                Timestamp.fromDate(new Date(event.target.value))
-                : null)}>
-               </Form.Control>
-              </Col>
-              <Col>
-                <Form.Label><strong>Has Claimed?</strong></Form.Label>
-                <Form.Select aria-label='has-claimed-select'  
-                onChange={(event)=>setcurrentHasClaimedPackage(event.target.value === "true"? true: null)}>
-                <option disabled>{currentHasClaimedPackage ? "Yes" : "No"}</option>
-                <option value="false">No</option> 
-                <option value="true">Yes</option>
-                </Form.Select> 
-              </Col>
-            </Row>
-            <Row style={{paddingLeft: "10px", paddingRight: "10px"}}>
-              <Form.Label><strong>Course</strong></Form.Label>
-              <Form.Control  defaultValue={currentCourse != null ? currentCourse : 
-                "Not available"} onChange={(event)=>setNewCourse(event.target.value != "" ? 
-                event.target.value : null)} type='text'></Form.Control>
-            </Row>
-          </Form.Group>
-        </Form>
-      </Modal.Body>
-      <Modal.Footer>
-        <Col>
-        <Button variant="danger" >Delete</Button>
-        </Col>
-        <Col className='d-flex justify-content-end'>
-        <Button className='ms-1 ps-4 pe-4' variant="success" >Save</Button>
-        </Col>
-      </Modal.Footer>
-    </Modal>
-      <ListGroup>
-        {displaySubsList.length > 0 ? (
-          displaySubsList.filter((subscriber)=>{
-
-            if ( subscriber.LASTNAME.toLowerCase().includes(searchQuery.toLowerCase())
-            || subscriber.FIRSTNAME.toLowerCase().includes(searchQuery.toLowerCase())
-            || subscriber.IDNUMBER.toLowerCase().includes(searchQuery.toLowerCase())) {
-              return subscriber;
-            }
-          }).map((subscriber) => {
-            return (
-            <ListGroupItem key={subscriber.IDNUMBER} className="subscriber-list-item">
+        <Modal
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+          show={show}
+          onShow={handleShow}
+          onHide={handleClose}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title id="contained-modal-title-vcenter">
+              <strong>Editing Subscriber</strong>
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
+              <Form.Group>
                 <Row>
-                    <Col lg="1">
-                        <span style={{backgroundColor: subscriber.HASCLAIMED === null ? "red" : "green"}} 
-                        className="has-claimed-circle"></span>
-                    </Col>
-                    <Col>
-                      <h5><strong>ID: {subscriber.IDNUMBER}</strong></h5>
-                      <strong>Name: </strong> {subscriber.LASTNAME + ", " + subscriber.FIRSTNAME}
-                    </Col>
-                    <Col>
-                      <h6><strong>Email:</strong> {subscriber.EMAIL}</h6>
-                      <h6><strong>Batch Year:</strong> {subscriber.BATCHYEAR}</h6>
-                    </Col>
-                    <Col>
-                      <h6><strong>Claimed Package:</strong> {subscriber.HASCLAIMED === null? 'No' : 'Yes'}</h6>
-                      <h6><strong>Claim Date:</strong> {subscriber.CLAIMDATE === null ?
-                       "Not Available" : subscriber.CLAIMDATE.toDate().toLocaleDateString()}</h6>
-                    </Col>
-                    <Col className="subscriber-list-item-button-div">
-                      <Button onClick={() => handlePassDataToEditModal(
-                        subscriber.IDNUMBER, subscriber.FIRSTNAME, subscriber.LASTNAME, subscriber.EMAIL,
-                        subscriber.COURSE, subscriber.BATCHYEAR, subscriber.HASCLAIMED, subscriber.CLAIMDATE
-                      )} className="sublist-btn" variant='success'>Edit</Button>
-                      {subscriber.HASCLAIMED === null ? 
-                      <Button onClick={()=>handleClaimPackage(subscriber.IDNUMBER, subscriber.LASTNAME, subscriber.FIRSTNAME)} 
-                      className="sublist-btn" variant='danger'>Claim</Button> : null}
-                    </Col>
+                  <Col>
+                    <Form.Label>
+                      <strong>Last Name</strong>
+                    </Form.Label>
+                    <Form.Control
+                      defaultValue={
+                        currentLName != null ? currentLName : "Not available"
+                      }
+                      type="text"
+                      placeholder="Doe"
+                    ></Form.Control>
+                  </Col>
+                  <Col>
+                    <Form.Label>
+                      <strong>First Name</strong>
+                    </Form.Label>
+                    <Form.Control
+                      defaultValue={
+                        currentFName != null ? currentFName : "Not available"
+                      }
+                      type="text"
+                      placeholder="John"
+                    ></Form.Control>
+                  </Col>
                 </Row>
-            </ListGroupItem>);
-          })
-        ) : (
-          <p style={{ textAlign: "center" }}>No subscribers to display</p>
-        )}
-      </ListGroup>
-      {!noMoreSubs && displaySubsList.length > 1?
-        <div className="load-more-div">
-          <Button variant="secondary" onClick={handleLoadMoreSubs}>Load More...</Button>
-        </div> : null 
-      }
+                <Row>
+                  <Col>
+                    <Form.Label>
+                      <strong>Email</strong>
+                    </Form.Label>
+                    <Form.Control
+                      defaultValue={
+                        currentEmail != null ? currentEmail : "Not available"
+                      }
+                      type="email"
+                      placeholder="johndoe@example.com"
+                    ></Form.Control>
+                  </Col>
+                  <Col>
+                    <Form.Label>
+                      <strong>Batch Year</strong>
+                    </Form.Label>
+                    <Form.Control
+                      defaultValue={
+                        currentBatchYear != null
+                          ? parseInt(currentBatchYear)
+                          : 2021
+                      }
+                      type="number"
+                      min={1948}
+                      max={2099}
+                      placeholder="ex. 2020"
+                    ></Form.Control>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Form.Label>
+                      <strong>Claim Date</strong>
+                    </Form.Label>
+                    <Form.Control
+                      disabled={currentHasClaimedPackage == null ? true : false}
+                      defaultValue={
+                        currentClaimDate
+                          ?.toDate()
+                          .toISOString()
+                          .substring(0, 10) != null
+                          ? currentClaimDate
+                              .toDate()
+                              .toISOString()
+                              .substring(0, 10)
+                          : "Not Available"
+                      }
+                      type={
+                        currentHasClaimedPackage == null &&
+                        currentClaimDate == null
+                          ? "text"
+                          : "date"
+                      }
+                    ></Form.Control>
+                  </Col>
+                  <Col>
+                    <Form.Label>
+                      <strong>Has Claimed?</strong>
+                    </Form.Label>
+                    <Form.Select
+                      aria-label="has-claimed-select"
+                      onChange={(event) =>
+                        setcurrentHasClaimedPackage(
+                          event.target.value === "true" ? true : null
+                        )
+                      }
+                    >
+                      <option disabled>
+                        {currentHasClaimedPackage ? "Yes" : "No"}
+                      </option>
+                      <option value="false">No</option>
+                      <option value="true">Yes</option>
+                    </Form.Select>
+                  </Col>
+                </Row>
+                <Row style={{ paddingLeft: "10px", paddingRight: "10px" }}>
+                  <Form.Label>
+                    <strong>Course</strong>
+                  </Form.Label>
+                  <Form.Control
+                    defaultValue={
+                      currentCourse != null ? currentCourse : "Not available"
+                    }
+                    type="text"
+                  ></Form.Control>
+                </Row>
+              </Form.Group>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Col>
+              <Button
+                onClick={async () => {
+                  handleDeleteSubscriber(currentID).finally(() => {
+                    handleClose();
+                  });
+                }}
+                variant="danger"
+              >
+                Delete
+              </Button>
+            </Col>
+            <Col className="d-flex justify-content-end">
+              <Button className="ms-1 ps-4 pe-4" variant="success">
+                Save
+              </Button>
+            </Col>
+          </Modal.Footer>
+        </Modal>
+        <ListGroup>
+          {displaySubsList.length > 0 ? (
+            displaySubsList
+              .filter((subscriber) => {
+                if (
+                  subscriber.LASTNAME.toLowerCase().includes(
+                    searchQuery.toLowerCase()
+                  ) ||
+                  subscriber.FIRSTNAME.toLowerCase().includes(
+                    searchQuery.toLowerCase()
+                  ) ||
+                  subscriber.IDNUMBER.toLowerCase().includes(
+                    searchQuery.toLowerCase()
+                  )
+                ) {
+                  return subscriber;
+                }
+              })
+              .map((subscriber) => {
+                return (
+                  <ListGroupItem
+                    key={subscriber.IDNUMBER}
+                    className="subscriber-list-item"
+                  >
+                    <Row>
+                      <Col lg="1">
+                        <span
+                          style={{
+                            backgroundColor:
+                              subscriber.HASCLAIMED === null ? "red" : "green",
+                          }}
+                          className="has-claimed-circle"
+                        ></span>
+                      </Col>
+                      <Col>
+                        <h5>
+                          <strong>ID: {subscriber.IDNUMBER}</strong>
+                        </h5>
+                        <strong>Name: </strong>{" "}
+                        {subscriber.LASTNAME + ", " + subscriber.FIRSTNAME}
+                      </Col>
+                      <Col>
+                        <h6>
+                          <strong>Email:</strong> {subscriber.EMAIL}
+                        </h6>
+                        <h6>
+                          <strong>Batch Year:</strong> {subscriber.BATCHYEAR}
+                        </h6>
+                      </Col>
+                      <Col>
+                        <h6>
+                          <strong>Claimed Package:</strong>{" "}
+                          {subscriber.HASCLAIMED === null ? "No" : "Yes"}
+                        </h6>
+                        <h6>
+                          <strong>Claim Date:</strong>{" "}
+                          {subscriber.CLAIMDATE === null
+                            ? "Not Available"
+                            : subscriber.CLAIMDATE.toDate().toLocaleDateString()}
+                        </h6>
+                      </Col>
+                      <Col className="subscriber-list-item-button-div">
+                        <Button className="sublist-btn" variant="success">
+                          Edit
+                        </Button>
+                        {subscriber.HASCLAIMED === null ? (
+                          <Button
+                            onClick={() =>
+                              handleClaimPackage(
+                                subscriber.IDNUMBER,
+                                subscriber.LASTNAME,
+                                subscriber.FIRSTNAME
+                              )
+                            }
+                            className="sublist-btn"
+                            variant="danger"
+                          >
+                            Claim
+                          </Button>
+                        ) : null}
+                      </Col>
+                    </Row>
+                  </ListGroupItem>
+                );
+              })
+          ) : (
+            <p style={{ textAlign: "center" }}>No subscribers to display</p>
+          )}
+        </ListGroup>
+        {!noMoreSubs && displaySubsList.length > 1 ? (
+          <div className="load-more-div">
+            <Button variant="secondary" onClick={handleLoadMoreSubs}>
+              Load More...
+            </Button>
+          </div>
+        ) : null}
       </div>
     </>
-  )
-}
+  );
+};
 
-export default SubscriberListComponent
+export default SubscriberListComponent;

@@ -1,4 +1,4 @@
-import { collection, doc, DocumentData, getDocs, limit, orderBy, query, serverTimestamp, setDoc, startAfter, Timestamp, where } from 'firebase/firestore'
+import { collection, deleteDoc, doc, DocumentData, getDocs, limit, orderBy, query, serverTimestamp, setDoc, startAfter, Timestamp, where } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import Swal from 'sweetalert2';
 import { db } from '../../../../../../services/firebase-config';
@@ -162,6 +162,52 @@ const SubscriberListHook = (props: SubscriberListHooksInterface) => {
     
     }
 
+ const handleDeleteSubscriber = async (id: string|null|undefined)=>{
+  if (id==null){
+    Swal.fire(
+      'Oops! Something went wrong.',
+      'Could not delete subcsriber. Either their records have been deleted or the ID is invalid.',
+      'error'
+    )
+    return false;
+  }
+  Swal.fire({
+    title:'Delete Subscriber?',
+    text: 'Are you sure you want to delete this subscriber? This cannot be undone.',
+    icon: 'warning',
+    showConfirmButton: true,
+    confirmButtonText: 'Yes',
+    showCancelButton: true,
+    cancelButtonText: 'Cancel',
+ }).then(async (result) => {
+  if (result.isConfirmed){
+    console.log('deleting subscriber wit ID: ' + id)
+    await deleteDoc(doc(db, "Subscribers", id)).then(() => {
+      Swal.fire(
+        'Completed Deletion.',
+        'Subscriber deleted successfully.',
+        'success'
+      ).then(() => {
+        fetchSubscribers();
+        return true;
+      })
+    }).catch((error) => {
+      Swal.fire(
+        'Oops! Something went wrong.',
+        'Subscriber deletion failed. Please try again.',
+        'error'
+      ).then(()=>{
+        fetchSubscribers();
+        return false;
+      });
+    });
+  }
+ }).finally(()=>{
+
+   return true;
+ })
+ }
+
  const handleEditSubscriber = (id: string, fname:string, lname:string, hasclaimed:boolean|null,
      claimdate:Timestamp|null, batchyear:string) => {
 
@@ -189,7 +235,7 @@ const SubscriberListHook = (props: SubscriberListHooksInterface) => {
 
      }
 
-  return {handleClaimPackage, handleLoadMoreSubs, handleEditSubscriber}
+  return {handleClaimPackage, handleLoadMoreSubs, handleEditSubscriber, handleDeleteSubscriber}
 }
 
 export default SubscriberListHook
