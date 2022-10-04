@@ -20,7 +20,7 @@ interface subscriberListInterface {
   searchQuery: string;
 }
 
-interface SubscriberInterface {
+export interface SubscriberInterface {
   IDNUMBER: string | null;
   FIRSTNAME: string | null;
   LASTNAME: string | null;
@@ -126,7 +126,7 @@ const SubscriberListComponent = (props: subscriberListInterface) => {
                                   subscriber.HASCLAIMED_PP !== null &&
                                   subscriber.HASCLAIMED_YB === null
                                 ? "yellow"
-                                : "green",
+                                : "red",
                           }}
                         >
                           <h2>

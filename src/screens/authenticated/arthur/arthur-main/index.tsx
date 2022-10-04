@@ -80,11 +80,23 @@ const Arthur = (props: ArthurProps) => {
   return (
     <Container className="arthur-container">
       <div className="d-flex justify-content-end mt-3">
-        <Button onClick={handleShow} variant="success">
+        <Button onClick={handleShow} variant="warning">
           Upload Data <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
         </Button>
-        <Button onClick={handleShow} style={{ marginLeft: "5px" }}>
+        <Button
+          onClick={handleShow}
+          variant="success"
+          style={{ marginLeft: "5px" }}
+        >
           Add Subscriber <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
+        </Button>
+        <Button
+          onClick={handleShow}
+          variant="primary"
+          style={{ marginLeft: "5px" }}
+        >
+          Export Subscriber Data{" "}
+          <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
         </Button>
       </div>
       <div className="arthur-search-div">
