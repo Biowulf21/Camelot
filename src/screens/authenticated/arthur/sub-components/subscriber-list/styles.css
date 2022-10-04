@@ -6,3 +6,4 @@
 .sublist-btn{width: 45%; margin: 5px;}
 .load-more-div{display: flex; align-items: center; justify-content: center; margin: 15px 0px 15px 0px;}
 .load-more-text{display: flex; justify-content: center;  margin: 15px 0px 15px 0px; font-weight: bold;}
+.package-type-display{display: flex; justify-content: center; align-items: center; height: 75px; width: 75px; border-radius: 50%; color:white}

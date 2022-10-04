@@ -99,12 +99,16 @@ const SubscriberListComponent = (props: subscriberListInterface) => {
                     <Row>
                       <Col lg="1">
                         <span
+                          className="package-type-display"
                           style={{
                             backgroundColor:
                               subscriber.HASCLAIMED === null ? "red" : "green",
                           }}
-                          className="has-claimed-circle"
-                        ></span>
+                        >
+                          <h2>
+                            <strong>{subscriber.PACKAGE_TYPE}</strong>
+                          </h2>
+                        </span>
                       </Col>
                       <Col>
                         <h5>
@@ -112,25 +116,39 @@ const SubscriberListComponent = (props: subscriberListInterface) => {
                         </h5>
                         <strong>Name: </strong>{" "}
                         {subscriber.LASTNAME + ", " + subscriber.FIRSTNAME}
+                        <h6>
+                          <strong>Batch Year:</strong> {subscriber.BATCHYEAR}
+                        </h6>
+                        <h6>
+                          <strong>Package Type: </strong>
+                          {subscriber.PACKAGE_TYPE}
+                        </h6>
                       </Col>
                       <Col>
                         <h6>
                           <strong>Email:</strong> {subscriber.EMAIL}
                         </h6>
                         <h6>
-                          <strong>Batch Year:</strong> {subscriber.BATCHYEAR}
+                          <strong>Claimed YB: </strong>
+                          {subscriber.HASCLAIMED_YB === null ? "No" : "Yes"}
+                        </h6>
+                        <h6>
+                          <strong>YB Claim Date: </strong>{" "}
+                          {subscriber.YB_CLAIM_DATE === null
+                            ? "Not Available"
+                            : subscriber.YB_CLAIM_DATE.toDate().toLocaleDateString()}
                         </h6>
                       </Col>
                       <Col>
                         <h6>
-                          <strong>Claimed Package:</strong>{" "}
-                          {subscriber.HASCLAIMED_YB === null ? "No" : "Yes"}
+                          <strong>Claimed PP: </strong>{" "}
+                          {subscriber.HASCLAIMED_PP === null ? "No" : "Yes"}
                         </h6>
                         <h6>
-                          <strong>YB Claim Date:</strong>{" "}
-                          {subscriber.YB_CLAIM_DATE === null
+                          <strong>PP Claim Date: </strong>{" "}
+                          {subscriber.PP_CLAIM_DATE === null
                             ? "Not Available"
-                            : subscriber.CLAIMDATE.toDate().toLocaleDateString()}
+                            : subscriber.PP_CLAIM_DATE.toDate().toLocaleDateString()}
                         </h6>
                       </Col>
                       <Col className="subscriber-list-item-button-div">
