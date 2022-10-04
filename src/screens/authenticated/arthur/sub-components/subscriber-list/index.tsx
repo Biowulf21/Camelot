@@ -124,11 +124,11 @@ const SubscriberListComponent = (props: subscriberListInterface) => {
                       <Col>
                         <h6>
                           <strong>Claimed Package:</strong>{" "}
-                          {subscriber.HASCLAIMED === null ? "No" : "Yes"}
+                          {subscriber.HASCLAIMED_YB === null ? "No" : "Yes"}
                         </h6>
                         <h6>
-                          <strong>Claim Date:</strong>{" "}
-                          {subscriber.CLAIMDATE === null
+                          <strong>YB Claim Date:</strong>{" "}
+                          {subscriber.YB_CLAIM_DATE === null
                             ? "Not Available"
                             : subscriber.CLAIMDATE.toDate().toLocaleDateString()}
                         </h6>
@@ -137,7 +137,7 @@ const SubscriberListComponent = (props: subscriberListInterface) => {
                         <Button className="sublist-btn" variant="success">
                           Edit
                         </Button>
-                        {subscriber.HASCLAIMED === null ? (
+                        {subscriber.HASCLAIMED_YB === null ? (
                           <Button
                             onClick={() =>
                               handleClaimPackage(
