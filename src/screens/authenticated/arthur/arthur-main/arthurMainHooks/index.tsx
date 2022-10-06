@@ -95,7 +95,7 @@ const ArthurMainHooks = (props: ArthurMainHooksInterface) => {
   const handleUploadSubscriberData = async (subscriberData: []) => {
     try {
       props.setisUploading((value) => !value);
-      for (var i = 0; i <= 10; i++) {
+      for (var i = 0; i <= subscriberData.length - 1; i++) {
         const subData: SubscriberInterface = subscriberData[i];
         await setDoc(doc(db, "Subscribers", subData.IDNUMBER), {
           ...subData,
@@ -134,11 +134,9 @@ const ArthurMainHooks = (props: ArthurMainHooksInterface) => {
         props.handleClose();
       });
     } catch (error) {
-      Swal.fire(
-        "Oops! Something went wrong.",
-        "Something went wrong while uploading the data. Please try again later.",
-        "error"
-      );
+      if (error instanceof Error)
+        Swal.fire("Oops! Something went wrong.", error.message, "error");
+      props.setisUploading((value) => !value);
     }
   };
 

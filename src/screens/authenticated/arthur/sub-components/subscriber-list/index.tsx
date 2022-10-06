@@ -28,10 +28,10 @@ export interface SubscriberInterface {
   COURSE: string | null;
   BATCHYEAR: string | null;
   PACKAGE_TYPE: string | null;
-  HASCLAIMED_PP: boolean | null;
-  PP_CLAIM_DATE: Timestamp | null | Date | string;
-  HASCLAIMED_YB: boolean | null;
-  YB_CLAIM_DATE: Timestamp | null | Date | string;
+  HASCLAIMED_PP: string | null;
+  PP_CLAIM_DATE: Timestamp | null | Date;
+  HASCLAIMED_YB: string | null;
+  YB_CLAIM_DATE: Timestamp | null | Date;
 }
 
 const SubscriberListComponent = (props: subscriberListInterface) => {
@@ -154,7 +154,12 @@ const SubscriberListComponent = (props: subscriberListInterface) => {
                         </h6>
                         <h6>
                           <strong>Claimed YB: </strong>
-                          {subscriber.HASCLAIMED_YB === null ? "No" : "Yes"}
+                          {subscriber.HASCLAIMED_YB !== null &&
+                          subscriber.HASCLAIMED_YB.toUpperCase() === "YES"
+                            ? "Yes"
+                            : subscriber.PACKAGE_TYPE.toUpperCase() === "B"
+                            ? "Not Available"
+                            : "No"}
                         </h6>
                         <h6>
                           <strong>YB Claim Date: </strong>{" "}
@@ -166,7 +171,10 @@ const SubscriberListComponent = (props: subscriberListInterface) => {
                       <Col>
                         <h6>
                           <strong>Claimed PP: </strong>{" "}
-                          {subscriber.HASCLAIMED_PP === null ? "No" : "Yes"}
+                          {subscriber.HASCLAIMED_PP !== null &&
+                          subscriber.HASCLAIMED_PP.toUpperCase() === "YES"
+                            ? "Yes"
+                            : "No"}
                         </h6>
                         <h6>
                           <strong>PP Claim Date: </strong>{" "}
