@@ -1,7 +1,14 @@
 import React, { Dispatch, SetStateAction } from "react";
 import "./style.css";
 import { useState, useEffect } from "react";
-import { Button, Container, Modal, ProgressBar } from "react-bootstrap";
+import {
+  Button,
+  Container,
+  Form,
+  FormControl,
+  Modal,
+  ProgressBar,
+} from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import CSVReader from "../../merlin/sub-components/mailing/sub-components/csv-reader";
@@ -15,13 +22,30 @@ interface ArthurProps {
   subscriberCount: number;
 }
 
+interface ExportFiltersInterface {
+  orderBy: null | string;
+  batchYear: null | string;
+  spreadSheetFormat: null | string;
+}
+
 const Arthur = (props: ArthurProps) => {
+  const defaultExportFilters = {
+    year: null,
+    orderBy: null,
+    batchYear: null,
+    spreadSheetFormat: null,
+  };
   const [csvFile, setcsvFile] = useState<any>({ data: [] });
   const [TempSearchTerm, setTempSearchTerm] = useState("");
   const [show, setShow] = useState(false);
+  const [exportModalShow, setExportModalShow] = useState(false);
   const [isUploading, setisUploading] = useState<boolean>(false);
   const [currentUploadingCount, setcurrentUploadingCount] = useState(0);
   const [uploadingMaxCount, setuploadingMaxCount] = useState(1);
+  const [exportFilters, setExportFilters] =
+    useState<ExportFiltersInterface>(defaultExportFilters);
+  const currentDate = new Date();
+  const currentDateYear = currentDate.getFullYear();
 
   // This function allows us to only save the current search string to state
   // once the user has finished typing
@@ -36,6 +60,9 @@ const Arthur = (props: ArthurProps) => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  const handleCloseExportModal = () => setExportModalShow(false);
+  const handleShowExportModal = () => setExportModalShow(true);
+
   const { handleParseCSVFile } = ArthurMainHooks({
     csvFile,
     setcsvFile,
@@ -43,6 +70,7 @@ const Arthur = (props: ArthurProps) => {
     setcurrentUploadingCount,
     setisUploading,
     handleClose,
+    handleCloseExportModal,
   });
 
   if (isUploading === true) {
@@ -82,11 +110,11 @@ const Arthur = (props: ArthurProps) => {
           Add Subscriber <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
         </Button>
         <Button
-          onClick={handleShow}
+          onClick={handleShowExportModal}
           variant="primary"
           style={{ marginLeft: "5px" }}
         >
-          Export Subscriber Data{" "}
+          Export Subscriber Data
           <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
         </Button>
       </div>
@@ -101,7 +129,51 @@ const Arthur = (props: ArthurProps) => {
         </div>
         <div>{props.children}</div>
       </div>
+      {/* Export Subscribers Modal */}
+      <Modal
+        show={exportModalShow}
+        onHide={handleCloseExportModal}
+        keyboard={false}
+        centered
+        size="lg"
+      >
+        <Modal.Header closeButton>
+          <div>
+            <Modal.Title className="mb-1">
+              <strong>Export Subscriber Data</strong>
+            </Modal.Title>
+          </div>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Label>Spreadsheet Format</Form.Label>
+            <Form.Select className="mb-2">
+              <option value="csv">CSV</option>
+              <option value="xlsx">Excel</option>
+            </Form.Select>
+            <Form.Label>Export Order (Last Name)</Form.Label>
+            <Form.Select className="mb-2">
+              <option value="ASC">Ascending (A-Z)</option>
+              <option value="DESC">Descending (Z-A)</option>
+            </Form.Select>
+            <Form.Label>Batch Year</Form.Label>
+            <Form.Control
+              className="mb-2"
+              type="number"
+              defaultValue={currentDateYear}
+              max={2099}
+              min={1900}
+            ></Form.Control>
+          </Form>
+        </Modal.Body>
 
+        <Modal.Footer>
+          <Button variant="secondary">Read Documentation</Button>
+          <Button variant="primary">Export</Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal for uploading subcsribers */}
       <Modal
         show={show}
         onHide={handleClose}

@@ -12,6 +12,7 @@ interface ArthurMainHooksInterface {
   setcurrentUploadingCount: React.Dispatch<React.SetStateAction<number>>;
   setisUploading: React.Dispatch<React.SetStateAction<boolean>>;
   handleClose: () => void;
+  handleCloseExportModal: () => void;
 }
 
 const ArthurMainHooks = (props: ArthurMainHooksInterface) => {
