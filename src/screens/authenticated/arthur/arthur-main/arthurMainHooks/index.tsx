@@ -1,9 +1,9 @@
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, Timestamp } from "firebase/firestore";
 import React from "react";
 import Swal from "sweetalert2";
-import { subscriberDataInterface } from "..";
 import { CSVtoJson } from "../../../../../services/CSVtoJSON/csv-to-json-v2";
 import { db } from "../../../../../services/firebase-config";
+import { SubscriberInterface } from "../../sub-components/subscriber-list";
 
 interface ArthurMainHooksInterface {
   csvFile: any;
@@ -93,32 +93,55 @@ const ArthurMainHooks = (props: ArthurMainHooksInterface) => {
   };
 
   const handleUploadSubscriberData = async (subscriberData: []) => {
-    props.setisUploading((value) => !value);
-
-    for (var i = 0; i <= subscriberData.length - 1; i++) {
-      const subData: subscriberDataInterface = subscriberData[i];
-      await setDoc(doc(db, "Subscribers", subData.IDNUMBER), subData)
-        // eslint-disable-next-line no-loop-func
-        .then(() => {
-          props.setcurrentUploadingCount(i);
-        })
-        .catch((error) => {
-          console.log(error.message);
-        });
-    }
-
-    Swal.fire(
-      "Finished uploading",
-      "Subscriber Data has been uploaded successfully.",
-      "success"
-    ).then(() => {
-      // cleans the state of Arthur
-      props.setcurrentUploadingCount(0);
-      props.setuploadingMaxCount(0);
-      props.setcsvFile({ data: [] });
+    try {
       props.setisUploading((value) => !value);
-      props.handleClose();
-    });
+      console.log("oten");
+
+      for (var i = 0; i <= 10; i++) {
+        const subData: SubscriberInterface = subscriberData[i];
+        await setDoc(doc(db, "Subscribers", subData.IDNUMBER), {
+          ...subData,
+          YB_CLAIM_DATE:
+            subData.YB_CLAIM_DATE !== null
+              ? Timestamp.fromDate(
+                  new Date(Date.parse(subData.YB_CLAIM_DATE.toString()))
+                )
+              : null,
+          PP_CLAIM_DATE:
+            subData.PP_CLAIM_DATE !== null
+              ? Timestamp.fromDate(
+                  new Date(Date.parse(subData.PP_CLAIM_DATE.toString()))
+                )
+              : null,
+        })
+          // eslint-disable-next-line no-loop-func
+          .then(() => {
+            props.setcurrentUploadingCount(i);
+          })
+          .catch((error) => {
+            console.log(error.message);
+          });
+      }
+
+      Swal.fire(
+        "Finished uploading",
+        "Subscriber Data has been uploaded successfully.",
+        "success"
+      ).then(() => {
+        // cleans the state of Arthur
+        props.setcurrentUploadingCount(0);
+        props.setuploadingMaxCount(0);
+        props.setcsvFile({ data: [] });
+        props.setisUploading((value) => !value);
+        props.handleClose();
+      });
+    } catch (error) {
+      Swal.fire(
+        "Oops! Something went wrong.",
+        "Something went wrong while uploading the data. Please try again later.",
+        "error"
+      );
+    }
   };
 
   return { handleParseCSVFile };

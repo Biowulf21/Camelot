@@ -9,15 +9,6 @@ import LoadingComponent from "../../../global-components/loading-component";
 import useDebounce from "../../../../hooks/useDebounce";
 import ArthurMainHooks from "./arthurMainHooks";
 
-export interface subscriberDataInterface {
-  LASTNAME: string;
-  FIRSTNAME: string;
-  EMAIL: string;
-  IDNUMBER: string;
-  COURSE: string;
-  BATCHYEAR: string;
-}
-
 interface ArthurProps {
   children: React.ReactNode;
   updateSearchQuery: Dispatch<SetStateAction<string>>;

@@ -21,7 +21,7 @@ interface subscriberListInterface {
 }
 
 export interface SubscriberInterface {
-  IDNUMBER: string | null;
+  IDNUMBER: string;
   FIRSTNAME: string | null;
   LASTNAME: string | null;
   EMAIL: string | null;
@@ -29,9 +29,9 @@ export interface SubscriberInterface {
   BATCHYEAR: string | null;
   PACKAGE_TYPE: string | null;
   HASCLAIMED_PP: boolean | null;
-  PP_CLAIM_DATE: Timestamp | null;
+  PP_CLAIM_DATE: Timestamp | null | Date | string;
   HASCLAIMED_YB: boolean | null;
-  YB_CLAIM_DATE: Timestamp | null;
+  YB_CLAIM_DATE: Timestamp | null | Date | string;
 }
 
 const SubscriberListComponent = (props: subscriberListInterface) => {
