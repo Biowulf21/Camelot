@@ -95,8 +95,6 @@ const ArthurMainHooks = (props: ArthurMainHooksInterface) => {
   const handleUploadSubscriberData = async (subscriberData: []) => {
     try {
       props.setisUploading((value) => !value);
-      console.log("oten");
-
       for (var i = 0; i <= 10; i++) {
         const subData: SubscriberInterface = subscriberData[i];
         await setDoc(doc(db, "Subscribers", subData.IDNUMBER), {
