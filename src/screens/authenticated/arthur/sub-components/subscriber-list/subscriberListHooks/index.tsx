@@ -15,6 +15,7 @@ import {
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import { SubscriberInterface } from "..";
 import { db } from "../../../../../../services/firebase-config";
 
 interface SubscriberListHooksInterface {
@@ -23,19 +24,6 @@ interface SubscriberListHooksInterface {
   displaySubsList: DocumentData[];
   setdisplaySubsList: React.Dispatch<React.SetStateAction<DocumentData[]>>;
   setnoMoreSubs: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-interface editSubscriberInterface {
-  IDNUMBER: string;
-  FIRSTNAME: string;
-  LASTNAME: string;
-  EMAIL: string;
-  COURSE: string;
-  BATCHYEAR: string;
-  HASCLAIMED_PP: boolean | null;
-  PP_CLAIM_DATE: Timestamp | null;
-  HASCLAIMED_YB: boolean | null;
-  YB_CLAIM_DATE: Timestamp | null;
 }
 
 const SubscriberListHook = (props: SubscriberListHooksInterface) => {
@@ -287,7 +275,7 @@ const SubscriberListHook = (props: SubscriberListHooksInterface) => {
       });
   };
 
-  const handleEditSubscriber = (editSubsProps: editSubscriberInterface) => {
+  const handleEditSubscriber = (editSubsProps: SubscriberInterface) => {
     const subscriberRef = doc(db, "Subscribers", editSubsProps.IDNUMBER);
     setDoc(subscriberRef, editSubsProps, { merge: true })
       .then(() => {

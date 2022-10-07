@@ -15,6 +15,7 @@ import CSVReader from "../../merlin/sub-components/mailing/sub-components/csv-re
 import LoadingComponent from "../../../global-components/loading-component";
 import useDebounce from "../../../../hooks/useDebounce";
 import ArthurMainHooks from "./arthurMainHooks";
+import ExportSubsLogic from "./exportSubsLogic";
 
 interface ArthurProps {
   children: React.ReactNode;
@@ -22,19 +23,15 @@ interface ArthurProps {
   subscriberCount: number;
 }
 
-interface ExportFiltersInterface {
-  orderBy: null | string;
-  batchYear: null | string;
-  spreadSheetFormat: null | string;
+export interface ExportFiltersInterface {
+  order: string;
+  batchYear: string;
+  spreadSheetFormat: string;
 }
 
 const Arthur = (props: ArthurProps) => {
-  const defaultExportFilters = {
-    year: null,
-    orderBy: null,
-    batchYear: null,
-    spreadSheetFormat: null,
-  };
+  const currentDate = new Date();
+  const currentDateYear = currentDate.getFullYear();
   const [csvFile, setcsvFile] = useState<any>({ data: [] });
   const [TempSearchTerm, setTempSearchTerm] = useState("");
   const [show, setShow] = useState(false);
@@ -42,10 +39,17 @@ const Arthur = (props: ArthurProps) => {
   const [isUploading, setisUploading] = useState<boolean>(false);
   const [currentUploadingCount, setcurrentUploadingCount] = useState(0);
   const [uploadingMaxCount, setuploadingMaxCount] = useState(1);
-  const [exportFilters, setExportFilters] =
-    useState<ExportFiltersInterface>(defaultExportFilters);
-  const currentDate = new Date();
-  const currentDateYear = currentDate.getFullYear();
+  const [exportFilters, setExportFilters] = useState<ExportFiltersInterface>({
+    order: "asc",
+    batchYear: "",
+    spreadSheetFormat: "csv",
+  });
+  const setFields = (field: string, value: string, event?: number) => {
+    setExportFilters({
+      ...exportFilters,
+      [field]: value,
+    });
+  };
 
   // This function allows us to only save the current search string to state
   // once the user has finished typing
@@ -72,6 +76,8 @@ const Arthur = (props: ArthurProps) => {
     handleClose,
     handleCloseExportModal,
   });
+
+  const { handleExportData } = ExportSubsLogic(exportFilters);
 
   if (isUploading === true) {
     return (
@@ -136,6 +142,13 @@ const Arthur = (props: ArthurProps) => {
         keyboard={false}
         centered
         size="lg"
+        onExit={() =>
+          setExportFilters({
+            order: "asc",
+            batchYear: "",
+            spreadSheetFormat: "csv",
+          })
+        }
       >
         <Modal.Header closeButton>
           <div>
@@ -145,22 +158,34 @@ const Arthur = (props: ArthurProps) => {
           </div>
         </Modal.Header>
         <Modal.Body>
+          {JSON.stringify(exportFilters)}
           <Form>
             <Form.Label>Spreadsheet Format</Form.Label>
-            <Form.Select className="mb-2">
+            <Form.Select
+              onChange={(event) =>
+                setFields("spreadSheetFormat", event.target.value)
+              }
+              className="mb-2"
+            >
               <option value="csv">CSV</option>
               <option value="xlsx">Excel</option>
             </Form.Select>
             <Form.Label>Export Order (Last Name)</Form.Label>
-            <Form.Select className="mb-2">
-              <option value="ASC">Ascending (A-Z)</option>
-              <option value="DESC">Descending (Z-A)</option>
+            <Form.Select
+              onChange={(event) => setFields("order", event.target.value)}
+              className="mb-2"
+            >
+              <option value="asc">Ascending (A-Z)</option>
+              <option value="desc">Descending (Z-A)</option>
             </Form.Select>
-            <Form.Label>Batch Year</Form.Label>
+            <Form.Label>
+              Batch Year (Leave empty to export all years)
+            </Form.Label>
             <Form.Control
+              onChange={(event) => setFields("batchYear", event.target.value)}
               className="mb-2"
               type="number"
-              defaultValue={currentDateYear}
+              minLength={1000}
               max={2099}
               min={1900}
             ></Form.Control>
@@ -169,7 +194,9 @@ const Arthur = (props: ArthurProps) => {
 
         <Modal.Footer>
           <Button variant="secondary">Read Documentation</Button>
-          <Button variant="primary">Export</Button>
+          <Button onClick={handleExportData} variant="primary">
+            Export
+          </Button>
         </Modal.Footer>
       </Modal>
 
