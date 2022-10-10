@@ -199,7 +199,6 @@ const Arthur = (props: ArthurProps) => {
           </Button>
         </Modal.Footer>
       </Modal>
-
       {/* Modal for uploading subcsribers */}
       <Modal
         show={show}
