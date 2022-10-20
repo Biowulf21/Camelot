@@ -61,6 +61,7 @@ const ArthurMainHooks = (props: ArthurMainHooksInterface) => {
       "IDNUMBER",
       "FIRSTNAME",
       "LASTNAME",
+      "CONTACTNUMBER",
       "EMAIL",
       "COURSE",
       "BATCHYEAR",

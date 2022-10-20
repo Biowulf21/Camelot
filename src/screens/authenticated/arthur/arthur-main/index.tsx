@@ -224,9 +224,8 @@ const Arthur = (props: ArthurProps) => {
             following headers:
             <strong>
               <code>
-                {" "}
-                LastName, FirstName, IDNumber, Email, Course, BatchYear,
-                HasClaimed, and ClaimDate.
+                LastName, FirstName, IDNumber, ContactNumber, Email, Course,
+                BatchYear, HasClaimed, and ClaimDate.
               </code>
             </strong>
           </p>
