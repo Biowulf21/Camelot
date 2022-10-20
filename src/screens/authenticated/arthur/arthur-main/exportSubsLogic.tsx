@@ -22,7 +22,6 @@ const ExportSubsLogic = (props: ExportFiltersInterface) => {
 
   useEffect(() => {
     try {
-    } catch (e) {
       if (subsList.length > 0) {
         const keys = Object.keys(subsList[0]);
         // set the headers of the CSV
@@ -50,6 +49,8 @@ const ExportSubsLogic = (props: ExportFiltersInterface) => {
         if (props.spreadSheetFormat === "csv") JSONToCSV();
         if (props.spreadSheetFormat === "xlsx") JSONToExcel();
       }
+    } catch (e) {
+      console.log(e);
     }
   }, [hasDoneParsingJSON]);
 
