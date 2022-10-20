@@ -27,7 +27,6 @@ const NewTemplate = () => {
   };
 
   const handleSaveNewTemplate = async () => {
-    console.log(templateTitle, templateSubject, templateBodyText);
     if (
       templateTitle === "" ||
       templateSubject === "" ||
@@ -39,7 +38,6 @@ const NewTemplate = () => {
         "error"
       );
     } else {
-      console.log("success");
       setisLoading(true);
       const hasSaved: boolean | void = await templateObject
         .saveNewTemplate(templateTitle, templateSubject, templateBodyText)
@@ -106,7 +104,8 @@ const NewTemplate = () => {
           <a
             className="cheatsheet-link"
             target={"_blank"}
-            href="https://www.markdownguide.org/cheat-sheet/" rel="noreferrer"
+            href="https://www.markdownguide.org/cheat-sheet/"
+            rel="noreferrer"
           >
             Formatting Cheatsheet
           </a>
