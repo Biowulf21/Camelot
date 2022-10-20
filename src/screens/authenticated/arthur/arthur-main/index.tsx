@@ -61,7 +61,11 @@ const Arthur = (props: ArthurProps) => {
     props.updateSearchQuery(debouncedSearch);
   }, [debouncedSearch]);
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    console.log(csvFile);
+    setShow(false);
+    setcsvFile({ data: [] });
+  };
   const handleShow = () => setShow(true);
 
   const handleCloseExportModal = () => setExportModalShow(false);
