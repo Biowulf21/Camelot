@@ -10,6 +10,7 @@ import {
   DocumentData,
 } from "firebase/firestore";
 import { db } from "../../../services/firebase-config";
+import GraphComponent from "./sub-components/graphComponent";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -39,6 +40,9 @@ const Dashboard = () => {
             <div className="d-flex ">
               <strong>Feature Coming Soon</strong>
             </div>
+            <div>
+              <GraphComponent />
+            </div>
           </Card>
         </Col>
         <Col>
@@ -47,6 +51,9 @@ const Dashboard = () => {
             <div className="d-flex ">
               <strong>Feature Coming Soon</strong>
             </div>
+            <div>
+              <GraphComponent />
+            </div>
           </Card>
         </Col>
         <Col>
@@ -54,6 +61,9 @@ const Dashboard = () => {
             Subscribers with Claimed Photo Packages
             <div className="d-flex ">
               <strong>Feature Coming Soon</strong>
+            </div>
+            <div>
+              <GraphComponent />
             </div>
           </Card>
         </Col>
