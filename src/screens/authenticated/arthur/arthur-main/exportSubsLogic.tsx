@@ -21,30 +21,35 @@ const ExportSubsLogic = (props: ExportFiltersInterface) => {
   const [headers, setHeaders] = useState<string[]>([]);
 
   useEffect(() => {
-    if (subsList.length > 0) {
-      const keys = Object.keys(subsList[0]);
-      // set the headers of the CSV
-      setHeaders(keys);
+    try {
+    } catch (e) {
+      if (subsList.length > 0) {
+        const keys = Object.keys(subsList[0]);
+        // set the headers of the CSV
+        setHeaders(keys);
 
-      subsList.forEach((sub) => {
-        var tempKey = "";
-        var tempValue = "";
-        Object.keys(sub).forEach((key) => {
-          if (
-            sub[key] instanceof Timestamp ||
-            (sub[key] instanceof Date && sub[key] != null)
-          ) {
-            tempKey = key;
-            tempValue = sub[key];
+        subsList.forEach((sub) => {
+          var tempKey = "";
+          var tempValue = "";
+          Object.keys(sub).forEach((key) => {
+            if (
+              sub[key] instanceof Timestamp ||
+              (sub[key] instanceof Date && sub[key] != null)
+            ) {
+              tempKey = key;
+              tempValue = sub[key];
+            }
+          });
+          if (sub[tempKey] != undefined) {
+            sub[tempKey] = sub[tempKey].toDate().toLocaleDateString();
           }
         });
-        sub[tempKey] = sub[tempKey].toDate().toLocaleDateString();
-      });
-      console.log(subsList);
-      setHasDoneParsingJSON(false);
+        console.log(subsList);
+        setHasDoneParsingJSON(false);
 
-      if (props.spreadSheetFormat === "csv") JSONToCSV();
-      if (props.spreadSheetFormat === "xlsx") JSONToExcel();
+        if (props.spreadSheetFormat === "csv") JSONToCSV();
+        if (props.spreadSheetFormat === "xlsx") JSONToExcel();
+      }
     }
   }, [hasDoneParsingJSON]);
 
