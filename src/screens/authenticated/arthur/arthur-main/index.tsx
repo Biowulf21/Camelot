@@ -162,7 +162,6 @@ const Arthur = (props: ArthurProps) => {
           </div>
         </Modal.Header>
         <Modal.Body>
-          {JSON.stringify(exportFilters)}
           <Form>
             <Form.Label>Spreadsheet Format</Form.Label>
             <Form.Select
