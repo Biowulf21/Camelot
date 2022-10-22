@@ -8,6 +8,8 @@ import {
   collection,
   CollectionReference,
   DocumentData,
+  getCountFromServer,
+  Query,
 } from "firebase/firestore";
 import { db } from "../../../services/firebase-config";
 import GraphComponent from "./sub-components/graphComponent";
@@ -24,12 +26,15 @@ const Dashboard = () => {
   }, []);
 
   //! TODO:  Add logic that would call the firestore count function
-  // useEffect(() => {
-  //   async function getSubscriberCount() {
-  //     const coll = collection(db, "cities");
-  //     const snapshot = await getCountFromServer(coll);
-  //   }
-  // });
+  useEffect(() => {
+    const subscriberCount = getTotalSubscriberCount();
+  });
+
+  const getTotalSubscriberCount = async () => {
+    const subscribers = collection(db, "Subscribers");
+    const snapshot = await getCountFromServer(subscribers);
+    console.log("count", snapshot.data().count);
+  };
 
   return (
     <Container className="pt-5">
