@@ -61,7 +61,11 @@ const Arthur = (props: ArthurProps) => {
     props.updateSearchQuery(debouncedSearch);
   }, [debouncedSearch]);
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    console.log(csvFile);
+    setShow(false);
+    setcsvFile({ data: [] });
+  };
   const handleShow = () => setShow(true);
 
   const handleCloseExportModal = () => setExportModalShow(false);
@@ -158,7 +162,6 @@ const Arthur = (props: ArthurProps) => {
           </div>
         </Modal.Header>
         <Modal.Body>
-          {JSON.stringify(exportFilters)}
           <Form>
             <Form.Label>Spreadsheet Format</Form.Label>
             <Form.Select
@@ -224,9 +227,8 @@ const Arthur = (props: ArthurProps) => {
             following headers:
             <strong>
               <code>
-                {" "}
-                LastName, FirstName, IDNumber, Email, Course, BatchYear,
-                HasClaimed, and ClaimDate.
+                LastName, FirstName, IDNumber, ContactNumber, Email, Course,
+                BatchYear, HasClaimed, and ClaimDate.
               </code>
             </strong>
           </p>

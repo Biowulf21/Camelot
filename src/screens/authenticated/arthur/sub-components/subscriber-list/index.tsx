@@ -167,6 +167,12 @@ const SubscriberListComponent = (props: subscriberListInterface) => {
                             ? "Not Available"
                             : subscriber.YB_CLAIM_DATE.toDate().toLocaleDateString()}
                         </h6>
+                        <h6>
+                          <strong>Contact Number: </strong>
+                          {subscriber.CONTACTNUMBER !== null
+                            ? subscriber.CONTACTNUMBER
+                            : "Not Available"}
+                        </h6>
                       </Col>
                       <Col>
                         <h6>
