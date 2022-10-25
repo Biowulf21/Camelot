@@ -30,3 +30,5 @@ MOCK_DATA.csv
 # Firebase logs
 firebase-debug.log
 firestore-debug.log
+
+.firebase/
