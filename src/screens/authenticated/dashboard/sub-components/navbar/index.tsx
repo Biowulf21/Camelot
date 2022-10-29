@@ -28,7 +28,9 @@ const SideBar = () => {
         <Navbar style={{ backgroundColor: "white" }} sticky="top">
           <Offcanvas show={show} onHide={handleClose} responsive="lg">
             <Offcanvas.Header closeButton>
-              <Offcanvas.Title>Camelot - The Crusader Yearbook</Offcanvas.Title>
+              <Offcanvas.Title>
+                <a href="/dashboard">Camelot - The Crusader Yearbook</a>
+              </Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
               <Nav>
