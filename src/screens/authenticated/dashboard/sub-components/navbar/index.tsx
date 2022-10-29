@@ -36,27 +36,27 @@ const SideBar = () => {
               </Nav>
               <Nav className="nav-card">
                 <Link onClick={handleClose} to={"/merlin"}>
-                  Merlin
+                  <strong>Merlin -Email Sender</strong>
                 </Link>
               </Nav>
               <Nav className="nav-card">
                 <Link onClick={handleClose} to={"/arthur"}>
-                  Arthur
+                  <strong>Arthur - Subscriber Management</strong>
                 </Link>
               </Nav>
               <Nav className="nav-card">
                 <Link onClick={handleClose} to={"/"}>
-                  Excalibur
+                  <strong>Excalibur - Inventory manager</strong>
                 </Link>
               </Nav>
               <Nav className="nav-card">
                 <Link onClick={handleClose} to={"/"}>
-                  Morgana
+                  <strong>Morgana - Manager</strong>
                 </Link>
               </Nav>
               <Nav className="nav-card">
                 <Link onClick={handleClose} to={"/"}>
-                  Settings
+                  <strong>Settings</strong>
                 </Link>
               </Nav>
               <Nav className="my-3">
