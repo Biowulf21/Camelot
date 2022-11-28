@@ -10,7 +10,7 @@ interface ParsedCSVFileInterface {
 }
 
 interface ReceipientObjectInterface {
-  [key: string]: string;
+  [key: string]: string | null;
 }
 
 export class CSVtoJson {
@@ -27,7 +27,6 @@ export class CSVtoJson {
   };
 
   CSVtoJSON = (file: CSVFileInterface) => {
-    // console.log(file.data)
     const { data } = file;
     this.CSVBody = data;
     var CSVColumnCounter = 0;
@@ -49,9 +48,9 @@ export class CSVtoJson {
         }
         CSVColumnCounter += 1;
       });
+      
       this.receipientsJSON.push(this.arrToJSON(this.recepients));
-      // this.receipientsJSON.pop()
-      // console.log(this.receipientsJSON);
+
       return this.CSVData;
     } catch (error) {
       if (typeof error === "string") {
@@ -71,16 +70,23 @@ export class CSVtoJson {
     receipientsArray.pop();
     // get each individual receipient from the receipient list
     for (const receipient in receipientsArray) {
+
       const currentReceipient = receipientsArray[receipient];
-      var currentHeader = "";
-      var currentHeaderValue = "";
+      var currentObjectKey: string | null = "";
+      var currentObjectValue: string | null = "";
       var currentObject: ReceipientObjectInterface = {};
-      // console.log(currentReceipient)
-      for (const header in headers) {
-        currentHeader = headers[header];
-        currentHeaderValue = currentReceipient[header];
-        currentObject[currentHeader] = currentHeaderValue;
-      }
+
+        for (const header in headers) {
+            currentObjectKey = headers[header];
+            currentObjectValue = currentReceipient[header];
+          // Will set default value to null if empty string
+          if (currentObjectValue === "") {
+              currentObjectValue = null;
+              currentObject[currentObjectKey] = null;
+          } else{
+              currentObject[currentObjectKey] = currentObjectValue;
+          }
+        }
       receipientsJSONArray.push(currentObject);
     }
 
@@ -88,10 +94,8 @@ export class CSVtoJson {
   };
 
   ParseCSVHeaders = () => {
-    console.log("Parsing CSV Headers");
   };
 
   FindEmailColumn = () => {
-    console.log("Finding EMAIL column");
   };
 }

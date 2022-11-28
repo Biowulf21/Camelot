@@ -9,16 +9,15 @@ interface ReceipientListInterface{
 const ReceipientList = (receipientsList:ReceipientListInterface) => {
     const {receipientList} = receipientsList
   return (
-    <ListGroup>
+    <ListGroup style={{height: "100%;"}}>
               {receipientList.length > 0 ? (
                 receipientList.map(
                   (receipient: { NAME: string; EMAIL: string }) => {
-                    console.log(receipient);
                     return (
-                      <ListGroupItem key={receipient.EMAIL}>
+                      <ListGroupItem id={receipient.EMAIL} key={receipient.EMAIL}>
                         {receipient.NAME !== undefined
                           ? receipient.NAME + " : " + receipient.EMAIL
-                          : "Emails: " + receipient.EMAIL}
+                          : "Email: " + receipient.EMAIL}
                       </ListGroupItem>
                     );
                   }

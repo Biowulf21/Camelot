@@ -1,6 +1,5 @@
 import { doc, setDoc, onSnapshot, query, collection, QueryDocumentSnapshot, DocumentData, addDoc, getDocs, deleteDoc } from "firebase/firestore"; 
-import TEMPLATE_PATH from "../firebase-constants";
-import { db } from "../firebase-config";
+import { db } from "./../firebase-config";
 
 interface SaveProps{
     title:string;
@@ -15,7 +14,7 @@ export class Template {
 
     async getTemplates(): Promise<DocumentData[]>{
         const templates:DocumentData[] = []
-        const q = query(collection(db, TEMPLATE_PATH));
+        const q = query(collection(db, 'Templates'));
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc)=>{
         templates.push({...doc.data(), key: doc.id})
@@ -39,11 +38,10 @@ export class Template {
             subject,
            body: base64Body
         }
-        await setDoc(doc(db, TEMPLATE_PATH, resultID), data);
+        await setDoc(doc(db, 'Templates', resultID), data);
        } 
     
        async deleteTemplate (id:string):Promise<void>{
-         console.log('deleteing template with id ' + id)
-        const deleteRef = await deleteDoc(doc(db, TEMPLATE_PATH, id))
+        const deleteRef = await deleteDoc(doc(db, 'Templates', id))
        }
 }
