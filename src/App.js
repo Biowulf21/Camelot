@@ -18,6 +18,7 @@ import MerlinPage from "./screens/authenticated/merlin/index";
 import NewTemplate from "./screens/authenticated/merlin/sub-components/template/sub-components/new-template/index.tsx";
 import MerlinMailing from "./screens/authenticated/merlin/sub-components/mailing/index";
 import ArthurPage from "./screens/authenticated/arthur/index";
+import ExcaliburPage from "./screens/authenticated/excalibur/index.tsx";
 
 function App() {
   return (
@@ -39,6 +40,8 @@ function App() {
         {/* Arthur */}
         <Route path="/arthur" element={<ArthurPage></ArthurPage>}></Route>
         <Route path="*" element={<Error404Page></Error404Page>}></Route>
+        {/* Excalibur */}
+        <Route path="/excalibur" element={<ExcaliburPage />}></Route>
       </Routes>
     </React.StrictMode>
   );

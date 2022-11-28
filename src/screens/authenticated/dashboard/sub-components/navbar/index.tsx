@@ -47,8 +47,8 @@ const SideBar = () => {
                 </Link>
               </Nav>
               <Nav className="nav-card">
-                <Link onClick={handleClose} to={"/"}>
-                  <strong>Excalibur - Inventory manager</strong>
+                <Link onClick={handleClose} to={"/excalibur"}>
+                  <strong>Excalibur - Org and Office Directory</strong>
                 </Link>
               </Nav>
               <Nav className="nav-card">
