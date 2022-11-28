@@ -22,6 +22,8 @@ const MerlinMailing = () => {
   const [emailIndex, updateEmailIndex] = useState<number>(0);
   const [templatesList, updateTemplatesList] =
     useState<TemplateFromDatabase[]>();
+  const [selectedTemplate, updateSelectedTemplate] =
+    useState<TemplateFromDatabase | null>();
 
   useEffect(() => {
     // Read all subjects here
@@ -101,7 +103,14 @@ const MerlinMailing = () => {
               return (
                 <>
                   <label className="mb-3">Choose a Subject</label>
-                  <FormSelect defaultValue="NULL">
+                  <FormSelect
+                    defaultValue="NULL"
+                    isInvalid={selectedTemplate == null ? true : false}
+                    isValid={selectedTemplate !== null ? true : false}
+                    onChange={(e) => {
+                      updateSelectedTemplate(template);
+                    }}
+                  >
                     <option disabled value="NULL">
                       Please select a template.
                     </option>
@@ -111,7 +120,9 @@ const MerlinMailing = () => {
               );
             })
           ) : (
-            <h4>Please add a template to continue sending</h4>
+            <h4 style={{ color: "red" }}>
+              Please add a template to continue sending
+            </h4>
           )}
         </div>
       </Row>
@@ -142,9 +153,14 @@ const MerlinMailing = () => {
           ></CSVReader>
         </Col>
       </Row>
-      <Button className="my-2" onClick={() => handleCSV()}>
-        Parse
-      </Button>
+      <Row>
+        <h1>otin</h1>
+      </Row>
+      <Row className="d-flex justify-content-center">
+        <Button className="my-2" onClick={() => handleCSV()}>
+          Send
+        </Button>
+      </Row>
     </Container>
   );
 };
