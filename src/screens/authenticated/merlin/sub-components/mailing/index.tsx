@@ -102,7 +102,7 @@ const MerlinMailing = () => {
             templatesList?.map((template) => {
               return (
                 <>
-                  <label className="mb-3">Choose a Subject</label>
+                  <label className="mb-3">Choose a Template</label>
                   <FormSelect
                     defaultValue="NULL"
                     isInvalid={selectedTemplate == null ? true : false}
@@ -126,6 +126,7 @@ const MerlinMailing = () => {
           )}
         </div>
       </Row>
+      <hr></hr>
       <Row>
         <Col className="align-items-center">
           <HeadersDetected headers={headers}></HeadersDetected>
@@ -145,16 +146,9 @@ const MerlinMailing = () => {
           </div>
         </Col>
       </Row>
-      <Row className="mt-3">
-        <Col>
-          <CSVReader
-            csvFile={csvFile}
-            updateCSVFile={updateCSVFile}
-          ></CSVReader>
-        </Col>
-      </Row>
-      <Row>
-        <h1>otin</h1>
+      <Row className="my-5">
+        <h4>Add Mailing CSV File</h4>
+        <CSVReader csvFile={csvFile} updateCSVFile={updateCSVFile}></CSVReader>
       </Row>
       <Row className="d-flex justify-content-center">
         <Button className="my-2" onClick={() => handleCSV()}>

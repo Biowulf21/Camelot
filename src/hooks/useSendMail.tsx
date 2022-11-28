@@ -10,20 +10,28 @@ type SendMailObject = {
 };
 
 const useSendMail = (props: SendMailObject) => {
-  const MailGunData = new Mailgun(FormData);
-  const mg = MailGunData.client({
-    username: "api",
-    key: process.env.REACT_APP_MAILGUN_API_KEY!,
-  });
-
-  mg.messages
-    .create("noreply@crusaderyb.com", {
-      from: "The Crusader Yearbook",
+  const response: any = axios({
+    method: "POST",
+    url: process.env.REACT_APP_MAILGUN_BASEURL!,
+    auth: {
+      username: "api",
+      password: process.env.REACT_APP_MAILGUN_API_KEY!,
+    },
+    params: {
+      from: "The Crusader Yearbook <noreply@crusaderyb.com>",
       to: props.to,
       subject: props.subject,
-      html: props.message,
-    })
-    .then((msg) => console.log(msg))
+      message: props.message,
+    },
+  })
+    .then(
+      (response) => {
+        console.log(response);
+        // Log success message
+      },
+      (reject) => console.log(reject)
+      //   Log failed message
+    )
     .catch((err) => console.log(err));
 };
 
