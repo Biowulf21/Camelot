@@ -1,17 +1,45 @@
-import React, { useState } from "react";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Button, Col, Container, FormSelect, Row } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { CSVtoJson } from "../../../../../services/CSVtoJSON/csv-to-json-v2";
 import "./styles.css";
 import CSVReader from "./sub-components/csv-reader";
 import HeadersDetected from "./sub-components/headers-detected";
 import ReceipientList from "./sub-components/reciepient-list/receipient-list";
+import { collection, query, getDocs, QuerySnapshot } from "firebase/firestore";
+import { db } from "../../../../../services/firebase-config";
 
+type TemplateFromDatabase = {
+  body: string;
+  id: string;
+  subject: string;
+  title: string;
+};
 const MerlinMailing = () => {
   const [csvFile, updateCSVFile] = useState<any>({ data: [] });
   const [headers, updateHeaders] = useState<[]>([]);
   const [receipientList, updateReceipientList] = useState<[]>([]);
   const [emailIndex, updateEmailIndex] = useState<number>(0);
+  const [templatesList, updateTemplatesList] =
+    useState<TemplateFromDatabase[]>();
+
+  useEffect(() => {
+    // Read all subjects here
+    getTemplates();
+  }, []);
+
+  async function getTemplates() {
+    const templateQuery = query(collection(db, "Templates"));
+    const snapshot = await getDocs(templateQuery);
+    let tempObj = {};
+    const tempArr: any = [];
+    snapshot.forEach((doc) => {
+      tempObj = doc.data();
+      tempArr.push(tempObj);
+    });
+    console.log(tempArr);
+    updateTemplatesList([...tempArr]);
+  }
 
   const CSVService = new CSVtoJson();
 
@@ -66,6 +94,27 @@ const MerlinMailing = () => {
 
   return (
     <Container fluid className="main-div m-5">
+      <Row>
+        <div className="choose-subject-div mb-5">
+          {templatesList != undefined && templatesList.length > 0 ? (
+            templatesList?.map((template) => {
+              return (
+                <>
+                  <label className="mb-3">Choose a Subject</label>
+                  <FormSelect defaultValue="NULL">
+                    <option disabled value="NULL">
+                      Please select a template.
+                    </option>
+                    <option>{template.title}</option>
+                  </FormSelect>
+                </>
+              );
+            })
+          ) : (
+            <h4>Please add a template to continue sending</h4>
+          )}
+        </div>
+      </Row>
       <Row>
         <Col className="align-items-center">
           <HeadersDetected headers={headers}></HeadersDetected>
