@@ -1,36 +1,43 @@
-# NOTE: THIS PROJECT WAS CREATED FOR ME TO LEARN REACTJS
+# Camelot - Crusader Yearbook Subscriber Manager
+### NOTE: THIS PROJECT WAS CREATED FOR ME TO LEARN REACTJS
 
-# Getting Started with Create React App
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Camelot is a powerful subscriber manager built to handle the Crusader Yearbook subscriptions efficiently. This application, written using TypeScript, ReactJS, Vite, and Firebase, empowers yearbook administrators to manage subscribers, update their yearbook status, and oversee claim status with ease.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **CRUD Subscribers:** Add, view, edit, and delete subscriber information effortlessly using a user-friendly interface.
 
-### `npm start`
+- **Yearbook Status Updates:** Keep track of each subscriber's yearbook status, whether they've ordered, received, or canceled their yearbook.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Claim Status Management:** Monitor and update claim status to ensure a smooth yearbook distribution process.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Tech Stack
 
-### `npm test`
+- **TypeScript:** Camelot is developed using TypeScript, which adds static typing to JavaScript, ensuring a more robust and maintainable codebase.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **ReactJS:** The application's frontend is built with ReactJS, providing a dynamic and interactive user experience.
 
-### `npm run build`
+- **Vite:** Vite is used as the build tool, optimizing the development process and ensuring rapid and efficient builds.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **Firebase:** Firebase powers the backend, offering real-time database management, user authentication, and secure cloud storage for seamless performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Getting Started
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+To run Camelot locally, follow these steps:
 
-### `npm run eject`
+1. Clone this repository.
+
+2. Install dependencies using `npm install`.
+
+3. Set up Firebase for your project and configure the necessary Firebase services.
+
+4. Start the development server using `npm run dev`.
+
+## Contribution
+
+Contributions to improve Camelot are welcome! If you have ideas for new features, spot a bug, or want to enhance the app's performance, feel free to open an issue or submit a pull request.
+
+Let's make managing Crusader Yearbook subscriptions a breeze with Camelot! 📚👑
 
 **Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
